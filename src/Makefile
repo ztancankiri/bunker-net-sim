@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for bunker-net-sim
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KINET4_4_PROJ=../../inet4.4 -DINET_IMPORT -L$$\(INET4_4_PROJ\)/src -lINET$$\(D\)
+#  opp_makemake -f -pINET -KINET4_4_PROJ=../../inet4.4 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -linet -lINET$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -19,13 +19,13 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(QTENV_LIBS) $(CMDENV_LIBS)
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH =
+INCLUDE_PATH = -I$(INET4_4_PROJ)/src/
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET4_4_PROJ)/src  -lINET$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET4_4_PROJ)/src  -linet -lINET$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -33,7 +33,7 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS =
+OBJS = $O/PingAppEx.o
 
 # Message files
 MSGFILES =
@@ -67,7 +67,7 @@ LIBS += -Wl,-rpath,$(abspath $(INET4_4_PROJ)/src)
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
-MSGCOPTS = $(INCLUDE_PATH)
+MSGCOPTS = $(INCLUDE_PATH) -PINET_API
 SMCOPTS =
 
 # we want to recompile everything if COPTS changes,
