@@ -1,0 +1,45 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+#include "Server.h"
+
+#include "inet/common/ModuleAccess.h"
+#include "inet/common/Simsignals.h"
+#include "inet/networklayer/common/L3AddressTag_m.h"
+#include "inet/transportlayer/common/L4PortTag_m.h"
+#include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
+
+namespace inet {
+
+Define_Module(Server);
+
+
+void Server::socketDataArrived(UdpSocket *socket, Packet *pk)
+{
+    // determine its source address/port
+    L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
+    int srcPort = pk->getTag<L4PortInd>()->getSrcPort();
+    pk->clearTags();
+    pk->trim();
+
+    // statistics
+    numEchoed++;
+    emit(packetSentSignal, pk);
+    // send back
+    socket->sendTo(pk, remoteAddress, srcPort);
+
+}
+
+} /* namespace inet */

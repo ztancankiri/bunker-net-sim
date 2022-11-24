@@ -13,12 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef PINGAPPEX_H_
-#define PINGAPPEX_H_
+#ifndef SERVER_H_
+#define SERVER_H_
 
-#include "inet/applications/pingapp/PingApp.h"
+#include "inet/applications/udpapp/UdpEchoApp.h"
 
-class PingAppEx : public inet::PingApp {
+namespace inet {
+
+class INET_API Server : public UdpEchoApp{
+    protected:
+        void socketDataArrived(UdpSocket *socket, Packet *packet) override;
 };
 
-#endif /* PINGAPPEX_H_ */
+
+} /* namespace inet */
+
+#endif /* SERVER_H_ */
