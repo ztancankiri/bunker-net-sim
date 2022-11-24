@@ -40,67 +40,40 @@ network Network
         bunker1router: Router {
             @display("p=280,231");
         }
-        bunker1host1: WirelessHost {
-            @display("i=device/cellphone;p=68,118");
+        bunker1host1: StandardHost {
+            @display("p=68,118");
         }
-        bunker1host2: WirelessHost {
-            @display("i=device/cellphone;p=68,231");
+        bunker1host2: StandardHost {
+            @display("p=68,231");
         }
-        bunker1host3: WirelessHost {
-            @display("i=device/cellphone;p=68,349");
-        }
-        bunker1AP1: AccessPoint {
-            @display("p=164,117");
-        }
-        bunker1AP2: AccessPoint {
-            @display("p=164,230");
-        }
-        bunker1AP3: AccessPoint {
-            @display("p=177,350");
+        bunker1host3: StandardHost {
+            @display("p=68,349");
         }
         // =====[ Bunker 2 ]======
         bunker2router: Router {
             @display("p=474,378");
         }
-        bunker2host1: WirelessHost {
-            @display("i=device/cellphone;p=372,505");
+        bunker2host1: StandardHost {
+            @display("p=372,505");
         }
-        bunker2host2: WirelessHost {
-            @display("i=device/cellphone;p=474,505");
+        bunker2host2: StandardHost {
+            @display("p=474,505");
         }
-        bunker2host3: WirelessHost {
-            @display("i=device/cellphone;p=599,505");
-        }
-        bunker2AP1: AccessPoint {
-            @display("p=372,444");
-        }
-        bunker2AP2: AccessPoint {
-            @display("p=480,444");
-        }
-        bunker2AP3: AccessPoint {
-            @display("p=606,450");
+        bunker2host3: StandardHost {
+            @display("p=599,505");
         }
         // =====[ Bunker 3 ]======
         bunker3router: Router {
             @display("p=683,231");
         }
-        bunker3host1: WirelessHost {
-            @display("i=device/cellphone;p=844,98");
+        bunker3host1: StandardHost {
+            @display("p=844,98");
         }
-        bunker3host2: WirelessHost {
-            @display("i=device/cellphone;p=844,231");
+        bunker3host2: StandardHost {
+            @display("p=844,231");
         }
-        bunker3host3: WirelessHost {
-            @display("i=device/cellphone;p=836,382");
-        }
-        bunker3AP1: AccessPoint {
-            @display("p=758,105");
-        }
-        bunker3AP2: AccessPoint {
-            @display("p=770,230");
-        }
-        bunker3AP3: AccessPoint {
-            @display("p=747,396");
+        bunker3host3: StandardHost {
+            @display("p=836,382");
         }
 
     connections:
@@ -110,17 +83,17 @@ network Network
         server.ethg++ <--> Eth10G <--> mainrouter.ethg++;
 
 
-        bunker1AP1.ethg++ <--> Eth10G <--> bunker1router.ethg++;
-        bunker1AP2.ethg++ <--> Eth10G <--> bunker1router.ethg++;
-        bunker1AP3.ethg++ <--> Eth10G <--> bunker1router.ethg++;
+        bunker1host1.ethg++ <--> Eth10G <--> bunker1router.ethg++;
+        bunker1host2.ethg++ <--> Eth10G <--> bunker1router.ethg++;
+        bunker1host3.ethg++ <--> Eth10G <--> bunker1router.ethg++;
 
 
-        bunker2AP1.ethg++ <--> Eth10G <--> bunker2router.ethg++;
-        bunker2AP2.ethg++ <--> Eth10G <--> bunker2router.ethg++;
-        bunker2AP3.ethg++ <--> Eth10G <--> bunker2router.ethg++;
+        bunker2host1.ethg++ <--> Eth10G <--> bunker2router.ethg++;
+        bunker2host2.ethg++ <--> Eth10G <--> bunker2router.ethg++;
+        bunker2host3.ethg++ <--> Eth10G <--> bunker2router.ethg++;
 
-        bunker3AP1.ethg++ <--> Eth10G <--> bunker3router.ethg++;
-        bunker3AP2.ethg++ <--> Eth10G <--> bunker3router.ethg++;
-        bunker3AP3.ethg++ <--> Eth10G <--> bunker3router.ethg++;
+        bunker3host1.ethg++ <--> Eth10G <--> bunker3router.ethg++;
+        bunker3host2.ethg++ <--> Eth10G <--> bunker3router.ethg++;
+        bunker3host3.ethg++ <--> Eth10G <--> bunker3router.ethg++;
 }
 

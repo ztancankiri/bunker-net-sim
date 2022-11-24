@@ -9,16 +9,4 @@
 	<interface hosts="bunker3*" address="10.0.3.x" netmask="255.255.255.x"/>
 
 	<interface hosts="*" address="10.x.x.x" netmask="255.255.255.x"/>
-
-	<wireless hosts="bunker1host1 bunker1AP1"/>
-	<wireless hosts="bunker1host2 bunker1AP2"/>
-	<wireless hosts="bunker1host3 bunker1AP3"/>
-	
-	<wireless hosts="bunker2host1 bunker2AP1"/>
-	<wireless hosts="bunker2host2 bunker2AP2"/>
-	<wireless hosts="bunker2host3 bunker2AP3"/>
-	
-	<wireless hosts="bunker3host1 bunker3AP1"/>
-	<wireless hosts="bunker3host2 bunker3AP2"/>
-	<wireless hosts="bunker3host3 bunker3AP3"/>
 </config>
