@@ -16,12 +16,20 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
+#include <unordered_map>
 #include "inet/applications/udpapp/UdpEchoApp.h"
 
 namespace inet {
 
-class INET_API Server : public UdpEchoApp{
+class INET_API Server : public UdpEchoApp {
     protected:
+        typedef UdpEchoApp super;
+
+        int numSent = 0;
+        std::unordered_map<std::string, int> connected_map;
+
+    protected:
+        void initialize(int stage) override;
         void socketDataArrived(UdpSocket *socket, Packet *packet) override;
 };
 

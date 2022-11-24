@@ -20,11 +20,23 @@
 #include "inet/networklayer/common/L3AddressTag_m.h"
 #include "inet/transportlayer/common/L4PortTag_m.h"
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
+#include "inet/networklayer/common/FragmentationTag_m.h"
+#include "inet/applications/base/ApplicationPacket_m.h"
+#include "inet/common/TimeTag_m.h"
 
 namespace inet {
 
 Define_Module(Server);
 
+void Server::initialize(int stage)
+{
+    super::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        numSent = 0;
+        WATCH(numSent);
+    }
+}
 
 void Server::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
@@ -34,11 +46,21 @@ void Server::socketDataArrived(UdpSocket *socket, Packet *pk)
     pk->clearTags();
     pk->trim();
 
-    // statistics
-    numEchoed++;
-    emit(packetSentSignal, pk);
-    // send back
-    socket->sendTo(pk, remoteAddress, srcPort);
+    umap["asd"] = 5454;
+
+    const char *resBody = par("resBody");
+    Packet *packet = new Packet(resBody);
+    packet->addTag<FragmentationReq>()->setDontFragment(true);
+
+    const auto& payload = makeShared<ApplicationPacket>();
+    payload->setChunkLength(B(par("messageLength")));
+    payload->setSequenceNumber(umap["asd"]);
+    payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+    packet->insertAtBack(payload);
+
+    emit(packetSentSignal, packet);
+    socket->sendTo(packet, remoteAddress, srcPort);
+    numSent++;
 
 }
 

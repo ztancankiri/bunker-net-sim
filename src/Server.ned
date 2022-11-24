@@ -28,6 +28,8 @@ simple Server like IApp
     parameters:
         string interfaceTableModule;   // The path to the InterfaceTable module
         int localPort;  // local port to listen on
+        string resBody;
+        volatile int messageLength @unit(B); // length of messages to generate, in bytes
         @display("i=block/app");
         @lifecycleSupport;
         double stopOperationExtraTime @unit(s) = default(-1s);    // extra time after lifecycle stop operation finished

@@ -16,9 +16,8 @@ namespace inet {
 
 class INET_API Client : public UdpBasicApp
 {
-
-  protected:
-    void sendPacket() override;
+    protected:
+        void sendPacket() override;
 };
 
 } // namespace inet
