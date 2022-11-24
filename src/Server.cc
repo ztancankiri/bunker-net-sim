@@ -46,7 +46,7 @@ void Server::socketDataArrived(UdpSocket *socket, Packet *pk)
     pk->clearTags();
     pk->trim();
 
-    umap["asd"] = 5454;
+    connected_map["asd"] = 5454;
 
     const char *resBody = par("resBody");
     Packet *packet = new Packet(resBody);
@@ -54,7 +54,7 @@ void Server::socketDataArrived(UdpSocket *socket, Packet *pk)
 
     const auto& payload = makeShared<ApplicationPacket>();
     payload->setChunkLength(B(par("messageLength")));
-    payload->setSequenceNumber(umap["asd"]);
+    payload->setSequenceNumber(connected_map["asd"]);
     payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
     packet->insertAtBack(payload);
 
