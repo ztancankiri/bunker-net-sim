@@ -41,14 +41,6 @@ void HeartBeatApp::sendPacket()
 void HeartBeatApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
     super::socketDataArrived(socket, pk);
-//    L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
-//    int srcPort = pk->getTag<L4PortInd>()->getSrcPort();
-//    pk->clearTags();
-//    pk->trim();
-//
-//    auto data = pk->peekData<BunkerPacket>();
-//    EV_INFO <<"---------------------CLIENT: " << data->getSurvivorName() << "---------------------" <<endl;
-//    EV_INFO <<"---------------------CLIENT: " << data->getBunkerId() << "---------------------" <<endl;
 }
 
 } // namespace inet
