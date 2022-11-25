@@ -17,6 +17,7 @@
 #include "inet/networklayer/common/FragmentationTag_m.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
+#include "BunkerPacket_m.h"
 
 namespace inet {
 
@@ -29,9 +30,9 @@ void Client::sendPacket()
     Packet *packet = new Packet(str.str().c_str());
     if (dontFragment)
         packet->addTag<FragmentationReq>()->setDontFragment(true);
-    const auto& payload = makeShared<ApplicationPacket>();
+    const auto& payload = makeShared<BunkerPacket>();
     payload->setChunkLength(B(par("messageLength")));
-    payload->setSequenceNumber(numSent);
+    payload->setSurvivorName("Zafer");
     payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
     packet->insertAtBack(payload);
     L3Address destAddr = chooseDestAddr();

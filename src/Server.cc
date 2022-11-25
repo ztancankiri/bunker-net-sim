@@ -17,12 +17,12 @@
 
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/Simsignals.h"
-#include "inet/networklayer/common/L3AddressTag_m.h"
 #include "inet/transportlayer/common/L4PortTag_m.h"
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
 #include "inet/networklayer/common/FragmentationTag_m.h"
 #include "inet/applications/base/ApplicationPacket_m.h"
 #include "inet/common/TimeTag_m.h"
+#include "BunkerPacket_m.h"
 
 namespace inet {
 
@@ -45,17 +45,24 @@ void Server::socketDataArrived(UdpSocket *socket, Packet *pk)
     int srcPort = pk->getTag<L4PortInd>()->getSrcPort();
     pk->clearTags();
     pk->trim();
+    auto data = pk->peekData<BunkerPacket>();
+    EV_INFO <<"---------------------" << data->getSurvivorName() << "---------------------" <<endl;
+    survivorDatabase["Erdem"].bunkerId = 2;
 
-    connected_map["asd"] = 5454;
 
     const char *resBody = par("resBody");
     Packet *packet = new Packet(resBody);
     packet->addTag<FragmentationReq>()->setDontFragment(true);
 
-    const auto& payload = makeShared<ApplicationPacket>();
-    payload->setChunkLength(B(par("messageLength")));
-    payload->setSequenceNumber(connected_map["asd"]);
-    payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+    const auto& payload = makeShared<BunkerPacket>();
+    int seqNum = 5454;
+    payload->setChunkLength(B(20));
+    payload->setSurvivorName("Erdem");
+
+//    payload->setChunkLength(B(par("messageLength")));
+//    payload->setSequenceNumber(connected_map["asd"]);
+//    payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+
     packet->insertAtBack(payload);
 
     emit(packetSentSignal, packet);

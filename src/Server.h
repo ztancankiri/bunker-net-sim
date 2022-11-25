@@ -18,6 +18,7 @@
 
 #include <unordered_map>
 #include "inet/applications/udpapp/UdpEchoApp.h"
+#include "inet/networklayer/common/L3AddressTag_m.h"
 
 namespace inet {
 
@@ -25,8 +26,13 @@ class INET_API Server : public UdpEchoApp {
     protected:
         typedef UdpEchoApp super;
 
+        struct SurvivorData{
+            L3Address ip;
+            int bunkerId;
+            simtime_t ts;
+        };
         int numSent = 0;
-        std::unordered_map<std::string, int> connected_map;
+        std::unordered_map<std::string, SurvivorData> survivorDatabase;
 
     protected:
         void initialize(int stage) override;
