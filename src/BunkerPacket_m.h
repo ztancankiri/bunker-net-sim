@@ -44,15 +44,13 @@ class BunkerPacket;
 namespace inet {
 
 /**
- * Class generated from <tt>BunkerPacket.msg:18</tt> by opp_msgtool.
+ * Class generated from <tt>BunkerPacket.msg:8</tt> by opp_msgtool.
  * <pre>
- * //
- * // Generic application packet
- * //
- * // TODO rename to ApplicationHeader and remove ByteCountChunk from ApplicationHeaderSerializer
  * class BunkerPacket extends FieldsChunk
  * {
- *     // 0=heartbeat 1=lookup request 2=lookup response
+ *     // Type-0 = Heartbeat
+ *     // Type-1 = Lookup request
+ *     // Type-2 = Lookup response
  *     int type;
  *     string survivorName;
  *     L3Address ip;

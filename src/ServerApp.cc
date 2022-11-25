@@ -1,0 +1,94 @@
+#include "ServerApp.h"
+
+#include "inet/common/ModuleAccess.h"
+#include "inet/common/Simsignals.h"
+#include "inet/transportlayer/common/L4PortTag_m.h"
+#include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
+#include "inet/networklayer/common/FragmentationTag_m.h"
+#include "inet/applications/base/ApplicationPacket_m.h"
+#include "inet/common/TimeTag_m.h"
+#include "BunkerPacket_m.h"
+
+namespace inet {
+
+Define_Module(ServerApp);
+
+void ServerApp::initialize(int stage)
+{
+    super::initialize(stage);
+}
+
+void ServerApp::handleStartOperation(LifecycleOperation *operation)
+{
+    socket.setOutputGate(gate("socketOut"));
+    int localPort = par("localPort");
+    socket.bind(localPort);
+    MulticastGroupList mgl = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this)->collectMulticastGroups();
+    socket.joinLocalMulticastGroups(mgl);
+    socket.setCallback(this);
+}
+
+void ServerApp::handleStopOperation(LifecycleOperation *operation)
+{
+    socket.close();
+    delayActiveOperationFinish(par("stopOperationTimeout"));
+}
+
+void ServerApp::handleCrashOperation(LifecycleOperation *operation)
+{
+    if (operation->getRootModule() != getContainingNode(this)) // closes socket when the application crashed only
+        socket.destroy(); // TODO  in real operating systems, program crash detected by OS and OS closes sockets of crashed programs.
+    socket.setCallback(nullptr);
+}
+
+void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
+{
+    L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
+    int srcPort = pk->getTag<L4PortInd>()->getSrcPort();
+    pk->clearTags();
+    pk->trim();
+
+    auto currentTime = simTime();
+
+    auto data = pk->peekData<BunkerPacket>();
+    auto packetType = data->getType();
+    auto survivorName = data->getSurvivorName();
+
+    if (packetType == 0) { // Heartbeat Packet
+        survivorDatabase[survivorName].bunkerId = 0;
+        survivorDatabase[survivorName].ip = remoteAddress;
+        survivorDatabase[survivorName].ts = simTime();
+        EV_INFO << "--- HEARTBEAT RECEIVED: " << survivorName << endl;
+    }
+    else if (packetType == 1) { // Lookup Request
+        Packet *packet = new Packet("Lookup Response");
+        packet->addTag<FragmentationReq>()->setDontFragment(true);
+        const auto& payload = makeShared<BunkerPacket>();
+        payload->setChunkLength(B(20));
+        payload->setType(2);  // Lookup Response
+
+        if (survivorDatabase.find(survivorName) == survivorDatabase.end()) { // Not Exists
+            payload->setSurvivorName("###NULL###");
+            EV_INFO << "--- SURVIVOR NOT FOUND: " << survivorName << endl;
+        }
+        else { // Exists
+            if (currentTime - survivorDatabase[survivorName].ts > par("heartbeatThreshold")) { // Last heartbeat is too old
+                survivorDatabase.erase(survivorName);
+                payload->setSurvivorName("###NULL###");
+                EV_INFO << "--- SURVIVOR NOT FOUND: " << survivorName << endl;
+            }
+            else {  // Survivor Found
+                payload->setSurvivorName(survivorName);
+                payload->setBunkerId(survivorDatabase[survivorName].bunkerId);
+                payload->setIp(survivorDatabase[survivorName].ip);
+                EV_INFO << "--- SURVIVOR FOUND: " << survivorName << endl;
+            }
+        }
+
+        packet->insertAtBack(payload);
+        emit(packetSentSignal, packet);
+        socket->sendTo(packet, remoteAddress, srcPort);
+    }
+}
+
+} /* namespace inet */
