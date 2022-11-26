@@ -16,12 +16,18 @@ class INET_API ClientApp : public UdpBasicApp
             L3Address ip;
             simtime_t ts;
         };
+
         std::unordered_map<std::string, addressEntry> addressBook;
         std::vector<std::string> possibleSurvivors;
     protected:
+        std::string randomSelectSurvivor();
+
         void sendLookupRequest();
+        void sendLookupRequest(std::string survivor);
+
         void sendTextMessage();
         void sendTextMessage(std::string receiver);
+
         void sendPacket() override;
         void initialize(int stage) override;
         void socketDataArrived(UdpSocket *socket, Packet *packet) override;

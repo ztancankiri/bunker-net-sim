@@ -21,24 +21,17 @@ void ClientApp::initialize(int stage)
     super::initialize(stage);
 
     if (stage == INITSTAGE_LOCAL) {
-        std::stringstream possibleSurvivorsStream(std::string(par("possibleSurvivors")));
-        std::string tmp;
+        const char *possibleSurvivorsStr = par("possibleSurvivors");
+        cStringTokenizer tokenizer(possibleSurvivorsStr);
+        const char *token;
 
-        while(getline(possibleSurvivorsStream, tmp, ' ')) {
-            possibleSurvivors.push_back(tmp);
+        while ((token = tokenizer.nextToken()) != nullptr) {
+            possibleSurvivors.push_back(token);
         }
     }
 }
 
-void ClientApp::sendLookupRequest()
-{
-    Packet *packet = new Packet("Lookup Request");
-    packet->addTag<FragmentationReq>()->setDontFragment(true);
-
-    const auto& payload = makeShared<BunkerPacket>();
-    payload->setChunkLength(B(20));
-    payload->setType(1);
-
+std::string ClientApp::randomSelectSurvivor() {
     // Select a survivor
     std::string survivor = "";
     int tryCounter = 50;
@@ -47,7 +40,32 @@ void ClientApp::sendLookupRequest()
         survivor = possibleSurvivors[k];
         tryCounter--;
     } while ((strcmp(survivor.c_str(), par("survivorName")) == 0 || addressBook.find(survivor) != addressBook.end()) && tryCounter > 0);
-    EV_INFO << "--- CLIENT: SURVIVOR SELECTED: " << survivor << endl;
+
+    if (survivor.size() > 0) {
+        EV_INFO << "--- CLIENT: SURVIVOR SELECTED: " << survivor << endl;
+    }
+    else {
+        EV_INFO << "--- CLIENT: SURVIVOR COULD NOT BE SELECTED" << endl;
+    }
+
+    return survivor;
+}
+
+void ClientApp::sendLookupRequest() {
+    std::string survivor = randomSelectSurvivor();
+
+    if (survivor.size() > 0) {
+        sendLookupRequest(survivor);
+    }
+}
+
+void ClientApp::sendLookupRequest(std::string survivor) {
+    Packet *packet = new Packet("Lookup Request");
+    packet->addTag<FragmentationReq>()->setDontFragment(true);
+
+    const auto& payload = makeShared<BunkerPacket>();
+    payload->setChunkLength(B(20));
+    payload->setType(1);
 
     payload->setSurvivorName(survivor.c_str());
 
@@ -58,9 +76,17 @@ void ClientApp::sendLookupRequest()
     socket.sendTo(packet, chooseDestAddr(), destPort);
 }
 
-void ClientApp::sendTextMessage()
-{
+void ClientApp::sendTextMessage() {
+    std::string survivor = randomSelectSurvivor();
 
+    if (survivor.size() > 0) {
+        if (addressBook.find(survivor) != addressBook.end()) { // Survivor exists in AdressBook
+            sendTextMessage(survivor);
+        }
+        else {  // Survivor does not exist in AdressBook
+            sendLookupRequest(survivor);
+        }
+    }
 }
 
 void ClientApp::sendTextMessage(std::string receiver)
@@ -74,7 +100,6 @@ void ClientApp::sendTextMessage(std::string receiver)
     payload->setSurvivorName(par("survivorName"));
     payload->setTextMessage("Slava Ukraini !!!");
 
-
     payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
     packet->insertAtBack(payload);
 
@@ -84,7 +109,14 @@ void ClientApp::sendTextMessage(std::string receiver)
 
 void ClientApp::sendPacket()
 {
-    sendLookupRequest();
+    int k = intrand(100);
+
+    if (k < 50) {
+        sendLookupRequest();
+    }
+    else {
+        sendTextMessage();
+    }
 }
 
 void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
