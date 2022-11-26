@@ -27,32 +27,59 @@ void ClientApp::initialize(int stage)
 
         while ((token = tokenizer.nextToken()) != nullptr) {
             possibleSurvivors.push_back(token);
+
+            if (textingSelectionAdded.find(token) == textingSelectionAdded.end()) {
+                textingSelection.push_back(token);
+                textingSelectionAdded.insert(token);
+            }
         }
     }
 }
 
-std::string ClientApp::randomSelectSurvivor() {
-    // Select a survivor
+std::string ClientApp::randomSelectForLookup() {
     std::string survivor = "";
-    int tryCounter = 50;
+
     do {
+        if (possibleSurvivors.size() == addressBook.size()) {
+            survivor = "";
+            break;
+        }
+
         int k = intrand(possibleSurvivors.size());
         survivor = possibleSurvivors[k];
-        tryCounter--;
-    } while ((strcmp(survivor.c_str(), par("survivorName")) == 0 || addressBook.find(survivor) != addressBook.end()) && tryCounter > 0);
+    } while (addressBook.find(survivor) != addressBook.end());
 
     if (survivor.size() > 0) {
-        EV_INFO << "--- CLIENT: SURVIVOR SELECTED: " << survivor << endl;
+        EV_INFO << "--- CLIENT: LOOKUP SELECTED: " << survivor << endl;
     }
     else {
-        EV_INFO << "--- CLIENT: SURVIVOR COULD NOT BE SELECTED" << endl;
+        EV_INFO << "--- CLIENT: LOOKUP COULD NOT BE SELECTED" << endl;
+    }
+
+    return survivor;
+}
+
+std::string ClientApp::randomSelectForTexting() {
+    std::string survivor = "";
+    int size = textingSelection.size();
+
+    if (size > 0) {
+        int k = intrand(size);
+        survivor = textingSelection[k];
+    }
+
+    if (survivor.size() > 0) {
+        EV_INFO << "--- CLIENT: TEXT RECEIVER SELECTED: " << survivor << endl;
+    }
+    else {
+        EV_INFO << "--- CLIENT: TEXT RECEIVER COULD NOT BE SELECTED" << endl;
     }
 
     return survivor;
 }
 
 void ClientApp::sendLookupRequest() {
-    std::string survivor = randomSelectSurvivor();
+    std::string survivor = randomSelectForLookup();
 
     if (survivor.size() > 0) {
         sendLookupRequest(survivor);
@@ -77,7 +104,7 @@ void ClientApp::sendLookupRequest(std::string survivor) {
 }
 
 void ClientApp::sendTextMessage() {
-    std::string survivor = randomSelectSurvivor();
+    std::string survivor = randomSelectForTexting();
 
     if (survivor.size() > 0) {
         if (addressBook.find(survivor) != addressBook.end()) { // Survivor exists in AdressBook
@@ -135,6 +162,12 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         else { // Survivor Found
             addressBook[survivorName].ip = ip;
             addressBook[survivorName].ts = simTime();
+
+            if (textingSelectionAdded.find(survivorName) == textingSelectionAdded.end()) {
+                textingSelection.push_back(survivorName);
+                textingSelectionAdded.insert(survivorName);
+            }
+
             EV_INFO << "--- CLIENT: SURVIVOR FOUND: " << survivorName << endl;
             sendTextMessage(survivorName);
         }
@@ -146,6 +179,11 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         // Add the sender to the address book.
         addressBook[survivorName].ip = remoteAddress;
         addressBook[survivorName].ts = simTime();
+
+        if (textingSelectionAdded.find(survivorName) == textingSelectionAdded.end()) {
+            textingSelection.push_back(survivorName);
+            textingSelectionAdded.insert(survivorName);
+        }
 
         EV_INFO << "--- CLIENT: TEXT MESSAGE RECEIVED: " << textMessage << endl;
     }

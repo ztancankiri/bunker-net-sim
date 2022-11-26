@@ -19,8 +19,12 @@ class INET_API ClientApp : public UdpBasicApp
 
         std::unordered_map<std::string, addressEntry> addressBook;
         std::vector<std::string> possibleSurvivors;
+
+        std::unordered_set<std::string> textingSelectionAdded;
+        std::vector<std::string> textingSelection;
     protected:
-        std::string randomSelectSurvivor();
+        std::string randomSelectForLookup();
+        std::string randomSelectForTexting();
 
         void sendLookupRequest();
         void sendLookupRequest(std::string survivor);
