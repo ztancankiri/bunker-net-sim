@@ -57,7 +57,10 @@ void UdpBasicAppX::sendPacket() {}
 void UdpBasicAppX::processStart()
 {
     socket.setOutputGate(gate("socketOut"));
-    socket.bind(localPort);
+    if (listeningEnabled) {
+        socket.bind(localPort);
+    }
+
     socket.setCallback(this);
 
     if (sendingEnabled) {
