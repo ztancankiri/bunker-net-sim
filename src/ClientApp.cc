@@ -33,14 +33,16 @@ void ClientApp::initialize(int stage)
                 textingSelectionAdded.insert(token);
             }
         }
+
+        ownName = std::string(par("survivorName"));
+        learntFromMessages = 0;
     }
 }
 
 std::string ClientApp::randomSelectForLookup() {
     std::string survivor = "";
-
     do {
-        if (possibleSurvivors.size() == addressBook.size()) {
+        if (possibleSurvivors.size() + learntFromMessages == addressBook.size()) {
             survivor = "";
             break;
         }
@@ -105,7 +107,6 @@ void ClientApp::sendLookupRequest(std::string survivor) {
 
 void ClientApp::sendTextMessage() {
     std::string survivor = randomSelectForTexting();
-
     if (survivor.size() > 0) {
         if (addressBook.find(survivor) != addressBook.end()) { // Survivor exists in AdressBook
             sendTextMessage(survivor);
@@ -125,13 +126,14 @@ void ClientApp::sendTextMessage(std::string receiver)
     payload->setChunkLength(B(20));
     payload->setType(3);
     payload->setSurvivorName(par("survivorName"));
-    payload->setTextMessage("Slava Ukraini !!!");
+    payload->setTextMessage("Test Message!");
 
     payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
     packet->insertAtBack(payload);
 
     emit(packetSentSignal, packet);
     socket.sendTo(packet, addressBook[receiver].ip, 5555);
+
 }
 
 void ClientApp::sendPacket()
@@ -151,7 +153,7 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     auto data = pk->peekData<BunkerPacket>();
 
     auto packetType = data->getType();
-    auto survivorName = data->getSurvivorName();
+    std::string survivorName = std::string(data->getSurvivorName());
     auto bunkerId = data->getBunkerId();
     auto ip = data->getIp();
 
@@ -176,16 +178,27 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
         auto textMessage = data->getTextMessage();
 
-        // Add the sender to the address book.
-        addressBook[survivorName].ip = remoteAddress;
-        addressBook[survivorName].ts = simTime();
+        if (addressBook.find(survivorName) == addressBook.end()){
 
-        if (textingSelectionAdded.find(survivorName) == textingSelectionAdded.end()) {
-            textingSelection.push_back(survivorName);
-            textingSelectionAdded.insert(survivorName);
+            if (textingSelectionAdded.find(survivorName) == textingSelectionAdded.end()) {
+                learntFromMessages++;
+            }
+
+
+            // Add the sender to the address book.
+            addressBook[survivorName].ip = remoteAddress;
+            addressBook[survivorName].ts = simTime();
+
+            if (textingSelectionAdded.find(survivorName) == textingSelectionAdded.end()) {
+                textingSelection.push_back(survivorName);
+                textingSelectionAdded.insert(survivorName);
+            }
         }
 
-        EV_INFO << "--- CLIENT: TEXT MESSAGE RECEIVED: " << textMessage << endl;
+
+
+
+        EV_INFO << ownName <<"--- CLIENT: TEXT MESSAGE RECEIVED: " << survivorName << endl;
     }
 
     delete pk;

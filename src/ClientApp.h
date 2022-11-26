@@ -17,9 +17,11 @@ class INET_API ClientApp : public UdpBasicAppX
             simtime_t ts;
         };
 
+        std::string ownName;
         std::unordered_map<std::string, addressEntry> addressBook;
         std::vector<std::string> possibleSurvivors;
 
+        int learntFromMessages;
         std::unordered_set<std::string> textingSelectionAdded;
         std::vector<std::string> textingSelection;
     protected:
