@@ -2,15 +2,15 @@
 #define __INET_CLIENTAPP_H
 
 #include <unordered_map>
-#include "inet/applications/udpapp/UdpBasicApp.h"
+#include "UdpBasicAppX.h"
 #include "inet/networklayer/common/L3AddressTag_m.h"
 
 namespace inet {
 
-class INET_API ClientApp : public UdpBasicApp
+class INET_API ClientApp : public UdpBasicAppX
 {
     protected:
-        typedef UdpBasicApp super;
+        typedef UdpBasicAppX super;
 
         struct addressEntry {
             L3Address ip;

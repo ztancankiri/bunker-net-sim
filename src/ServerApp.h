@@ -2,14 +2,14 @@
 #define SERVERAPP_H_
 
 #include <unordered_map>
-#include "inet/applications/udpapp/UdpBasicApp.h"
+#include "UdpBasicAppX.h"
 #include "inet/networklayer/common/L3AddressTag_m.h"
 
 namespace inet {
 
-class INET_API ServerApp : public UdpBasicApp {
+class INET_API ServerApp : public UdpBasicAppX {
     protected:
-        typedef UdpBasicApp super;
+        typedef UdpBasicAppX super;
 
         struct SurvivorData {
             L3Address ip;
@@ -21,10 +21,6 @@ class INET_API ServerApp : public UdpBasicApp {
     protected:
         void initialize(int stage) override;
         void socketDataArrived(UdpSocket *socket, Packet *packet) override;
-
-        void handleStartOperation(LifecycleOperation *operation) override;
-        void handleStopOperation(LifecycleOperation *operation) override;
-        void handleCrashOperation(LifecycleOperation *operation) override;
 };
 
 

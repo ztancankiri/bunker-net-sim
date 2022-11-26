@@ -16,11 +16,6 @@ namespace inet {
 
 Define_Module(HeartBeatApp);
 
-void HeartBeatApp::initialize(int stage)
-{
-    super::initialize(stage);
-}
-
 void HeartBeatApp::sendPacket()
 {
     Packet *packet = new Packet("HeartBeatData");
@@ -35,12 +30,7 @@ void HeartBeatApp::sendPacket()
     packet->insertAtBack(payload);
 
     emit(packetSentSignal, packet);
-    socket.sendTo(packet, chooseDestAddr(), destPort);
-}
-
-void HeartBeatApp::socketDataArrived(UdpSocket *socket, Packet *pk)
-{
-    super::socketDataArrived(socket, pk);
+    socket.sendTo(packet, destAddress, destPort);
 }
 
 } // namespace inet

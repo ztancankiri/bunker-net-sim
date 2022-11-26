@@ -100,7 +100,7 @@ void ClientApp::sendLookupRequest(std::string survivor) {
     packet->insertAtBack(payload);
 
     emit(packetSentSignal, packet);
-    socket.sendTo(packet, chooseDestAddr(), destPort);
+    socket.sendTo(packet, destAddress, destPort);
 }
 
 void ClientApp::sendTextMessage() {
@@ -187,6 +187,8 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 
         EV_INFO << "--- CLIENT: TEXT MESSAGE RECEIVED: " << textMessage << endl;
     }
+
+    delete pk;
 }
 
 } // namespace inet

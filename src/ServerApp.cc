@@ -18,29 +18,6 @@ void ServerApp::initialize(int stage)
     super::initialize(stage);
 }
 
-void ServerApp::handleStartOperation(LifecycleOperation *operation)
-{
-    socket.setOutputGate(gate("socketOut"));
-    int localPort = par("localPort");
-    socket.bind(localPort);
-    MulticastGroupList mgl = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this)->collectMulticastGroups();
-    socket.joinLocalMulticastGroups(mgl);
-    socket.setCallback(this);
-}
-
-void ServerApp::handleStopOperation(LifecycleOperation *operation)
-{
-    socket.close();
-    delayActiveOperationFinish(par("stopOperationTimeout"));
-}
-
-void ServerApp::handleCrashOperation(LifecycleOperation *operation)
-{
-    if (operation->getRootModule() != getContainingNode(this)) // closes socket when the application crashed only
-        socket.destroy(); // TODO  in real operating systems, program crash detected by OS and OS closes sockets of crashed programs.
-    socket.setCallback(nullptr);
-}
-
 void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
     L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
@@ -91,6 +68,8 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         emit(packetSentSignal, packet);
         socket->sendTo(packet, remoteAddress, srcPort);
     }
+
+    delete pk;
 }
 
 } /* namespace inet */

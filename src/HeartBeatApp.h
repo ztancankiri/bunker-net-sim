@@ -1,18 +1,16 @@
 #ifndef __INET_HEARTBEATAPP_H
 #define __INET_HEARTBEATAPP_H
 
-#include "inet/applications/udpapp/UdpBasicApp.h"
+#include "UdpBasicAppX.h"
 
 namespace inet {
 
-class INET_API HeartBeatApp : public UdpBasicApp
+class INET_API HeartBeatApp : public UdpBasicAppX
 {
     protected:
-        typedef UdpBasicApp super;
+        typedef UdpBasicAppX super;
     protected:
         void sendPacket() override;
-        void initialize(int stage) override;
-        void socketDataArrived(UdpSocket *socket, Packet *packet) override;
 };
 
 } // namespace inet
