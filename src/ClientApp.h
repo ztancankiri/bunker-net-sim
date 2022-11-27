@@ -17,7 +17,6 @@ class INET_API ClientApp : public UdpBasicAppX
             simtime_t ts;
         };
 
-        std::string ownName;
         std::unordered_map<std::string, addressEntry> addressBook;
         std::vector<std::string> possibleSurvivors;
 
@@ -25,6 +24,7 @@ class INET_API ClientApp : public UdpBasicAppX
         std::unordered_set<std::string> textingSelectionAdded;
         std::vector<std::string> textingSelection;
     protected:
+        void possibleSurvivorsInit();
         std::string randomSelectForLookup();
         std::string randomSelectForTexting();
 

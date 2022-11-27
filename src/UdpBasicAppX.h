@@ -18,6 +18,8 @@ class INET_API UdpBasicAppX : public ClockUserModuleMixin<ApplicationBase>, publ
     clocktime_t startTime;
     clocktime_t stopTime;
 
+    std::string ownName;
+
     const char *packetName = nullptr;
 
     bool sendingEnabled;

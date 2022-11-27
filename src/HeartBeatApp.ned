@@ -5,9 +5,7 @@ import inet.applications.contract.IApp;
 simple HeartBeatApp like IApp
 {
     parameters:
-        string survivorName;
-        
-        string clockModule = default(""); // relative path of a module that implements IClock; optional
+		string clockModule = default(""); // relative path of a module that implements IClock; optional
 
         bool sendingEnabled = default(true);
         string destAddress = default("");

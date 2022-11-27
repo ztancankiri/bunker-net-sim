@@ -22,6 +22,7 @@ void UdpBasicAppX::initialize(int stage)
     ClockUserModuleMixin::initialize(stage);
 
     if (stage == INITSTAGE_LOCAL) {
+        ownName = std::string(getParentModule()->getFullName());
         startTime = par("startTime");
         stopTime = par("stopTime");
 

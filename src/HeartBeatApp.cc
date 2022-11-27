@@ -24,7 +24,7 @@ void HeartBeatApp::sendPacket()
     const auto& payload = makeShared<BunkerPacket>();
     payload->setChunkLength(B(20));
     payload->setType(0);
-    payload->setSurvivorName(par("survivorName"));
+    payload->setSurvivorName(ownName.c_str());
 
     payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
     packet->insertAtBack(payload);

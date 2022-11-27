@@ -4,9 +4,16 @@ import inet.applications.contract.IApp;
 
 simple ClientApp like IApp
 {
-    parameters:
-        string possibleSurvivors;
-        string survivorName;
+    parameters:        
+        int bunker1_host_number;
+        int bunker2_host_number;
+        int bunker3_host_number;
+        
+        int nonExist_host_number;
+        
+        string bunker1_host_prefix = default("bunker1host");
+        string bunker2_host_prefix = default("bunker2host");
+        string bunker3_host_prefix = default("bunker3host");
         
         string clockModule = default(""); // relative path of a module that implements IClock; optional
         

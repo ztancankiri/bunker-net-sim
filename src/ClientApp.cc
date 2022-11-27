@@ -12,9 +12,83 @@
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
 #include "BunkerPacket_m.h"
 
+#include <algorithm>
+#include <random>
+
 namespace inet {
 
 Define_Module(ClientApp);
+
+void ClientApp::possibleSurvivorsInit() {
+    std::string bunker1_host_prefix = std::string(par("bunker1_host_prefix"));
+    std::string bunker2_host_prefix = std::string(par("bunker2_host_prefix"));
+    std::string bunker3_host_prefix = std::string(par("bunker3_host_prefix"));
+
+    int bunker1_host_number = par("bunker1_host_number");
+    int bunker2_host_number = par("bunker2_host_number");
+    int bunker3_host_number = par("bunker3_host_number");
+    int nonExist_host_number = par("nonExist_host_number");
+
+    std::vector<std::string> hosts;
+
+    for (int i = 0; i < bunker1_host_number; i++) {
+        std::stringstream tmp;
+        tmp << bunker1_host_prefix << "[" << i << "]";
+        std::string result;
+        tmp >> result;
+
+        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
+            hosts.push_back(result);
+        }
+    }
+
+    for (int i = 0; i < bunker2_host_number; i++) {
+        std::stringstream tmp;
+        tmp << bunker2_host_prefix << "[" << i << "]";
+        std::string result;
+        tmp >> result;
+
+        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
+            hosts.push_back(result);
+        }
+    }
+
+    for (int i = 0; i < bunker3_host_number; i++) {
+        std::stringstream tmp;
+        tmp << bunker3_host_prefix << "[" << i << "]";
+        std::string result;
+        tmp >> result;
+
+        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
+            hosts.push_back(result);
+        }
+    }
+
+    for (int i = 0; i < nonExist_host_number; i++) {
+        std::stringstream tmp;
+        tmp << "nonExist" << "[" << i << "]";
+        std::string result;
+        tmp >> result;
+
+        hosts.push_back(result);
+    }
+
+    int size = intrand(hosts.size());
+    EV_INFO << size << endl;
+
+    std::shuffle(std::begin(hosts), std::end(hosts), std::random_device());
+
+    for (int i = 0; i < size; i++) {
+        possibleSurvivors.push_back(hosts[i]);
+
+        if (textingSelectionAdded.find(hosts[i]) == textingSelectionAdded.end()) {
+            textingSelection.push_back(hosts[i]);
+            textingSelectionAdded.insert(hosts[i]);
+        }
+
+        EV_INFO << hosts[i] << endl;
+    }
+}
 
 void ClientApp::initialize(int stage)
 {
@@ -23,20 +97,21 @@ void ClientApp::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
         chunkLength = registerSignal("chunkLength");
 
-        const char *possibleSurvivorsStr = par("possibleSurvivors");
-        cStringTokenizer tokenizer(possibleSurvivorsStr);
-        const char *token;
+//        const char *possibleSurvivorsStr = par("possibleSurvivors");
+//        cStringTokenizer tokenizer(possibleSurvivorsStr);
+//        const char *token;
+//
+//        while ((token = tokenizer.nextToken()) != nullptr) {
+//            possibleSurvivors.push_back(token);
+//
+//            if (textingSelectionAdded.find(token) == textingSelectionAdded.end()) {
+//                textingSelection.push_back(token);
+//                textingSelectionAdded.insert(token);
+//            }
+//        }
 
-        while ((token = tokenizer.nextToken()) != nullptr) {
-            possibleSurvivors.push_back(token);
+        possibleSurvivorsInit();
 
-            if (textingSelectionAdded.find(token) == textingSelectionAdded.end()) {
-                textingSelection.push_back(token);
-                textingSelectionAdded.insert(token);
-            }
-        }
-
-        ownName = std::string(par("survivorName"));
         learntFromMessages = 0;
     }
 }
@@ -130,7 +205,7 @@ void ClientApp::sendTextMessage(std::string receiver)
     payload->setChunkLength(B(packetSize));
     emit(chunkLength, packetSize);
     payload->setType(3);
-    payload->setSurvivorName(par("survivorName"));
+    payload->setSurvivorName(ownName.c_str());
     payload->setTextMessage("Test Message!");
 
     payload->addTag<CreationTimeTag>()->setCreationTime(simTime());

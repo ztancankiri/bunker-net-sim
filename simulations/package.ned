@@ -16,7 +16,11 @@ import inet.node.inet.WirelessHost;
 //
 network Network
 {
-    @display("bgb=1025,631");
+    parameters:
+        int bunker1_host_number;
+        int bunker2_host_number;
+        int bunker3_host_number;
+        @display("bgb=1025,631");
     submodules:
         configurator: Ipv4NetworkConfigurator {
             @display("p=61,31");
@@ -24,76 +28,53 @@ network Network
         visualizer: IntegratedCanvasVisualizer {
             @display("p=138,31");
         }
-        radioMedium: Ieee80211ScalarRadioMedium {
-            @display("p=218,34");
-        }
-
         // =====[ Main ]======
         mainrouter: Router {
             @display("p=474,231");
         }
         server: StandardHost {
-            @display("p=536,276");
+            @display("p=473.34,127.33875");
         }
-
         // =====[ Bunker 1 ]======
         bunker1router: Router {
             @display("p=280,231");
         }
-        bunker1host1: StandardHost {
-            @display("p=68,118");
-        }
-        bunker1host2: StandardHost {
-            @display("p=68,231");
-        }
-        bunker1host3: StandardHost {
-            @display("p=68,349");
+        bunker1host[bunker1_host_number]: StandardHost {
+            parameters:
+                @display("p=87.465,230.23875,col,100");
         }
         // =====[ Bunker 2 ]======
         bunker2router: Router {
             @display("p=474,378");
         }
-        bunker2host1: StandardHost {
-            @display("p=372,505");
-        }
-        bunker2host2: StandardHost {
-            @display("p=474,505");
-        }
-        bunker2host3: StandardHost {
-            @display("p=599,505");
+        bunker2host[bunker2_host_number]: StandardHost {
+            parameters:
+                @display("p=473.34,493.92,row,100");
         }
         // =====[ Bunker 3 ]======
         bunker3router: Router {
             @display("p=683,231");
         }
-        bunker3host1: StandardHost {
-            @display("p=844,98");
+        bunker3host[bunker3_host_number]: StandardHost {
+            parameters:
+                @display("p=875.9362,230.23875,col,100");
         }
-        bunker3host2: StandardHost {
-            @display("p=844,231");
-        }
-        bunker3host3: StandardHost {
-            @display("p=836,382");
-        }
-
     connections:
         bunker1router.ethg++ <--> Eth10G <--> mainrouter.ethg++;
         bunker2router.ethg++ <--> Eth10G <--> mainrouter.ethg++;
         bunker3router.ethg++ <--> Eth10G <--> mainrouter.ethg++;
         server.ethg++ <--> Eth10G <--> mainrouter.ethg++;
 
+        for i=0..bunker1_host_number-1 {
+            bunker1host[i].ethg++ <--> Eth10G <--> bunker1router.ethg++;
+        }
 
-        bunker1host1.ethg++ <--> Eth10G <--> bunker1router.ethg++;
-        bunker1host2.ethg++ <--> Eth10G <--> bunker1router.ethg++;
-        bunker1host3.ethg++ <--> Eth10G <--> bunker1router.ethg++;
+        for i=0..bunker2_host_number-1 {
+            bunker2host[i].ethg++ <--> Eth10G <--> bunker2router.ethg++;
+        }
 
-
-        bunker2host1.ethg++ <--> Eth10G <--> bunker2router.ethg++;
-        bunker2host2.ethg++ <--> Eth10G <--> bunker2router.ethg++;
-        bunker2host3.ethg++ <--> Eth10G <--> bunker2router.ethg++;
-
-        bunker3host1.ethg++ <--> Eth10G <--> bunker3router.ethg++;
-        bunker3host2.ethg++ <--> Eth10G <--> bunker3router.ethg++;
-        bunker3host3.ethg++ <--> Eth10G <--> bunker3router.ethg++;
+        for i=0..bunker3_host_number-1 {
+            bunker3host[i].ethg++ <--> Eth10G <--> bunker3router.ethg++;
+        }
 }
 
