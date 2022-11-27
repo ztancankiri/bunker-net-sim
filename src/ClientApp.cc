@@ -21,6 +21,8 @@ void ClientApp::initialize(int stage)
     super::initialize(stage);
 
     if (stage == INITSTAGE_LOCAL) {
+        chunkLength = registerSignal("chunkLength");
+
         const char *possibleSurvivorsStr = par("possibleSurvivors");
         cStringTokenizer tokenizer(possibleSurvivorsStr);
         const char *token;
@@ -126,6 +128,7 @@ void ClientApp::sendTextMessage(std::string receiver)
 
     int packetSize = 20 + intrand(980);
     payload->setChunkLength(B(packetSize));
+    emit(chunkLength, packetSize);
     payload->setType(3);
     payload->setSurvivorName(par("survivorName"));
     payload->setTextMessage("Test Message!");
@@ -186,7 +189,6 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
                 learntFromMessages++;
             }
 
-
             // Add the sender to the address book.
             addressBook[survivorName].ip = remoteAddress;
             addressBook[survivorName].ts = simTime();
@@ -197,13 +199,15 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
             }
         }
 
-
-
-
         EV_INFO << ownName <<"--- CLIENT: TEXT MESSAGE RECEIVED: " << survivorName << endl;
     }
 
     delete pk;
+}
+
+void ClientApp::finish() {
+    recordScalar("chunkLength", chunkLength);
+    super::finish();
 }
 
 } // namespace inet

@@ -37,6 +37,10 @@ class INET_API ClientApp : public UdpBasicAppX
         void sendPacket() override;
         void initialize(int stage) override;
         void socketDataArrived(UdpSocket *socket, Packet *packet) override;
+
+        void finish() override;
+    protected:
+        simsignal_t chunkLength;
 };
 
 } // namespace inet
