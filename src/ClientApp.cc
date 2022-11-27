@@ -123,7 +123,9 @@ void ClientApp::sendTextMessage(std::string receiver)
     packet->addTag<FragmentationReq>()->setDontFragment(true);
 
     const auto& payload = makeShared<BunkerPacket>();
-    payload->setChunkLength(B(20));
+
+    int packetSize = 20 + intrand(980);
+    payload->setChunkLength(B(packetSize));
     payload->setType(3);
     payload->setSurvivorName(par("survivorName"));
     payload->setTextMessage("Test Message!");
