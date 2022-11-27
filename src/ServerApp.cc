@@ -16,6 +16,13 @@ Define_Module(ServerApp);
 void ServerApp::initialize(int stage)
 {
     super::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        successfulLookupCount = 0;
+        unsuccessfulLookupCount = 0;
+        successfulLookup = registerSignal("successfulLookup");
+        unsuccessfulLookup = registerSignal("unsuccessfulLookup");
+    }
 }
 
 void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
@@ -48,6 +55,8 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
             payload->setSurvivorName(survivorName);
             payload->setBunkerId(-1);
             EV_INFO << "--- SERVER: SURVIVOR NOT FOUND: " << survivorName << endl;
+            unsuccessfulLookupCount++;
+            emit(unsuccessfulLookup, unsuccessfulLookupCount);
         }
         else { // Exists
             if (currentTime - survivorDatabase[survivorName].ts > par("heartbeatThreshold")) { // Last heartbeat is too old
@@ -55,12 +64,16 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
                 payload->setSurvivorName(survivorName);
                 payload->setBunkerId(-1);
                 EV_INFO << "--- SERVER: SURVIVOR NOT FOUND (LAST HEARTBEAT TIMEOUT): " << survivorName << endl;
+                unsuccessfulLookupCount++;
+                emit(unsuccessfulLookup, unsuccessfulLookupCount);
             }
             else {  // Survivor Found
                 payload->setSurvivorName(survivorName);
                 payload->setBunkerId(survivorDatabase[survivorName].bunkerId);
                 payload->setIp(survivorDatabase[survivorName].ip);
                 EV_INFO << "--- SERVER: SURVIVOR FOUND: " << survivorName << endl;
+                successfulLookupCount++;
+                emit(successfulLookup, successfulLookupCount);
             }
         }
 
@@ -70,6 +83,12 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     }
 
     delete pk;
+}
+
+void ServerApp::finish() {
+    recordScalar("successfulLookup", successfulLookup);
+    recordScalar("unsuccessfulLookup", unsuccessfulLookup);
+    super::finish();
 }
 
 } /* namespace inet */

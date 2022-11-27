@@ -36,6 +36,4 @@ out/
 bin/
 .metadata/
 .settings/
-simulations/results/
-simulations/run
 src/bunker-net-sim

@@ -21,6 +21,13 @@ class INET_API ServerApp : public UdpBasicAppX {
     protected:
         void initialize(int stage) override;
         void socketDataArrived(UdpSocket *socket, Packet *packet) override;
+        void finish() override;
+
+    protected:
+        int successfulLookupCount = 0;
+        int unsuccessfulLookupCount = 0;
+        simsignal_t successfulLookup;
+        simsignal_t unsuccessfulLookup;
 };
 
 

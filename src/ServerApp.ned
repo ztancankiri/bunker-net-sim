@@ -22,6 +22,12 @@ simple ServerApp like IApp
         @lifecycleSupport;
         double stopOperationExtraTime @unit(s) = default(-1s);    // extra time after lifecycle stop operation finished
         double stopOperationTimeout @unit(s) = default(2s);    // timeout value for lifecycle stop operation
+        
+        @signal[successfulLookup](type="long");
+        @statistic[successfulLookup](title="Successful Lookup Count"; source="successfulLookup"; record=vector; interpolationmode=linear);
+        
+        @signal[unsuccessfulLookup](type="long");
+        @statistic[unsuccessfulLookup](title="Unsuccessful Lookup Count"; source="unsuccessfulLookup"; record=vector; interpolationmode=linear);
     gates:
         input socketIn @labels(UdpControlInfo/up);
         output socketOut @labels(UdpControlInfo/down);

@@ -26,7 +26,7 @@ network Network
             @display("p=61,31");
         }
         visualizer: IntegratedCanvasVisualizer {
-            @display("p=138,31");
+            @display("p=168.49875,30.87");
         }
         // =====[ Main ]======
         mainrouter: Router {
@@ -41,7 +41,7 @@ network Network
         }
         bunker1host[bunker1_host_number]: StandardHost {
             parameters:
-                @display("p=87.465,230.23875,col,100");
+                @display("p=87.465,127.33875,col,100");
         }
         // =====[ Bunker 2 ]======
         bunker2router: Router {
@@ -49,7 +49,7 @@ network Network
         }
         bunker2host[bunker2_host_number]: StandardHost {
             parameters:
-                @display("p=473.34,493.92,row,100");
+                @display("p=279.11624,491.3475,row,100");
         }
         // =====[ Bunker 3 ]======
         bunker3router: Router {
@@ -57,7 +57,7 @@ network Network
         }
         bunker3host[bunker3_host_number]: StandardHost {
             parameters:
-                @display("p=875.9362,230.23875,col,100");
+                @display("p=875.9362,127.33875,col,100");
         }
     connections:
         bunker1router.ethg++ <--> Eth10G <--> mainrouter.ethg++;

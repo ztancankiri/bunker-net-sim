@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for bunker-net-sim
 #
 # This file was generated with the command:
-#  opp_makemake -f -pINET -KINET4_4_PROJ=../../inet4.4 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -linet -lINET$$\(D\)
+#  opp_makemake -f -pINET -KINET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -linet -lINET$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -43,7 +43,7 @@ MSGFILES = \
 SMFILES =
 
 # Other makefile variables (-K)
-INET4_4_PROJ=../../inet4.4
+INET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4
 
 #------------------------------------------------------------------------------
 

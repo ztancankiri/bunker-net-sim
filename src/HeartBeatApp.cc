@@ -41,4 +41,8 @@ void HeartBeatApp::sendPacket()
 
 }
 
+void HeartBeatApp::finish() {
+    super::finish();
+}
+
 } // namespace inet

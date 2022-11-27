@@ -11,6 +11,7 @@ class INET_API HeartBeatApp : public UdpBasicAppX
         typedef UdpBasicAppX super;
     protected:
         void sendPacket() override;
+        void finish() override;
 };
 
 } // namespace inet
