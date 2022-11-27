@@ -18,19 +18,27 @@ Define_Module(HeartBeatApp);
 
 void HeartBeatApp::sendPacket()
 {
-    Packet *packet = new Packet("HeartBeatData");
-    packet->addTag<FragmentationReq>()->setDontFragment(true);
+    int k = intrand(100);
 
-    const auto& payload = makeShared<BunkerPacket>();
-    payload->setChunkLength(B(20));
-    payload->setType(0);
-    payload->setSurvivorName(ownName.c_str());
+    if (k < 50) {
 
-    payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
-    packet->insertAtBack(payload);
+        EV_INFO << "HEARTBEAT REQUEST CREATED BY: " << ownName;
+        Packet *packet = new Packet("HeartBeatData");
+        packet->addTag<FragmentationReq>()->setDontFragment(true);
 
-    emit(packetSentSignal, packet);
-    socket.sendTo(packet, destAddress, destPort);
+        const auto& payload = makeShared<BunkerPacket>();
+        payload->setChunkLength(B(20));
+        payload->setType(0);
+        payload->setSurvivorName(ownName.c_str());
+
+        payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+        packet->insertAtBack(payload);
+
+        emit(packetSentSignal, packet);
+        socket.sendTo(packet, destAddress, destPort);
+    }
+
+
 }
 
 } // namespace inet

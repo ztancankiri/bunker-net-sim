@@ -35,7 +35,7 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         survivorDatabase[survivorName].bunkerId = 0;
         survivorDatabase[survivorName].ip = remoteAddress;
         survivorDatabase[survivorName].ts = simTime();
-        EV_INFO << "--- SERVER: HEARTBEAT RECEIVED: " << survivorName << endl;
+        EV_INFO << "--- SERVER: HEARTBEAT RECEIVED FROM: " << survivorName << endl;
     }
     else if (packetType == 1) { // Lookup Request
         Packet *packet = new Packet("Lookup Response");
@@ -54,7 +54,7 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
                 survivorDatabase.erase(survivorName);
                 payload->setSurvivorName(survivorName);
                 payload->setBunkerId(-1);
-                EV_INFO << "--- SERVER: SURVIVOR NOT FOUND: " << survivorName << endl;
+                EV_INFO << "--- SERVER: SURVIVOR NOT FOUND (LAST HEARTBEAT TIMEOUT): " << survivorName << endl;
             }
             else {  // Survivor Found
                 payload->setSurvivorName(survivorName);

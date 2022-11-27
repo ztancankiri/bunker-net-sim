@@ -16,7 +16,7 @@ simple ServerApp like IApp
         
         double startTime @unit(s) = default(this.sendInterval); // application start time (start of the first packet)
         double stopTime @unit(s) = default(-1s);  // time of finishing sending, -1s means forever
-        volatile double sendInterval @unit(s); // should usually be a random value, e.g. exponential(1)
+        volatile double sendInterval @unit(s) = default(1s); // should usually be a random value, e.g. exponential(1)
 
         @display("i=block/app");
         @lifecycleSupport;

@@ -74,7 +74,7 @@ void ClientApp::possibleSurvivorsInit() {
     }
 
     int size = intrand(hosts.size());
-    EV_INFO << size << endl;
+    EV_INFO << "-------" << ownName << "'s Survivor Search List-------" << endl;
 
     std::shuffle(std::begin(hosts), std::end(hosts), std::random_device());
 
@@ -128,13 +128,6 @@ std::string ClientApp::randomSelectForLookup() {
         survivor = possibleSurvivors[k];
     } while (addressBook.find(survivor) != addressBook.end());
 
-    if (survivor.size() > 0) {
-        EV_INFO << "--- CLIENT: LOOKUP SELECTED: " << survivor << endl;
-    }
-    else {
-        EV_INFO << "--- CLIENT: LOOKUP COULD NOT BE SELECTED" << endl;
-    }
-
     return survivor;
 }
 
@@ -148,7 +141,7 @@ std::string ClientApp::randomSelectForTexting() {
     }
 
     if (survivor.size() > 0) {
-        EV_INFO << "--- CLIENT: TEXT RECEIVER SELECTED: " << survivor << endl;
+        EV_INFO << "----" << "--- CLIENT: TEXT RECEIVER SELECTED: " << survivor << endl;
     }
     else {
         EV_INFO << "--- CLIENT: TEXT RECEIVER COULD NOT BE SELECTED" << endl;
@@ -166,6 +159,7 @@ void ClientApp::sendLookupRequest() {
 }
 
 void ClientApp::sendLookupRequest(std::string survivor) {
+    EV_INFO << "LOOKUP REQUEST: " << ownName << "---->" << survivor << endl;
     Packet *packet = new Packet("Lookup Request");
     packet->addTag<FragmentationReq>()->setDontFragment(true);
 
@@ -196,6 +190,7 @@ void ClientApp::sendTextMessage() {
 
 void ClientApp::sendTextMessage(std::string receiver)
 {
+    EV_INFO << "TEXT MESSAGE SENDING: " << ownName << "---->" << receiver << endl;
     Packet *packet = new Packet("Text Message");
     packet->addTag<FragmentationReq>()->setDontFragment(true);
 
@@ -239,7 +234,7 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 
     if (packetType == 2) {
         if (bunkerId == -1) { // Not Found
-            EV_INFO << "--- CLIENT: SURVIVOR NOT FOUND: " << survivorName << endl;
+            EV_INFO << "LOOKUP RESPONSE RECEIVED BY: " << ownName << ". SURVIVOR: " << survivorName << " IS NOT AT THE BUNKER "<< endl;
         }
         else { // Survivor Found
             addressBook[survivorName].ip = ip;
@@ -250,7 +245,8 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
                 textingSelectionAdded.insert(survivorName);
             }
 
-            EV_INFO << "--- CLIENT: SURVIVOR FOUND: " << survivorName << endl;
+            EV_INFO << "LOOKUP RESPONSE RECEIVED BY: " << ownName << ". SURVIVOR: " << survivorName << " IS AT THE BUNKER "<< endl;
+
             sendTextMessage(survivorName);
         }
     }
@@ -274,7 +270,7 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
             }
         }
 
-        EV_INFO << ownName <<"--- CLIENT: TEXT MESSAGE RECEIVED: " << survivorName << endl;
+        EV_INFO << "TEXT MESSAGE FROM " << survivorName << " RECEIVED BY: " << ownName << endl;
     }
 
     delete pk;
