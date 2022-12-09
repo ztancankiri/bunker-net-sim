@@ -1,4 +1,4 @@
-#include "ClientApp.h"
+#include "UdpClientApp.h"
 
 #include "inet/applications/base/ApplicationPacket_m.h"
 #include "inet/common/ModuleAccess.h"
@@ -17,9 +17,9 @@
 
 namespace inet {
 
-Define_Module(ClientApp);
+Define_Module(UdpClientApp);
 
-void ClientApp::possibleSurvivorsInit() {
+void UdpClientApp::possibleSurvivorsInit() {
     std::string bunker1_host_prefix = std::string(par("bunker1_host_prefix"));
     std::string bunker2_host_prefix = std::string(par("bunker2_host_prefix"));
     std::string bunker3_host_prefix = std::string(par("bunker3_host_prefix"));
@@ -90,7 +90,7 @@ void ClientApp::possibleSurvivorsInit() {
     }
 }
 
-void ClientApp::initialize(int stage)
+void UdpClientApp::initialize(int stage)
 {
     super::initialize(stage);
 
@@ -116,7 +116,7 @@ void ClientApp::initialize(int stage)
     }
 }
 
-std::string ClientApp::randomSelectForLookup() {
+std::string UdpClientApp::randomSelectForLookup() {
     std::string survivor = "";
     do {
         if (possibleSurvivors.size() + learntFromMessages == addressBook.size()) {
@@ -131,7 +131,7 @@ std::string ClientApp::randomSelectForLookup() {
     return survivor;
 }
 
-std::string ClientApp::randomSelectForTexting() {
+std::string UdpClientApp::randomSelectForTexting() {
     std::string survivor = "";
     int size = textingSelection.size();
 
@@ -150,7 +150,7 @@ std::string ClientApp::randomSelectForTexting() {
     return survivor;
 }
 
-void ClientApp::sendLookupRequest() {
+void UdpClientApp::sendLookupRequest() {
     std::string survivor = randomSelectForLookup();
 
     if (survivor.size() > 0) {
@@ -158,7 +158,7 @@ void ClientApp::sendLookupRequest() {
     }
 }
 
-void ClientApp::sendLookupRequest(std::string survivor) {
+void UdpClientApp::sendLookupRequest(std::string survivor) {
     EV_INFO << "LOOKUP REQUEST: " << ownName << "---->" << survivor << endl;
     Packet *packet = new Packet("Lookup Request");
     packet->addTag<FragmentationReq>()->setDontFragment(true);
@@ -176,7 +176,7 @@ void ClientApp::sendLookupRequest(std::string survivor) {
     socket.sendTo(packet, destAddress, destPort);
 }
 
-void ClientApp::sendTextMessage() {
+void UdpClientApp::sendTextMessage() {
     std::string survivor = randomSelectForTexting();
     if (survivor.size() > 0) {
         if (addressBook.find(survivor) != addressBook.end()) { // Survivor exists in AdressBook
@@ -188,7 +188,7 @@ void ClientApp::sendTextMessage() {
     }
 }
 
-void ClientApp::sendTextMessage(std::string receiver)
+void UdpClientApp::sendTextMessage(std::string receiver)
 {
     EV_INFO << "TEXT MESSAGE SENDING: " << ownName << "---->" << receiver << endl;
     Packet *packet = new Packet("Text Message");
@@ -211,7 +211,7 @@ void ClientApp::sendTextMessage(std::string receiver)
 
 }
 
-void ClientApp::sendPacket()
+void UdpClientApp::sendPacket()
 {
     int k = intrand(100);
 
@@ -223,7 +223,7 @@ void ClientApp::sendPacket()
     }
 }
 
-void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
+void UdpClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
     auto data = pk->peekData<BunkerPacket>();
 
@@ -276,7 +276,7 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     delete pk;
 }
 
-void ClientApp::finish() {
+void UdpClientApp::finish() {
     recordScalar("chunkLength", chunkLength);
     super::finish();
 }

@@ -1,5 +1,3 @@
-#include "HeartBeatApp.h"
-
 #include "inet/applications/base/ApplicationPacket_m.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/TagBase_m.h"
@@ -11,12 +9,13 @@
 #include "inet/transportlayer/common/L4PortTag_m.h"
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
 #include "BunkerPacket_m.h"
+#include "UdpHeartBeatApp.h"
 
 namespace inet {
 
-Define_Module(HeartBeatApp);
+Define_Module(UdpHeartBeatApp);
 
-void HeartBeatApp::sendPacket()
+void UdpHeartBeatApp::sendPacket()
 {
     int k = intrand(100);
 
@@ -41,7 +40,7 @@ void HeartBeatApp::sendPacket()
 
 }
 
-void HeartBeatApp::finish() {
+void UdpHeartBeatApp::finish() {
     super::finish();
 }
 

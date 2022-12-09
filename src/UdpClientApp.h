@@ -1,5 +1,5 @@
-#ifndef __INET_CLIENTAPP_H
-#define __INET_CLIENTAPP_H
+#ifndef __INET_UDPCLIENTAPP_H
+#define __INET_UDPCLIENTAPP_H
 
 #include <unordered_map>
 #include "UdpBasicAppX.h"
@@ -7,7 +7,7 @@
 
 namespace inet {
 
-class INET_API ClientApp : public UdpBasicAppX
+class INET_API UdpClientApp : public UdpBasicAppX
 {
     protected:
         typedef UdpBasicAppX super;

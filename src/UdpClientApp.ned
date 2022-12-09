@@ -2,7 +2,7 @@ package bunker_net_sim;
 
 import inet.applications.contract.IApp;
 
-simple ClientApp like IApp
+simple UdpClientApp like IApp
 {
     parameters:        
         int bunker1_host_number;

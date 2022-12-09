@@ -1,11 +1,11 @@
-#ifndef __INET_HEARTBEATAPP_H
-#define __INET_HEARTBEATAPP_H
+#ifndef __INET_UDPHEARTBEATAPP_H
+#define __INET_UDPHEARTBEATAPP_H
 
 #include "UdpBasicAppX.h"
 
 namespace inet {
 
-class INET_API HeartBeatApp : public UdpBasicAppX
+class INET_API UdpHeartBeatApp : public UdpBasicAppX
 {
     protected:
         typedef UdpBasicAppX super;

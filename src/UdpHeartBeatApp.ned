@@ -2,7 +2,7 @@ package bunker_net_sim;
 
 import inet.applications.contract.IApp;
 
-simple HeartBeatApp like IApp
+simple UdpHeartBeatApp like IApp
 {
     parameters:
 		string clockModule = default(""); // relative path of a module that implements IClock; optional

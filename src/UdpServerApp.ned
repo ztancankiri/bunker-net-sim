@@ -2,7 +2,7 @@ package bunker_net_sim;
 
 import inet.applications.contract.IApp;
 
-simple ServerApp like IApp
+simple UdpServerApp like IApp
 {
     parameters:
         int heartbeatThreshold;

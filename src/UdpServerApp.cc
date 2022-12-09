@@ -1,5 +1,3 @@
-#include "ServerApp.h"
-
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/Simsignals.h"
 #include "inet/transportlayer/common/L4PortTag_m.h"
@@ -8,12 +6,13 @@
 #include "inet/applications/base/ApplicationPacket_m.h"
 #include "inet/common/TimeTag_m.h"
 #include "BunkerPacket_m.h"
+#include "UdpServerApp.h"
 
 namespace inet {
 
-Define_Module(ServerApp);
+Define_Module(UdpServerApp);
 
-void ServerApp::initialize(int stage)
+void UdpServerApp::initialize(int stage)
 {
     super::initialize(stage);
 
@@ -25,7 +24,7 @@ void ServerApp::initialize(int stage)
     }
 }
 
-void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
+void UdpServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
     L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
     int srcPort = pk->getTag<L4PortInd>()->getSrcPort();
@@ -85,7 +84,7 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     delete pk;
 }
 
-void ServerApp::finish() {
+void UdpServerApp::finish() {
     recordScalar("successfulLookup", successfulLookup);
     recordScalar("unsuccessfulLookup", unsuccessfulLookup);
     super::finish();
