@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+.DS_Store
 
 # Compiled Object files
 *.slo
@@ -37,3 +38,9 @@ bin/
 .metadata/
 .settings/
 src/bunker-net-sim
+*.sca
+*.vci
+*.vec
+*.csv
+*.json
+.cmdenv-log

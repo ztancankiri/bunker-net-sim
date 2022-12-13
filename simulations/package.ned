@@ -2,13 +2,10 @@ package bunker_net_sim.simulations;
 
 
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
-import inet.node.wireless.AccessPoint;
 import inet.visualizer.canvas.integrated.IntegratedCanvasVisualizer;
-import inet.physicallayer.wireless.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
-import inet.node.ethernet.Eth10G;
+import ned.DatarateChannel;
 import inet.node.inet.Router;
 import inet.node.inet.StandardHost;
-import inet.node.inet.WirelessHost;
 
 @license(LGPL);
 //
@@ -20,7 +17,16 @@ network Network
         int bunker1_host_number;
         int bunker2_host_number;
         int bunker3_host_number;
+        double cableLength @unit(m);
+        double cableBandwidth @unit(bps);
         @display("bgb=1025,631");
+        
+    types:
+        channel cable extends DatarateChannel
+        {
+            delay = replaceUnit(parent.cableLength / 2e8, "s");
+            datarate = parent.cableBandwidth;
+        }
     submodules:
         configurator: Ipv4NetworkConfigurator {
             @display("p=61,31");
@@ -60,21 +66,21 @@ network Network
                 @display("p=875.9362,127.33875,col,100");
         }
     connections:
-        bunker1router.ethg++ <--> Eth10G <--> mainrouter.ethg++;
-        bunker2router.ethg++ <--> Eth10G <--> mainrouter.ethg++;
-        bunker3router.ethg++ <--> Eth10G <--> mainrouter.ethg++;
-        server.ethg++ <--> Eth10G <--> mainrouter.ethg++;
+        bunker1router.ethg++ <--> cable <--> mainrouter.ethg++;
+        bunker2router.ethg++ <--> cable <--> mainrouter.ethg++;
+        bunker3router.ethg++ <--> cable <--> mainrouter.ethg++;
+        server.ethg++ <--> cable <--> mainrouter.ethg++;
 
         for i=0..bunker1_host_number-1 {
-            bunker1host[i].ethg++ <--> Eth10G <--> bunker1router.ethg++;
+            bunker1host[i].ethg++ <--> cable <--> bunker1router.ethg++;
         }
 
         for i=0..bunker2_host_number-1 {
-            bunker2host[i].ethg++ <--> Eth10G <--> bunker2router.ethg++;
+            bunker2host[i].ethg++ <--> cable <--> bunker2router.ethg++;
         }
 
         for i=0..bunker3_host_number-1 {
-            bunker3host[i].ethg++ <--> Eth10G <--> bunker3router.ethg++;
+            bunker3host[i].ethg++ <--> cable <--> bunker3router.ethg++;
         }
 }
 
