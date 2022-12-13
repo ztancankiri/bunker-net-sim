@@ -20,42 +20,18 @@ namespace inet {
 Define_Module(ClientApp);
 
 void ClientApp::possibleSurvivorsInit() {
-    std::string bunker1_host_prefix = std::string(par("bunker1_host_prefix"));
-    std::string bunker2_host_prefix = std::string(par("bunker2_host_prefix"));
-    std::string bunker3_host_prefix = std::string(par("bunker3_host_prefix"));
-
-    int bunker1_host_number = par("bunker1_host_number");
-    int bunker2_host_number = par("bunker2_host_number");
-    int bunker3_host_number = par("bunker3_host_number");
+    std::string host_prefix = std::string(par("host_prefix"));
+    int bunker_number = par("bunker_number");
+    int host_number = par("host_number");
     int nonExist_host_number = par("nonExist_host_number");
+
+    int total_host_number = bunker_number * host_number;
 
     std::vector<std::string> hosts;
 
-    for (int i = 0; i < bunker1_host_number; i++) {
+    for (int i = 0; i < total_host_number; i++) {
         std::stringstream tmp;
-        tmp << bunker1_host_prefix << "[" << i << "]";
-        std::string result;
-        tmp >> result;
-
-        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
-            hosts.push_back(result);
-        }
-    }
-
-    for (int i = 0; i < bunker2_host_number; i++) {
-        std::stringstream tmp;
-        tmp << bunker2_host_prefix << "[" << i << "]";
-        std::string result;
-        tmp >> result;
-
-        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
-            hosts.push_back(result);
-        }
-    }
-
-    for (int i = 0; i < bunker3_host_number; i++) {
-        std::stringstream tmp;
-        tmp << bunker3_host_prefix << "[" << i << "]";
+        tmp << host_prefix << "[" << i << "]";
         std::string result;
         tmp >> result;
 
@@ -96,22 +72,7 @@ void ClientApp::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL) {
         chunkLength = registerSignal("chunkLength");
-
-//        const char *possibleSurvivorsStr = par("possibleSurvivors");
-//        cStringTokenizer tokenizer(possibleSurvivorsStr);
-//        const char *token;
-//
-//        while ((token = tokenizer.nextToken()) != nullptr) {
-//            possibleSurvivors.push_back(token);
-//
-//            if (textingSelectionAdded.find(token) == textingSelectionAdded.end()) {
-//                textingSelection.push_back(token);
-//                textingSelectionAdded.insert(token);
-//            }
-//        }
-
         possibleSurvivorsInit();
-
         learntFromMessages = 0;
     }
 }

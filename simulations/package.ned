@@ -1,6 +1,5 @@
 package bunker_net_sim.simulations;
 
-
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.visualizer.canvas.integrated.IntegratedCanvasVisualizer;
 import ned.DatarateChannel;
@@ -8,22 +7,16 @@ import inet.node.inet.Router;
 import inet.node.inet.StandardHost;
 
 @license(LGPL);
-//
-// TODO documentation
-//
-network Network
-{
+network Network {
     parameters:
-        int bunker1_host_number;
-        int bunker2_host_number;
-        int bunker3_host_number;
+        int bunker_number;
+        int host_number;
         double cableLength @unit(m);
         double cableBandwidth @unit(bps);
-        @display("bgb=1025,631");
+        @display("bgb=1400,700");
         
     types:
-        channel cable extends DatarateChannel
-        {
+        channel cable extends DatarateChannel {
             delay = replaceUnit(parent.cableLength / 2e8, "s");
             datarate = parent.cableBandwidth;
         }
@@ -36,51 +29,29 @@ network Network
         }
         // =====[ Main ]======
         mainrouter: Router {
-            @display("p=474,231");
+            @display("p=575,231");
         }
         server: StandardHost {
-            @display("p=473.34,127.33875");
+            @display("p=575,130");
         }
-        // =====[ Bunker 1 ]======
-        bunker1router: Router {
-            @display("p=280,231");
-        }
-        bunker1host[bunker1_host_number]: StandardHost {
+        
+        bunkerrouter[bunker_number]: Router {
             parameters:
-                @display("p=87.465,127.33875,col,100");
+                @display("p=475,350,row,100");
         }
-        // =====[ Bunker 2 ]======
-        bunker2router: Router {
-            @display("p=474,378");
-        }
-        bunker2host[bunker2_host_number]: StandardHost {
+        
+        bunkerhost[bunker_number * host_number]: StandardHost {
             parameters:
-                @display("p=279.11624,491.3475,row,100");
-        }
-        // =====[ Bunker 3 ]======
-        bunker3router: Router {
-            @display("p=683,231");
-        }
-        bunker3host[bunker3_host_number]: StandardHost {
-            parameters:
-                @display("p=875.9362,127.33875,col,100");
+                @display("p=100,550,row,100");
         }
     connections:
-        bunker1router.ethg++ <--> cable <--> mainrouter.ethg++;
-        bunker2router.ethg++ <--> cable <--> mainrouter.ethg++;
-        bunker3router.ethg++ <--> cable <--> mainrouter.ethg++;
         server.ethg++ <--> cable <--> mainrouter.ethg++;
-
-        for i=0..bunker1_host_number-1 {
-            bunker1host[i].ethg++ <--> cable <--> bunker1router.ethg++;
+        
+        for i=0..bunker_number-1 {
+            bunkerrouter[i].ethg++ <--> cable <--> mainrouter.ethg++;
         }
-
-        for i=0..bunker2_host_number-1 {
-            bunker2host[i].ethg++ <--> cable <--> bunker2router.ethg++;
-        }
-
-        for i=0..bunker3_host_number-1 {
-            bunker3host[i].ethg++ <--> cable <--> bunker3router.ethg++;
+        
+        for i=0..bunker_number-1, for j=0..host_number-1 {
+            bunkerrouter[i].ethg++ <--> cable <--> bunkerhost[host_number * i + j].ethg++;
         }
 }
-
