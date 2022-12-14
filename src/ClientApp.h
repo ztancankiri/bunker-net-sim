@@ -41,6 +41,7 @@ class INET_API ClientApp : public UdpBasicAppX
         void finish() override;
     protected:
         simsignal_t chunkLength;
+        simsignal_t endtoenddelay;
 };
 
 } // namespace inet

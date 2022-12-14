@@ -28,6 +28,8 @@ class INET_API ServerApp : public UdpBasicAppX {
         int unsuccessfulLookupCount = 0;
         simsignal_t successfulLookup;
         simsignal_t unsuccessfulLookup;
+
+        simsignal_t endtoenddelay;
 };
 
 

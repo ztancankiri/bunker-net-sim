@@ -31,7 +31,8 @@ simple ClientApp like IApp
         @signal[chunkLength](type="long");
         @statistic[chunkLength](title="Chunk Length"; source="chunkLength"; record=vector; interpolationmode=none);
         
-        
+        @signal[endtoenddelay](type="long");
+        @statistic[endtoenddelay](title="End-to-end Delay"; source="endtoenddelay"; record=vector; interpolationmode=linear);
         
         @signal[packetSent](type=inet::Packet);
         @signal[packetReceived](type=inet::Packet);

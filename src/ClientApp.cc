@@ -74,6 +74,8 @@ void ClientApp::initialize(int stage)
         chunkLength = registerSignal("chunkLength");
         possibleSurvivorsInit();
         learntFromMessages = 0;
+
+        endtoenddelay = registerSignal("endtoenddelay");
     }
 }
 
@@ -187,6 +189,8 @@ void ClientApp::sendPacket()
 
 void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
+    emit(endtoenddelay, simTime() - pk->getCreationTime());
+
     emit(packetReceivedSignal, pk);
     numReceived++;
 

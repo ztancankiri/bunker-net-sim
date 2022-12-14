@@ -22,11 +22,15 @@ void ServerApp::initialize(int stage)
         unsuccessfulLookupCount = 0;
         successfulLookup = registerSignal("successfulLookup");
         unsuccessfulLookup = registerSignal("unsuccessfulLookup");
+
+        endtoenddelay = registerSignal("endtoenddelay");
     }
 }
 
 void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
+    emit(endtoenddelay, simTime() - pk->getCreationTime());
+
     emit(packetReceivedSignal, pk);
     numReceived++;
 

@@ -29,6 +29,8 @@ simple ServerApp like IApp
         @signal[unsuccessfulLookup](type="long");
         @statistic[unsuccessfulLookup](title="Unsuccessful Lookup Count"; source="unsuccessfulLookup"; record=vector; interpolationmode=linear);
         
+        @signal[endtoenddelay](type="long");
+        @statistic[endtoenddelay](title="End-to-end Delay"; source="endtoenddelay"; record=vector; interpolationmode=linear);
         
         @signal[packetSent](type=inet::Packet);
         @signal[packetReceived](type=inet::Packet);
