@@ -135,6 +135,7 @@ void ClientApp::sendLookupRequest(std::string survivor) {
 
     emit(packetSentSignal, packet);
     socket.sendTo(packet, destAddress, destPort);
+    numSent++;
 }
 
 void ClientApp::sendTextMessage() {
@@ -169,7 +170,7 @@ void ClientApp::sendTextMessage(std::string receiver)
 
     emit(packetSentSignal, packet);
     socket.sendTo(packet, addressBook[receiver].ip, 5555);
-
+    numSent++;
 }
 
 void ClientApp::sendPacket()
@@ -186,6 +187,9 @@ void ClientApp::sendPacket()
 
 void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
+    emit(packetReceivedSignal, pk);
+    numReceived++;
+
     auto data = pk->peekData<BunkerPacket>();
 
     auto packetType = data->getType();

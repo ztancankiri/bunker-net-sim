@@ -36,9 +36,8 @@ void HeartBeatApp::sendPacket()
 
         emit(packetSentSignal, packet);
         socket.sendTo(packet, destAddress, destPort);
+        numSent++;
     }
-
-
 }
 
 void HeartBeatApp::finish() {

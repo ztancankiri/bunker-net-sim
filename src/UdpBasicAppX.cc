@@ -38,6 +38,12 @@ void UdpBasicAppX::initialize(int stage)
         }
 
         selfMsg = new ClockEvent("sendTimer");
+
+        // statistics
+        numSent = 0;
+        numReceived = 0;
+        WATCH(numSent);
+        WATCH(numReceived);
     }
 
     if (stage == INITSTAGE_LAST) {
@@ -50,6 +56,9 @@ void UdpBasicAppX::initialize(int stage)
 
 void UdpBasicAppX::finish()
 {
+    // statistics
+    recordScalar("packets sent", numSent);
+    recordScalar("packets received", numReceived);
     ApplicationBase::finish();
 }
 

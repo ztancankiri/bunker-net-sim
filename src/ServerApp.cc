@@ -27,6 +27,9 @@ void ServerApp::initialize(int stage)
 
 void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
+    emit(packetReceivedSignal, pk);
+    numReceived++;
+
     L3Address remoteAddress = pk->getTag<L3AddressInd>()->getSrcAddress();
     int srcPort = pk->getTag<L4PortInd>()->getSrcPort();
     pk->clearTags();
@@ -78,8 +81,10 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         }
 
         packet->insertAtBack(payload);
-        emit(packetSentSignal, packet);
         socket->sendTo(packet, remoteAddress, srcPort);
+
+        emit(packetSentSignal, packet);
+        numSent++;
     }
 
     delete pk;

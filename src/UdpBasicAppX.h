@@ -31,6 +31,10 @@ class INET_API UdpBasicAppX : public ClockUserModuleMixin<ApplicationBase>, publ
 
     UdpSocket socket;
     ClockEvent *selfMsg = nullptr;
+
+    // statistics
+    int numSent = 0;
+    int numReceived = 0;
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void initialize(int stage) override;
