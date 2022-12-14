@@ -12,8 +12,8 @@ import time
 scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
 INET_path = os.path.join(scavetool_path.replace('/bin/opp_scavetool', ''), 'samples', 'inet4.4')
 
-if not os.path.exists('results'):
-    os.makedirs('results')
+if not os.path.exists('./simulations/results'):
+    os.makedirs('./simulations/results')
 
 with open('./simulations/omnetpp.ini') as f:
     omnetINI = f.read()
@@ -180,10 +180,10 @@ for config in config_list:
     with open('./simulations/results/'+ config + '.clean.vec.json', 'w') as f:
         f.write(json.dumps(vectors, indent = 4))
 
-    if not os.path.exists('plots'):
-        os.makedirs('plots')
+    if not os.path.exists('./simulations/results/plots'):
+        os.makedirs('./simulations/results/plots')
 
-    config_folder = os.path.join('plots', config)
+    config_folder = os.path.join('./simulations/results/plots', config)
     if os.path.exists(config_folder):
         shutil.rmtree(config_folder)
 
