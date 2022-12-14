@@ -1,17 +1,17 @@
-file 5234418 1671037506                                         
+file 5247525 1671048331                                         
 version 3
-run General-0-20221214-18:05:06-81734
-attr configname General
-attr datetime 20221214-18:05:06
-attr datetimef 20221214-180506
-attr experiment General
+run routerBufferCapacity_4-0-20221214-21:05:30-92657
+attr configname routerBufferCapacity_4
+attr datetime 20221214-21:05:30
+attr datetimef 20221214-210530
+attr experiment routerBufferCapacity_4
 attr inifile ./simulations/omnetpp.ini
 attr iterationvars "$bnum=int(uniform(2, 5)), $hnum=int(uniform(2, 5)), $xnum=int(uniform(1, 2))"
 attr iterationvarsd bnum=int(uniform(2,_5))/hnum=int(uniform(2,_5))/xnum=int(uniform(1,_2))
 attr iterationvarsf bnum=int(uniform(2,_5)),hnum=int(uniform(2,_5)),xnum=int(uniform(1,_2))-
 attr measurement "$bnum=int(uniform(2, 5)), $hnum=int(uniform(2, 5)), $xnum=int(uniform(1, 2))"
 attr network Network
-attr processid 81734
+attr processid 92657
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -21,6 +21,7 @@ itervar bnum "int(uniform(2, 5))"
 itervar hnum "int(uniform(2, 5))"
 itervar xnum "int(uniform(1, 2))"
 config image-path ../../omnetpp-6.0.1/samples/inet4.4/images
+config *.*router.eth[*].queue.packetCapacity 4
 config network Network
 config sim-time-limit 300s
 config output-scalar-file results/scalars.sca
@@ -34,7 +35,7 @@ config *.configurator.config "xmldoc(\"config.xml\")"
 config *.visualizer.interfaceTableVisualizer.displayInterfaceTables true
 config *.visualizer.interfaceTableVisualizer.nodeFilter "\"not (*router*)\""
 config *.cableBandwidth 100Mbps
-config *.cableLength 20km
+config *.cableLength 2km
 config *.cableBandwidth.param-record-as-scalar true
 config *.cableLength.param-record-as-scalar true
 config *.*.ipv4.arp.typename GlobalArp
@@ -1254,1041 +1255,1042 @@ attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 217 Network.server.app[0] successfulLookup:vector ETV
+vector 217 Network.mainrouter.eth[1].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 218 Network.mainrouter.eth[1].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 219 Network.mainrouter.eth[1].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 220 Network.mainrouter.eth[1].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 221 Network.mainrouter.eth[1].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 222 Network.mainrouter.eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 223 Network.mainrouter.eth[1].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 224 Network.mainrouter.eth[1].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 225 Network.mainrouter.eth[1].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 226 Network.mainrouter.eth[3].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 227 Network.mainrouter.eth[3].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 228 Network.mainrouter.eth[3].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 229 Network.mainrouter.eth[3].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 230 Network.mainrouter.eth[3].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 231 Network.mainrouter.eth[3].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 232 Network.mainrouter.eth[3].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 233 Network.mainrouter.eth[3].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 234 Network.bunkerrouter[0].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 235 Network.bunkerrouter[0].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 236 Network.bunkerrouter[0].eth[1].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 237 Network.bunkerrouter[0].eth[1].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 238 Network.bunkerrouter[0].eth[1].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 239 Network.bunkerrouter[0].eth[1].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 240 Network.bunkerrouter[0].eth[1].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 241 Network.bunkerrouter[0].eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 242 Network.bunkerrouter[0].eth[1].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 243 Network.bunkerrouter[0].eth[1].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 244 Network.mainrouter.eth[3].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 245 Network.bunkerrouter[0].eth[1].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 246 Network.bunkerrouter[2].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 247 Network.bunkerrouter[2].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 248 Network.bunkerrouter[2].eth[3].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 249 Network.bunkerrouter[2].eth[3].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 250 Network.bunkerrouter[2].eth[3].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 251 Network.bunkerrouter[2].eth[3].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 252 Network.bunkerrouter[2].eth[3].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 253 Network.bunkerrouter[2].eth[3].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 254 Network.bunkerrouter[2].eth[3].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 255 Network.bunkerrouter[2].eth[3].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 256 Network.bunkerhost[0].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 257 Network.bunkerhost[0].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 258 Network.bunkerhost[0].ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 259 Network.bunkerhost[0].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 260 Network.bunkerhost[0].app[1] endtoenddelay:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source endtoenddelay
+attr title "End-to-end Delay"
+vector 261 Network.bunkerhost[0].app[1] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 262 Network.bunkerrouter[2].eth[3].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 263 Network.bunkerrouter[0].eth[4].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 264 Network.bunkerrouter[0].eth[4].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 265 Network.bunkerrouter[0].eth[4].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 266 Network.bunkerrouter[0].eth[4].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 267 Network.bunkerrouter[0].eth[4].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 268 Network.bunkerrouter[0].eth[4].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 269 Network.bunkerrouter[0].eth[4].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 270 Network.bunkerrouter[0].eth[4].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 271 Network.bunkerrouter[0].eth[4].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 272 Network.bunkerhost[10].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 273 Network.bunkerhost[10].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 274 Network.bunkerhost[10].ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 275 Network.bunkerhost[10].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 276 Network.bunkerhost[10].app[1] endtoenddelay:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source endtoenddelay
+attr title "End-to-end Delay"
+vector 277 Network.bunkerhost[10].app[1] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 278 Network.bunkerhost[3].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 279 Network.bunkerhost[3].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 280 Network.bunkerhost[3].ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 281 Network.bunkerhost[3].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 282 Network.bunkerhost[3].app[1] endtoenddelay:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source endtoenddelay
+attr title "End-to-end Delay"
+vector 283 Network.bunkerhost[3].app[1] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 284 Network.bunkerhost[0].app[0] throughput:vector ETV
+attr recordingmode vector
+attr source throughput(packetSent)
+attr title throughput
+attr unit bps
+vector 285 Network.bunkerhost[0].app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 286 Network.bunkerhost[1].app[1] throughput:vector ETV
+attr recordingmode vector
+attr source throughput(packetSent)
+attr title throughput
+attr unit bps
+vector 287 Network.bunkerhost[1].app[1] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 288 Network.bunkerhost[2].app[1] throughput:vector ETV
+attr recordingmode vector
+attr source throughput(packetSent)
+attr title throughput
+attr unit bps
+vector 289 Network.bunkerhost[2].app[1] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 290 Network.bunkerhost[1].udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 291 Network.bunkerhost[1].ethernet encapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source encapPk
+attr title "packets encapsulated, packetBytes"
+vector 292 Network.bunkerhost[1].eth[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 293 Network.bunkerhost[1].eth[0].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 294 Network.bunkerhost[1].eth[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 295 Network.bunkerhost[1].eth[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 296 Network.bunkerhost[1].eth[0].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 297 Network.bunkerhost[1].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 298 Network.bunkerhost[1].eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 299 Network.bunkerhost[1].eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 300 Network.bunkerhost[1].eth[0].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 301 Network.bunkerrouter[0].eth[2].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 302 Network.bunkerrouter[0].eth[2].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 303 Network.server.app[0] successfulLookup:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source successfulLookup
 attr title "Successful Lookup Count"
-vector 218 Network.mainrouter.eth[1].queue incomingPacketLengths:vector ETV
+vector 304 Network.bunkerrouter[0].eth[2].queue incomingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPushStarted)
 attr title "incoming packet lengths"
 attr unit b
-vector 219 Network.mainrouter.eth[1].queue incomingDataRate:vector ETV
+vector 305 Network.bunkerrouter[0].eth[2].queue incomingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPushStarted)
 attr title "incoming datarate"
 attr unit bps
-vector 220 Network.mainrouter.eth[1].queue queueingTime:vector ETV
+vector 306 Network.bunkerrouter[0].eth[2].queue queueingTime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source queueingTime(packetPulled)
 attr title "queueing times"
 attr unit s
-vector 221 Network.mainrouter.eth[1].queue outgoingPacketLengths:vector ETV
+vector 307 Network.bunkerrouter[0].eth[2].queue outgoingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPulled)
 attr title "outgoing packet lengths"
 attr unit b
-vector 222 Network.mainrouter.eth[1].queue outgoingDataRate:vector ETV
+vector 308 Network.bunkerrouter[0].eth[2].queue outgoingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPulled)
 attr title "outgoing datarate"
 attr unit bps
-vector 223 Network.mainrouter.eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
+vector 309 Network.bunkerrouter[0].eth[2].mac packetReceivedFromUpper:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceivedFromUpper
 attr title "packet bytes from higher layer, packetBytes"
-vector 224 Network.mainrouter.eth[1].queue queueLength:vector ETV
+vector 310 Network.bunkerrouter[0].eth[2].queue queueLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
 attr title "queue length"
 attr unit pk
-vector 225 Network.mainrouter.eth[1].queue queueBitLength:vector ETV
+vector 311 Network.bunkerrouter[0].eth[2].queue queueBitLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
 attr title "queue bit length"
 attr unit b
-vector 226 Network.mainrouter.eth[1].mac txPk:vector(packetBytes) ETV
+vector 312 Network.bunkerrouter[0].eth[2].mac txPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToLower
 attr title "packets transmitted, packetBytes"
-vector 227 Network.mainrouter.eth[3].queue incomingPacketLengths:vector ETV
+vector 313 Network.bunkerrouter[0].eth[3].queue incomingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPushStarted)
 attr title "incoming packet lengths"
 attr unit b
-vector 228 Network.mainrouter.eth[3].queue incomingDataRate:vector ETV
+vector 314 Network.bunkerrouter[0].eth[3].queue incomingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPushStarted)
 attr title "incoming datarate"
 attr unit bps
-vector 229 Network.mainrouter.eth[3].queue queueingTime:vector ETV
+vector 315 Network.bunkerrouter[0].eth[3].queue queueingTime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source queueingTime(packetPulled)
 attr title "queueing times"
 attr unit s
-vector 230 Network.mainrouter.eth[3].queue outgoingPacketLengths:vector ETV
+vector 316 Network.bunkerrouter[0].eth[3].queue outgoingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPulled)
 attr title "outgoing packet lengths"
 attr unit b
-vector 231 Network.mainrouter.eth[3].queue outgoingDataRate:vector ETV
+vector 317 Network.bunkerrouter[0].eth[3].queue outgoingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPulled)
 attr title "outgoing datarate"
 attr unit bps
-vector 232 Network.mainrouter.eth[3].mac packetReceivedFromUpper:vector(packetBytes) ETV
+vector 318 Network.bunkerrouter[0].eth[3].mac packetReceivedFromUpper:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceivedFromUpper
 attr title "packet bytes from higher layer, packetBytes"
-vector 233 Network.mainrouter.eth[3].queue queueLength:vector ETV
+vector 319 Network.bunkerrouter[0].eth[3].queue queueLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
 attr title "queue length"
 attr unit pk
-vector 234 Network.mainrouter.eth[3].queue queueBitLength:vector ETV
+vector 320 Network.bunkerrouter[0].eth[3].queue queueBitLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
 attr title "queue bit length"
 attr unit b
-vector 235 Network.mainrouter.eth[3].mac txPk:vector(packetBytes) ETV
+vector 321 Network.bunkerrouter[0].eth[3].mac txPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToLower
 attr title "packets transmitted, packetBytes"
-vector 236 Network.bunkerrouter[0].eth[0].mac rxPkOk:vector(packetBytes) ETV
+vector 322 Network.bunkerhost[1].eth[0].mac rxPkOk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source rxPkOk
 attr title "packets received OK, packetBytes"
-vector 237 Network.bunkerrouter[0].eth[0].mac passedUpPk:vector(packetBytes) ETV
+vector 323 Network.bunkerhost[1].eth[0].mac passedUpPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 238 Network.bunkerrouter[0].eth[1].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 239 Network.bunkerrouter[0].eth[1].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 240 Network.bunkerrouter[0].eth[1].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 241 Network.bunkerrouter[0].eth[1].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 242 Network.bunkerrouter[0].eth[1].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 243 Network.bunkerrouter[0].eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 244 Network.bunkerrouter[0].eth[1].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 245 Network.bunkerrouter[0].eth[1].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 246 Network.bunkerrouter[0].eth[1].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 247 Network.bunkerrouter[2].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 248 Network.bunkerrouter[2].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 249 Network.bunkerrouter[2].eth[3].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 250 Network.bunkerrouter[2].eth[3].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 251 Network.bunkerrouter[2].eth[3].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 252 Network.bunkerrouter[2].eth[3].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 253 Network.bunkerrouter[2].eth[3].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 254 Network.bunkerrouter[2].eth[3].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 255 Network.bunkerrouter[2].eth[3].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 256 Network.bunkerrouter[2].eth[3].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 257 Network.bunkerrouter[2].eth[3].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 258 Network.bunkerrouter[0].eth[4].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 259 Network.bunkerrouter[0].eth[4].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 260 Network.bunkerrouter[0].eth[4].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 261 Network.bunkerrouter[0].eth[4].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 262 Network.bunkerrouter[0].eth[4].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 263 Network.bunkerrouter[0].eth[4].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 264 Network.bunkerrouter[0].eth[4].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 265 Network.bunkerrouter[0].eth[4].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 266 Network.bunkerrouter[0].eth[4].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 267 Network.bunkerhost[0].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 268 Network.bunkerhost[0].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 269 Network.bunkerhost[0].ethernet decapPk:vector(packetBytes) ETV
+vector 324 Network.bunkerhost[1].ethernet decapPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source decapPk
 attr title "packets decapsulated, packetBytes"
-vector 270 Network.bunkerhost[0].udp packetReceived:vector(packetBytes) ETV
+vector 325 Network.bunkerhost[1].udp packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 271 Network.bunkerhost[0].app[1] endtoenddelay:vector ETV
+vector 326 Network.bunkerhost[1].app[1] endtoenddelay:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source endtoenddelay
 attr title "End-to-end Delay"
-vector 272 Network.bunkerhost[0].app[1] packetReceived:vector(packetBytes) ETV
+vector 327 Network.bunkerhost[1].app[1] packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 273 Network.bunkerhost[10].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 274 Network.bunkerhost[10].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 275 Network.bunkerhost[10].ethernet decapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source decapPk
-attr title "packets decapsulated, packetBytes"
-vector 276 Network.bunkerhost[10].udp packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 277 Network.bunkerhost[10].app[1] endtoenddelay:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source endtoenddelay
-attr title "End-to-end Delay"
-vector 278 Network.bunkerhost[10].app[1] packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 279 Network.bunkerhost[3].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 280 Network.bunkerhost[3].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 281 Network.bunkerhost[3].ethernet decapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source decapPk
-attr title "packets decapsulated, packetBytes"
-vector 282 Network.bunkerhost[3].udp packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 283 Network.bunkerhost[3].app[1] endtoenddelay:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source endtoenddelay
-attr title "End-to-end Delay"
-vector 284 Network.bunkerhost[3].app[1] packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 285 Network.bunkerhost[3].app[1] chunkLength:vector ETV
+vector 328 Network.bunkerhost[1].app[1] chunkLength:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source chunkLength
 attr title "Chunk Length"
-vector 286 Network.bunkerhost[10].app[1] rcvdPkLifetime:vector ETV
+vector 329 Network.bunkerhost[2].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 330 Network.bunkerhost[2].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 331 Network.bunkerhost[2].ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 332 Network.bunkerhost[2].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 333 Network.bunkerhost[2].app[1] endtoenddelay:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source endtoenddelay
+attr title "End-to-end Delay"
+vector 334 Network.bunkerhost[2].app[1] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 335 Network.bunkerhost[2].app[1] rcvdPkLifetime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source dataAge(packetReceived)
 attr title "received packet lifetime"
 attr unit s
-vector 287 Network.bunkerhost[0].app[0] throughput:vector ETV
+vector 336 Network.bunkerhost[1].app[0] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 288 Network.bunkerhost[0].app[0] packetSent:vector(packetBytes) ETV
+vector 337 Network.bunkerhost[1].app[0] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 289 Network.bunkerhost[1].app[1] throughput:vector ETV
+vector 338 Network.bunkerhost[8].app[1] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 290 Network.bunkerhost[1].app[1] packetSent:vector(packetBytes) ETV
+vector 339 Network.bunkerhost[8].app[1] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 291 Network.bunkerhost[2].app[1] throughput:vector ETV
+vector 340 Network.bunkerhost[9].app[1] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 292 Network.bunkerhost[2].app[1] packetSent:vector(packetBytes) ETV
+vector 341 Network.bunkerhost[9].app[1] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 293 Network.bunkerhost[1].udp packetSent:vector(packetBytes) ETV
+vector 342 Network.bunkerhost[8].udp packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 294 Network.bunkerhost[1].ethernet encapPk:vector(packetBytes) ETV
+vector 343 Network.bunkerhost[9].udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 344 Network.bunkerhost[8].ethernet encapPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source encapPk
 attr title "packets encapsulated, packetBytes"
-vector 295 Network.bunkerhost[1].eth[0].queue incomingPacketLengths:vector ETV
+vector 345 Network.bunkerhost[9].ethernet encapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source encapPk
+attr title "packets encapsulated, packetBytes"
+vector 346 Network.bunkerhost[8].eth[0].queue incomingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPushStarted)
 attr title "incoming packet lengths"
 attr unit b
-vector 296 Network.bunkerhost[1].eth[0].queue incomingDataRate:vector ETV
+vector 347 Network.bunkerhost[8].eth[0].queue incomingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPushStarted)
 attr title "incoming datarate"
 attr unit bps
-vector 297 Network.bunkerhost[1].eth[0].queue queueingTime:vector ETV
+vector 348 Network.bunkerhost[8].eth[0].queue queueingTime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source queueingTime(packetPulled)
 attr title "queueing times"
 attr unit s
-vector 298 Network.bunkerhost[1].eth[0].queue outgoingPacketLengths:vector ETV
+vector 349 Network.bunkerhost[8].eth[0].queue outgoingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPulled)
 attr title "outgoing packet lengths"
 attr unit b
-vector 299 Network.bunkerhost[1].eth[0].queue outgoingDataRate:vector ETV
+vector 350 Network.bunkerhost[8].eth[0].queue outgoingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPulled)
 attr title "outgoing datarate"
 attr unit bps
-vector 300 Network.bunkerhost[1].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+vector 351 Network.bunkerhost[8].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceivedFromUpper
 attr title "packet bytes from higher layer, packetBytes"
-vector 301 Network.bunkerhost[1].eth[0].queue queueLength:vector ETV
+vector 352 Network.bunkerhost[8].eth[0].queue queueLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
 attr title "queue length"
 attr unit pk
-vector 302 Network.bunkerhost[1].eth[0].queue queueBitLength:vector ETV
+vector 353 Network.bunkerhost[8].eth[0].queue queueBitLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
 attr title "queue bit length"
 attr unit b
-vector 303 Network.bunkerhost[1].eth[0].mac txPk:vector(packetBytes) ETV
+vector 354 Network.bunkerhost[9].eth[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 355 Network.bunkerhost[9].eth[0].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 356 Network.bunkerhost[9].eth[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 357 Network.bunkerhost[9].eth[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 358 Network.bunkerhost[9].eth[0].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 359 Network.bunkerhost[9].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 360 Network.bunkerhost[9].eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 361 Network.bunkerhost[9].eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 362 Network.bunkerhost[8].eth[0].mac txPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToLower
 attr title "packets transmitted, packetBytes"
-vector 304 Network.bunkerrouter[0].eth[2].mac rxPkOk:vector(packetBytes) ETV
+vector 363 Network.bunkerhost[9].eth[0].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 364 Network.bunkerrouter[2].eth[1].mac rxPkOk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source rxPkOk
 attr title "packets received OK, packetBytes"
-vector 305 Network.bunkerrouter[0].eth[2].mac passedUpPk:vector(packetBytes) ETV
+vector 365 Network.bunkerrouter[2].eth[1].mac passedUpPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 306 Network.bunkerrouter[0].eth[2].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 307 Network.bunkerrouter[0].eth[2].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 308 Network.bunkerrouter[0].eth[2].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 309 Network.bunkerrouter[0].eth[2].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 310 Network.bunkerrouter[0].eth[2].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 311 Network.bunkerrouter[0].eth[2].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 312 Network.bunkerrouter[0].eth[2].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 313 Network.bunkerrouter[0].eth[2].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 314 Network.bunkerrouter[0].eth[2].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 315 Network.bunkerrouter[0].eth[3].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 316 Network.bunkerrouter[0].eth[3].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 317 Network.bunkerrouter[0].eth[3].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 318 Network.bunkerrouter[0].eth[3].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 319 Network.bunkerrouter[0].eth[3].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 320 Network.bunkerrouter[0].eth[3].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 321 Network.bunkerrouter[0].eth[3].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 322 Network.bunkerrouter[0].eth[3].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 323 Network.bunkerrouter[0].eth[3].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 324 Network.bunkerhost[1].eth[0].mac rxPkOk:vector(packetBytes) ETV
+vector 366 Network.bunkerrouter[2].eth[2].mac rxPkOk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source rxPkOk
 attr title "packets received OK, packetBytes"
-vector 325 Network.bunkerhost[1].eth[0].mac passedUpPk:vector(packetBytes) ETV
+vector 367 Network.bunkerrouter[2].eth[2].mac passedUpPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 326 Network.bunkerhost[1].ethernet decapPk:vector(packetBytes) ETV
+vector 368 Network.bunkerrouter[2].eth[1].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 369 Network.bunkerrouter[2].eth[1].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 370 Network.bunkerrouter[2].eth[1].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 371 Network.bunkerrouter[2].eth[1].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 372 Network.bunkerrouter[2].eth[1].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 373 Network.bunkerrouter[2].eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 374 Network.bunkerrouter[2].eth[1].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 375 Network.bunkerrouter[2].eth[1].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 376 Network.bunkerrouter[2].eth[1].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 377 Network.bunkerrouter[2].eth[2].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 378 Network.bunkerrouter[2].eth[2].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 379 Network.bunkerrouter[2].eth[2].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 380 Network.bunkerrouter[2].eth[2].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 381 Network.bunkerrouter[2].eth[2].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 382 Network.bunkerrouter[2].eth[2].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 383 Network.bunkerrouter[2].eth[2].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 384 Network.bunkerrouter[2].eth[2].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 385 Network.bunkerrouter[2].eth[2].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 386 Network.bunkerhost[8].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 387 Network.bunkerhost[8].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 388 Network.bunkerhost[8].ethernet decapPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source decapPk
 attr title "packets decapsulated, packetBytes"
-vector 327 Network.bunkerhost[1].udp packetReceived:vector(packetBytes) ETV
+vector 389 Network.bunkerhost[8].udp packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 328 Network.bunkerhost[1].app[1] endtoenddelay:vector ETV
+vector 390 Network.bunkerhost[8].app[1] endtoenddelay:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source endtoenddelay
 attr title "End-to-end Delay"
-vector 329 Network.bunkerhost[1].app[1] packetReceived:vector(packetBytes) ETV
+vector 391 Network.bunkerhost[8].app[1] packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 330 Network.bunkerhost[1].app[1] chunkLength:vector ETV
+vector 392 Network.bunkerhost[8].app[1] chunkLength:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source chunkLength
 attr title "Chunk Length"
-vector 331 Network.bunkerhost[2].eth[0].mac rxPkOk:vector(packetBytes) ETV
+vector 393 Network.bunkerhost[9].eth[0].mac rxPkOk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source rxPkOk
 attr title "packets received OK, packetBytes"
-vector 332 Network.bunkerhost[2].eth[0].mac passedUpPk:vector(packetBytes) ETV
+vector 394 Network.bunkerhost[9].eth[0].mac passedUpPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 333 Network.bunkerhost[2].ethernet decapPk:vector(packetBytes) ETV
+vector 395 Network.bunkerhost[9].ethernet decapPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source decapPk
 attr title "packets decapsulated, packetBytes"
-vector 334 Network.bunkerhost[2].udp packetReceived:vector(packetBytes) ETV
+vector 396 Network.bunkerhost[9].udp packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 335 Network.bunkerhost[2].app[1] endtoenddelay:vector ETV
+vector 397 Network.bunkerhost[9].app[1] endtoenddelay:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source endtoenddelay
 attr title "End-to-end Delay"
-vector 336 Network.bunkerhost[2].app[1] packetReceived:vector(packetBytes) ETV
+vector 398 Network.bunkerhost[9].app[1] packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 337 Network.bunkerhost[2].app[1] rcvdPkLifetime:vector ETV
+vector 399 Network.bunkerhost[9].app[1] chunkLength:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source chunkLength
+attr title "Chunk Length"
+vector 400 Network.bunkerhost[1].app[1] rcvdPkLifetime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source dataAge(packetReceived)
 attr title "received packet lifetime"
 attr unit s
-vector 338 Network.bunkerhost[1].app[0] throughput:vector ETV
-attr recordingmode vector
-attr source throughput(packetSent)
-attr title throughput
-attr unit bps
-vector 339 Network.bunkerhost[1].app[0] packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 340 Network.bunkerhost[3].app[0] throughput:vector ETV
-attr recordingmode vector
-attr source throughput(packetSent)
-attr title throughput
-attr unit bps
-vector 341 Network.bunkerhost[3].app[0] packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 342 Network.bunkerhost[8].app[1] throughput:vector ETV
-attr recordingmode vector
-attr source throughput(packetSent)
-attr title throughput
-attr unit bps
-vector 343 Network.bunkerhost[8].app[1] packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 344 Network.bunkerhost[9].app[1] throughput:vector ETV
-attr recordingmode vector
-attr source throughput(packetSent)
-attr title throughput
-attr unit bps
-vector 345 Network.bunkerhost[9].app[1] packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 346 Network.bunkerhost[8].udp packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 347 Network.bunkerhost[9].udp packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 348 Network.bunkerhost[8].ethernet encapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source encapPk
-attr title "packets encapsulated, packetBytes"
-vector 349 Network.bunkerhost[9].ethernet encapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source encapPk
-attr title "packets encapsulated, packetBytes"
-vector 350 Network.bunkerhost[8].eth[0].queue incomingPacketLengths:vector ETV
+vector 401 Network.bunkerhost[0].app[1] rcvdPkLifetime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 351 Network.bunkerhost[8].eth[0].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 352 Network.bunkerhost[8].eth[0].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
 attr unit s
-vector 353 Network.bunkerhost[8].eth[0].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 354 Network.bunkerhost[8].eth[0].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 355 Network.bunkerhost[8].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 356 Network.bunkerhost[8].eth[0].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 357 Network.bunkerhost[8].eth[0].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 358 Network.bunkerhost[9].eth[0].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 359 Network.bunkerhost[9].eth[0].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 360 Network.bunkerhost[9].eth[0].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 361 Network.bunkerhost[9].eth[0].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 362 Network.bunkerhost[9].eth[0].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 363 Network.bunkerhost[9].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 364 Network.bunkerhost[9].eth[0].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 365 Network.bunkerhost[9].eth[0].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 366 Network.bunkerhost[8].eth[0].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 367 Network.bunkerhost[9].eth[0].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 368 Network.bunkerrouter[2].eth[1].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 369 Network.bunkerrouter[2].eth[1].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 370 Network.bunkerrouter[2].eth[2].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 371 Network.bunkerrouter[2].eth[2].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 372 Network.bunkerrouter[2].eth[1].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 373 Network.bunkerrouter[2].eth[1].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 374 Network.bunkerrouter[2].eth[1].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 375 Network.bunkerrouter[2].eth[1].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 376 Network.bunkerrouter[2].eth[1].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 377 Network.bunkerrouter[2].eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 378 Network.bunkerrouter[2].eth[1].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 379 Network.bunkerrouter[2].eth[1].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 380 Network.bunkerrouter[2].eth[1].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 381 Network.bunkerrouter[2].eth[2].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 382 Network.bunkerrouter[2].eth[2].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 383 Network.bunkerrouter[2].eth[2].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 384 Network.bunkerrouter[2].eth[2].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 385 Network.bunkerrouter[2].eth[2].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 386 Network.bunkerrouter[2].eth[2].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 387 Network.bunkerrouter[2].eth[2].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 388 Network.bunkerrouter[2].eth[2].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 389 Network.bunkerrouter[2].eth[2].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 390 Network.bunkerhost[8].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 391 Network.bunkerhost[8].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 392 Network.bunkerhost[8].ethernet decapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source decapPk
-attr title "packets decapsulated, packetBytes"
-vector 393 Network.bunkerhost[8].udp packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 394 Network.bunkerhost[8].app[1] endtoenddelay:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source endtoenddelay
-attr title "End-to-end Delay"
-vector 395 Network.bunkerhost[8].app[1] packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 396 Network.bunkerhost[9].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 397 Network.bunkerhost[9].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 398 Network.bunkerhost[9].ethernet decapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source decapPk
-attr title "packets decapsulated, packetBytes"
-vector 399 Network.bunkerhost[9].udp packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 400 Network.bunkerhost[9].app[1] endtoenddelay:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source endtoenddelay
-attr title "End-to-end Delay"
-vector 401 Network.bunkerhost[9].app[1] packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
 vector 402 Network.bunkerhost[4].app[1] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
@@ -2644,388 +2646,387 @@ attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
 attr title "queue bit length"
 attr unit b
-vector 464 Network.bunkerrouter[1].eth[2].mac txPk:vector(packetBytes) ETV
+vector 464 Network.bunkerhost[4].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 465 Network.bunkerhost[4].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 466 Network.bunkerhost[4].ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 467 Network.bunkerhost[4].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 468 Network.bunkerhost[4].app[1] endtoenddelay:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source endtoenddelay
+attr title "End-to-end Delay"
+vector 469 Network.bunkerhost[4].app[1] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 470 Network.bunkerhost[4].app[1] chunkLength:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source chunkLength
+attr title "Chunk Length"
+vector 471 Network.bunkerrouter[1].eth[2].mac txPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToLower
 attr title "packets transmitted, packetBytes"
-vector 465 Network.bunkerhost[4].eth[0].mac rxPkOk:vector(packetBytes) ETV
+vector 472 Network.bunkerhost[5].eth[0].mac rxPkOk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source rxPkOk
 attr title "packets received OK, packetBytes"
-vector 466 Network.bunkerhost[4].eth[0].mac passedUpPk:vector(packetBytes) ETV
+vector 473 Network.bunkerhost[5].eth[0].mac passedUpPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 467 Network.bunkerhost[4].ethernet decapPk:vector(packetBytes) ETV
+vector 474 Network.bunkerhost[5].ethernet decapPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source decapPk
 attr title "packets decapsulated, packetBytes"
-vector 468 Network.bunkerhost[4].udp packetReceived:vector(packetBytes) ETV
+vector 475 Network.bunkerhost[5].udp packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 469 Network.bunkerhost[4].app[1] endtoenddelay:vector ETV
+vector 476 Network.bunkerhost[5].app[1] endtoenddelay:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source endtoenddelay
 attr title "End-to-end Delay"
-vector 470 Network.bunkerhost[4].app[1] packetReceived:vector(packetBytes) ETV
+vector 477 Network.bunkerhost[5].app[1] packetReceived:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceived
 attr title "packets received, packetBytes"
-vector 471 Network.bunkerhost[5].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 472 Network.bunkerhost[5].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 473 Network.bunkerhost[5].ethernet decapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source decapPk
-attr title "packets decapsulated, packetBytes"
-vector 474 Network.bunkerhost[5].udp packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 475 Network.bunkerhost[5].app[1] endtoenddelay:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source endtoenddelay
-attr title "End-to-end Delay"
-vector 476 Network.bunkerhost[5].app[1] packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 477 Network.bunkerhost[6].app[1] chunkLength:vector ETV
+vector 478 Network.bunkerhost[0].app[1] chunkLength:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source chunkLength
 attr title "Chunk Length"
-vector 478 Network.bunkerhost[3].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 479 Network.bunkerhost[5].app[0] throughput:vector ETV
-attr recordingmode vector
-attr source throughput(packetSent)
-attr title throughput
-attr unit bps
-vector 480 Network.bunkerhost[5].app[0] packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 481 Network.bunkerhost[4].app[1] chunkLength:vector ETV
+vector 479 Network.bunkerhost[3].app[1] chunkLength:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source chunkLength
 attr title "Chunk Length"
-vector 482 Network.bunkerhost[5].app[1] rcvdPkLifetime:vector ETV
+vector 480 Network.bunkerhost[8].app[1] rcvdPkLifetime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source dataAge(packetReceived)
 attr title "received packet lifetime"
 attr unit s
-vector 483 Network.bunkerhost[2].app[1] chunkLength:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source chunkLength
-attr title "Chunk Length"
-vector 484 Network.bunkerhost[1].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 485 Network.bunkerhost[4].app[0] throughput:vector ETV
+vector 481 Network.bunkerhost[5].app[0] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 486 Network.bunkerhost[4].app[0] packetSent:vector(packetBytes) ETV
+vector 482 Network.bunkerhost[5].app[0] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 487 Network.bunkerhost[9].app[0] throughput:vector ETV
+vector 483 Network.bunkerhost[9].app[0] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 488 Network.bunkerhost[9].app[0] packetSent:vector(packetBytes) ETV
+vector 484 Network.bunkerhost[9].app[0] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 489 Network.bunkerhost[5].app[1] chunkLength:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source chunkLength
-attr title "Chunk Length"
-vector 490 Network.bunkerhost[6].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 491 Network.bunkerhost[8].app[0] throughput:vector ETV
+vector 485 Network.bunkerhost[7].app[0] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 492 Network.bunkerhost[8].app[0] packetSent:vector(packetBytes) ETV
+vector 486 Network.bunkerhost[7].app[0] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 493 Network.bunkerhost[4].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 494 Network.bunkerhost[7].app[0] throughput:vector ETV
-attr recordingmode vector
-attr source throughput(packetSent)
-attr title throughput
-attr unit bps
-vector 495 Network.bunkerhost[7].app[0] packetSent:vector(packetBytes) ETV
+vector 487 Network.bunkerhost[7].udp packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 496 Network.bunkerhost[7].udp packetSent:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSent
-attr title "packets sent, packetBytes"
-vector 497 Network.bunkerhost[7].ethernet encapPk:vector(packetBytes) ETV
+vector 488 Network.bunkerhost[7].ethernet encapPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source encapPk
 attr title "packets encapsulated, packetBytes"
-vector 498 Network.bunkerhost[7].eth[0].queue incomingPacketLengths:vector ETV
+vector 489 Network.bunkerhost[7].eth[0].queue incomingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPushStarted)
 attr title "incoming packet lengths"
 attr unit b
-vector 499 Network.bunkerhost[7].eth[0].queue incomingDataRate:vector ETV
+vector 490 Network.bunkerhost[7].eth[0].queue incomingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPushStarted)
 attr title "incoming datarate"
 attr unit bps
-vector 500 Network.bunkerhost[7].eth[0].queue queueingTime:vector ETV
+vector 491 Network.bunkerhost[7].eth[0].queue queueingTime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source queueingTime(packetPulled)
 attr title "queueing times"
 attr unit s
-vector 501 Network.bunkerhost[7].eth[0].queue outgoingPacketLengths:vector ETV
+vector 492 Network.bunkerhost[7].eth[0].queue outgoingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source packetLength(packetPulled)
 attr title "outgoing packet lengths"
 attr unit b
-vector 502 Network.bunkerhost[7].eth[0].queue outgoingDataRate:vector ETV
+vector 493 Network.bunkerhost[7].eth[0].queue outgoingDataRate:vector ETV
 attr interpolationmode linear
 attr recordingmode vector
 attr source throughput(packetPulled)
 attr title "outgoing datarate"
 attr unit bps
-vector 503 Network.bunkerhost[7].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+vector 494 Network.bunkerhost[7].eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetReceivedFromUpper
 attr title "packet bytes from higher layer, packetBytes"
-vector 504 Network.bunkerhost[7].eth[0].queue queueLength:vector ETV
+vector 495 Network.bunkerhost[7].eth[0].queue queueLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
 attr title "queue length"
 attr unit pk
-vector 505 Network.bunkerhost[7].eth[0].queue queueBitLength:vector ETV
+vector 496 Network.bunkerhost[7].eth[0].queue queueBitLength:vector ETV
 attr autoWarmupFilter false
 attr interpolationmode sample-hold
 attr recordingmode vector
 attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
 attr title "queue bit length"
 attr unit b
-vector 506 Network.bunkerhost[7].eth[0].mac txPk:vector(packetBytes) ETV
+vector 497 Network.bunkerhost[7].eth[0].mac txPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToLower
 attr title "packets transmitted, packetBytes"
-vector 507 Network.bunkerrouter[1].eth[4].mac rxPkOk:vector(packetBytes) ETV
+vector 498 Network.bunkerrouter[1].eth[4].mac rxPkOk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source rxPkOk
 attr title "packets received OK, packetBytes"
-vector 508 Network.bunkerrouter[1].eth[4].mac passedUpPk:vector(packetBytes) ETV
+vector 499 Network.bunkerrouter[1].eth[4].mac passedUpPk:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSentToUpper
 attr title "packets passed to higher layer, packetBytes"
-vector 509 Network.bunkerhost[0].app[1] chunkLength:vector ETV
+vector 500 Network.bunkerhost[10].app[1] chunkLength:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source chunkLength
 attr title "Chunk Length"
-vector 510 Network.bunkerhost[10].app[1] chunkLength:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source chunkLength
-attr title "Chunk Length"
-vector 511 Network.bunkerhost[0].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 512 Network.bunkerhost[9].app[1] chunkLength:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source chunkLength
-attr title "Chunk Length"
-vector 513 Network.bunkerrouter[1].eth[4].queue incomingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPushStarted)
-attr title "incoming packet lengths"
-attr unit b
-vector 514 Network.bunkerrouter[1].eth[4].queue incomingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPushStarted)
-attr title "incoming datarate"
-attr unit bps
-vector 515 Network.bunkerrouter[1].eth[4].queue queueingTime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source queueingTime(packetPulled)
-attr title "queueing times"
-attr unit s
-vector 516 Network.bunkerrouter[1].eth[4].queue outgoingPacketLengths:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source packetLength(packetPulled)
-attr title "outgoing packet lengths"
-attr unit b
-vector 517 Network.bunkerrouter[1].eth[4].queue outgoingDataRate:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source throughput(packetPulled)
-attr title "outgoing datarate"
-attr unit bps
-vector 518 Network.bunkerrouter[1].eth[4].mac packetReceivedFromUpper:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceivedFromUpper
-attr title "packet bytes from higher layer, packetBytes"
-vector 519 Network.bunkerrouter[1].eth[4].queue queueLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
-attr title "queue length"
-attr unit pk
-vector 520 Network.bunkerrouter[1].eth[4].queue queueBitLength:vector ETV
-attr autoWarmupFilter false
-attr interpolationmode sample-hold
-attr recordingmode vector
-attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
-attr title "queue bit length"
-attr unit b
-vector 521 Network.bunkerrouter[1].eth[4].mac txPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToLower
-attr title "packets transmitted, packetBytes"
-vector 522 Network.bunkerhost[7].eth[0].mac rxPkOk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source rxPkOk
-attr title "packets received OK, packetBytes"
-vector 523 Network.bunkerhost[7].eth[0].mac passedUpPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetSentToUpper
-attr title "packets passed to higher layer, packetBytes"
-vector 524 Network.bunkerhost[7].ethernet decapPk:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source decapPk
-attr title "packets decapsulated, packetBytes"
-vector 525 Network.bunkerhost[7].udp packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 526 Network.bunkerhost[7].app[1] endtoenddelay:vector ETV
-attr interpolationmode linear
-attr recordingmode vector
-attr source endtoenddelay
-attr title "End-to-end Delay"
-vector 527 Network.bunkerhost[7].app[1] packetReceived:vector(packetBytes) ETV
-attr interpolationmode none
-attr recordingmode vector(packetBytes)
-attr source packetReceived
-attr title "packets received, packetBytes"
-vector 528 Network.bunkerhost[7].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 529 Network.bunkerhost[7].app[1] chunkLength:vector ETV
-attr interpolationmode none
-attr recordingmode vector
-attr source chunkLength
-attr title "Chunk Length"
-vector 530 Network.bunkerhost[7].app[1] throughput:vector ETV
+vector 501 Network.bunkerhost[3].app[0] throughput:vector ETV
 attr recordingmode vector
 attr source throughput(packetSent)
 attr title throughput
 attr unit bps
-vector 531 Network.bunkerhost[7].app[1] packetSent:vector(packetBytes) ETV
+vector 502 Network.bunkerhost[3].app[0] packetSent:vector(packetBytes) ETV
 attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-vector 532 Network.bunkerhost[9].app[1] rcvdPkLifetime:vector ETV
+vector 503 Network.bunkerhost[4].app[1] rcvdPkLifetime:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source dataAge(packetReceived)
 attr title "received packet lifetime"
 attr unit s
-vector 533 Network.bunkerhost[8].app[1] rcvdPkLifetime:vector ETV
-attr interpolationmode none
+vector 504 Network.bunkerhost[4].app[0] throughput:vector ETV
 attr recordingmode vector
-attr source dataAge(packetReceived)
-attr title "received packet lifetime"
-attr unit s
-vector 534 Network.bunkerhost[8].app[1] chunkLength:vector ETV
+attr source throughput(packetSent)
+attr title throughput
+attr unit bps
+vector 505 Network.bunkerhost[4].app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 506 Network.bunkerhost[8].app[0] throughput:vector ETV
+attr recordingmode vector
+attr source throughput(packetSent)
+attr title throughput
+attr unit bps
+vector 507 Network.bunkerhost[8].app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 508 Network.bunkerhost[5].app[1] chunkLength:vector ETV
 attr interpolationmode none
 attr recordingmode vector
 attr source chunkLength
 attr title "Chunk Length"
+vector 509 Network.bunkerhost[6].app[1] rcvdPkLifetime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
+attr unit s
+vector 510 Network.bunkerrouter[1].eth[4].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 511 Network.bunkerrouter[1].eth[4].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 512 Network.bunkerrouter[1].eth[4].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 513 Network.bunkerrouter[1].eth[4].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 514 Network.bunkerrouter[1].eth[4].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 515 Network.bunkerrouter[1].eth[4].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 516 Network.bunkerrouter[1].eth[4].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 517 Network.bunkerrouter[1].eth[4].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 518 Network.bunkerrouter[1].eth[4].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 519 Network.bunkerhost[7].eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 520 Network.bunkerhost[7].eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 521 Network.bunkerhost[7].ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 522 Network.bunkerhost[7].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 523 Network.bunkerhost[7].app[1] endtoenddelay:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source endtoenddelay
+attr title "End-to-end Delay"
+vector 524 Network.bunkerhost[7].app[1] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 525 Network.bunkerhost[7].app[1] rcvdPkLifetime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
+attr unit s
+vector 526 Network.bunkerhost[6].app[1] chunkLength:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source chunkLength
+attr title "Chunk Length"
+vector 527 Network.bunkerhost[2].app[1] chunkLength:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source chunkLength
+attr title "Chunk Length"
+vector 528 Network.bunkerhost[9].app[1] rcvdPkLifetime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
+attr unit s
+vector 529 Network.bunkerhost[3].app[1] rcvdPkLifetime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
+attr unit s
+vector 530 Network.bunkerhost[10].app[1] rcvdPkLifetime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
+attr unit s
+vector 531 Network.bunkerhost[5].app[1] rcvdPkLifetime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "received packet lifetime"
+attr unit s
+vector 532 Network.bunkerhost[7].app[1] chunkLength:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source chunkLength
+attr title "Chunk Length"
+vector 533 Network.bunkerhost[7].app[1] throughput:vector ETV
+attr recordingmode vector
+attr source throughput(packetSent)
+attr title throughput
+attr unit bps
+vector 534 Network.bunkerhost[7].app[1] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
 vector 535 Network.bunkerrouter[2].eth[4].queue incomingPacketLengths:vector ETV
 attr interpolationmode none
 attr recordingmode vector
@@ -3131,558 +3132,558 @@ attr interpolationmode none
 attr recordingmode vector(packetBytes)
 attr source packetSent
 attr title "packets sent, packetBytes"
-0	130985 8350 0 16782 0 299.00032464 355 0 354 62835 14850005
-1	139335 8 0 0 0 0 1 0 0 0 0
-2	139343 8 0 0 0 0 1 0 0 0 0
-3	139351 531 0 15104 0 264.00058152 25 0 24 300 4900
-4	139882 8 0 0 0 0 1 0 0 0 0
-5	139890 8 0 0 0 0 1 0 0 0 0
-6	139898 290 0 15476 0 275.00031552 14 0 13 91 819
-7	140188 8 0 0 0 0 1 0 0 0 0
-8	140196 8 0 0 0 0 1 0 0 0 0
-9	140204 694 0 16633 0 297.0006256 32 0 31 496 10416
-10	140898 9 0 0 0 0 1 0 0 0 0
-11	140907 9 0 0 0 0 1 0 0 0 0
-12	140916 592 0 16796 0 299.00064704 26 0 25 325 5525
-13	141508 9 0 0 0 0 1 0 0 0 0
-14	141517 9 0 0 0 0 1 0 0 0 0
-15	141526 718 0 16491 0 294.00062432 31 0 30 465 9455
-16	142244 9 0 0 0 0 1 0 0 0 0
-17	142253 9 0 0 0 0 1 0 0 0 0
-18	142262 352 0 15200 0 266.00066272 16 0 15 120 1240
-19	142614 9 0 0 0 0 1 0 0 0 0
-20	142623 9 0 0 0 0 1 0 0 0 0
-21	142632 373 0 16392 0 290.00050432 17 0 16 136 1496
-22	143005 9 0 0 0 0 1 0 0 0 0
-23	143014 9 0 0 0 0 1 0 0 0 0
-24	143023 192 0 16399 0 290.00060512 9 0 8 36 204
-25	143215 9 0 0 0 0 1 0 0 0 0
-26	143224 9 0 0 0 0 1 0 0 0 0
-27	143233 687 0 16710 0 298.00063552 30 0 29 435 8555
-28	143920 9 0 0 0 0 1 0 0 0 0
-29	143929 9 0 0 0 0 1 0 0 0 0
-30	143938 1203 0 16595 0 295.0006424 51 0 50 1275 42925
-31	145141 9 0 0 0 0 1 0 0 0 0
-32	145150 9 0 0 0 0 1 0 0 0 0
-33	145159 539 0 16387 0 290.00050256 24 0 23 276 4324
-34	145698 9 0 0 0 0 1 0 0 0 0
-35	145707 9 0 0 0 0 1 0 0 0 0
-36	145716 57 0 15333 0 271.00022752 3 0 2 3 5
-37	145773 9 0 0 0 0 1 0 0 0 0
-38	145782 9 0 0 0 0 1 0 0 0 0
-39	145791 47758 3 16805 0.1 300 3000 0 1600 35200 56320000
-40	193549 325 3 16636 5 298 22 20 20 440 8800
-41	193874 47551 4 16805 0.1 300 3000 0 1600 36800 58880000
-42	241425 338 4 16010 5 287 23 20 20 460 9200
-43	241763 810 6 16638 5 298 51 28 991 10000 5614628
-44	242573 689 7 16256 5 290 44 28 1005 9203 6241707
-45	243262 814 10 16642 5 298 51 48 1011 11020 6035028
-46	244076 692 11 16266 5 290 44 48 1025 10083 6627427
-47	244768 863 12 16644 5 298 51 528 8232 95504 412689408
-48	245631 47869 12 16805 0.1 300 3000 0 86480 955040 43252531200
-49	293500 773 12 16644 5 298 51 0 4.024e-05 4.712e-05 1.666592e-09
-50	294273 881 12 16644 5 298 51 528 8232 95504 412689408
-51	295154 47869 12 16805 0.1 300 3000 0 86480 955040 43252531200
-52	343023 833 12 16644 5 298 51 66 1029 11938 6448272
-53	343856 784 12 16644 5 298 53 0 1 2 2
-54	344640 788 12 16644 5 298 53 0 528 1056 557568
-55	345428 733 13 16271 5 290 44 528 8344 87000 448298944
-56	346161 47667 13 16805 0.1 300 3000 0 87920 870000 46834604800
-57	393828 647 13 16271 5 290 44 0 6.88e-06 6.88e-06 4.73344e-11
-58	394475 742 13 16271 5 290 44 528 8344 87000 448298944
-59	395217 47667 13 16805 0.1 300 3000 0 87920 870000 46834604800
-60	442884 701 13 16271 5 290 44 66 1043 10875 7004671
-61	443585 653 13 16271 5 290 45 0 1 1 1
-62	444238 655 13 16271 5 290 45 0 528 528 278784
-63	444893 1233 14 16646 5.00000592 298.00000592 51 66 1029 11938 6448272
-64	446126 1056 15 16283 5.00000592 290.00005128 44 66 1043 10875 7004671
-65	447182 1233 18 16650 5.00010592 298.00010592 51 66 1029 11938 6448272
-66	448415 1233 18 16650 5.00010592 298.00010592 51 66 1029 11938 6448272
-67	449648 1056 19 16309 5.00010592 290.00015128 44 66 1043 10875 7004671
-68	450704 1056 19 16309 5.00010592 290.00015128 44 66 1043 10875 7004671
-69	451760 6054 20 16787 5.00010592 299.00048528 250 48 1027 70597 43131823
-70	457814 6677 21 16701 5.00010592 298.0005296 278 48 1025 42216 21955698
-71	464491 6054 24 16789 5.00010592 299.00048528 250 48 1027 70597 43131823
-72	470545 6677 25 16703 5.00010592 298.0005296 278 48 1025 42216 21955698
-73	477222 3949 26 16743 5.00010592 299.00010592 157 528 8360 283536 1310354432
-74	481171 47962 26 16805 0.1 300 3000 0 134000 2835360 162474086400
-75	529133 3702 26 16743 5.00010592 299.00010592 157 0 2.864e-05 0.00015968 2.0553728e-09
-76	532835 3935 26 16743 5.00010592 299.00010592 157 528 8360 283536 1310354432
-77	536770 47962 26 16805 0.1 300 3000 0 134000 2835360 162474086400
-78	584732 3782 26 16743 5.00010592 299.00010592 157 66 1045 35442 20474288
-79	588514 3979 26 16743 5.00010592 299.00010592 175 0 2 20 22
-80	592493 4020 26 16743 5.00010592 299.00010592 175 0 6016 16592 42917120
-81	596513 4355 27 16657 5.00010592 298.00010592 174 528 8344 174096 596295936
-82	600868 47973 27 16805 0.1 300 3000 0 88560 1740960 68833689600
-83	648841 4145 27 16657 5.00010592 298.00010592 174 0 1.376e-05 0.00018072 1.4234176e-09
-84	652986 4335 27 16657 5.00010592 298.00010592 174 528 8344 174096 596295936
-85	657321 47973 27 16805 0.1 300 3000 0 88560 1740960 68833689600
-86	705294 4165 27 16657 5.00010592 298.00010592 174 66 1043 21762 9317124
-87	709459 4540 27 16657 5.00010592 298.00010592 199 0 2 29 33
-88	713999 4596 27 16657 5.00010592 298.00010592 199 0 1056 15312 9199872
-89	718595 3792 28 16745 5.00011184 299.00011184 157 66 1045 35442 20474288
-90	722387 4187 29 16659 5.00011184 298.00011184 174 66 1043 21762 9317124
-91	726574 3792 32 16754 5.00021184 299.00021184 157 66 1045 35442 20474288
-92	730366 3792 32 16754 5.00021184 299.00021184 157 66 1045 35442 20474288
-93	734158 4187 33 16663 5.00021184 298.00021184 174 66 1043 21762 9317124
-94	738345 4187 33 16663 5.00021184 298.00021184 174 66 1043 21762 9317124
-95	742532 13420 34 16775 5.00021184 299.00032352 559 48 1027 81181 42156951
-96	755952 13420 38 16777 5.00021184 299.00032352 559 48 1027 81181 42156951
-97	769372 8806 40 16762 5.00021184 299.00021184 354 528 528 186912 98689536
-98	778178 48231 40 16805 0.1 300 3000 0 26400 1869120 21243340800
-99	826409 8918 40 16764 5.00021184 299.00021872 354 0 2.064e-05 0.00097696 9.1828736e-09
-100	835327 9132 40 16764 5.00021184 299.00021872 354 528 528 186912 98689536
-101	844459 51231 40 16805 0.1 300 3000 0 26400 1869120 21243340800
-102	895690 8778 40 16764 5.00021184 299.00021872 354 66 66 23364 1542024
-103	904468 11228 40 16764 5.00021184 299.00021872 472 0 3 166 222
-104	915696 11532 40 16764 5.00021184 299.00021872 472 0 1584 87648 61890048
-105	927228 8803 42 16767 5.00021776 299.00022464 354 66 66 23364 1542024
-106	936031 8804 46 16779 5.00031776 299.00032464 354 66 66 23364 1542024
-107	944835 8804 46 16779 5.00031776 299.00032464 354 66 66 23364 1542024
-108	953639 8804 47 16780 5.00031776 299.00032464 354 48 48 16992 815616
-109	962443 8804 49 16782 5.00031776 299.00032464 354 28 28 9912 277536
-110	971247 11628 50 16783 5.00031776 299.00032464 354 0.00031776 0.00037936 0.11407592 3.67797756224e-05
-111	982875 8805 50 16783 5.00031776 299.00032464 354 20 20 7080 141600
-112	991680 11628 50 16783 5.00031776 299.00032464 354 0.00031776 0.00037936 0.11407592 3.67797756224e-05
-113	1003308 50831 57 16805 0.1 300 3000 0 79840 926080 50057305600
-114	1054139 478 57 16712 6 299 27 20 998 11576 7730454
-115	1054617 796 59 16716 6 299 47 28 1006 12352 7933078
-116	1055413 798 61 16722 6 299 47 48 1026 13292 8445958
-117	1056211 842 62 16725 6 299 47 528 8352 113104 572140672
-118	1057053 50662 62 16805 0.1 300 3000 0 83520 1131040 60469926400
-119	1107715 778 62 16725 6 299 47 0 3.344e-05 6.56e-05 1.8046464e-09
-120	1108493 869 62 16725 6 299 47 528 8352 113104 572140672
-121	1109362 50662 62 16805 0.1 300 3000 0 83520 1131040 60469926400
-122	1160024 825 62 16725 6 299 47 66 1044 14138 8939698
-123	1160849 800 62 16725 6 299 50 0 1 3 3
-124	1161649 806 62 16725 6 299 50 0 528 1584 836352
-125	1162455 1179 63 16732 6.00000592 299.00006176 47 66 1044 14138 8939698
-126	1163634 1179 65 16748 6.00010592 299.00016176 47 66 1044 14138 8939698
-127	1164813 1179 65 16748 6.00010592 299.00016176 47 66 1044 14138 8939698
-128	1165992 5156 66 16749 6.00010592 299.00016176 204 48 1027 59443 39046853
-129	1171148 5158 68 16751 6.00010592 299.00016176 204 48 1027 59443 39046853
-130	1176306 3530 69 16752 6.00010592 299.00016176 135 528 8352 223208 964100032
-131	1179836 50877 69 16805 0.1 300 3000 0 94400 2232080 111650080000
-132	1230713 3279 69 16752 6.00010592 299.00016176 135 0 4.472e-05 0.00011944 3.0366528e-09
-133	1233992 3524 69 16752 6.00010592 299.00016176 135 528 8352 223208 964100032
-134	1237516 50877 69 16805 0.1 300 3000 0 94400 2232080 111650080000
-135	1288393 3393 69 16752 6.00010592 299.00016176 135 66 1044 27901 15064063
-136	1291786 3431 69 16752 6.00010592 299.00016176 144 0 1 9 9
-137	1295217 3450 69 16752 6.00010592 299.00016176 144 0 4856 9080 25811008
-138	1298667 3400 70 16765 6.00011184 299.00022352 135 66 1044 27901 15064063
-139	1302067 3400 72 16774 6.00021184 299.00032352 135 66 1044 27901 15064063
-140	1305467 3400 72 16774 6.00021184 299.00032352 135 66 1044 27901 15064063
-141	1308867 1612 83 16681 6.00031776 298.00031776 66 1 66 2211 98021
-142	1310479 50777 83 16805 0.1 300 3000 0 4800 148800 335360000
-143	1361256 2270 83 16681 6.00031776 298.00031776 93 20 20 1860 37200
-144	1363526 2270 84 16682 6.00031776 298.00031776 93 28 28 2604 72912
-145	1365796 2270 86 16684 6.00031776 298.00031776 93 48 48 4464 214272
-146	1368066 2363 87 16685 6.00031776 298.00031776 93 528 528 49104 25926912
-147	1370429 50794 87 16805 0.1 300 3000 0 15840 491040 3652070400
-148	1421223 2177 87 16685 6.00031776 298.00031776 93 0 0 0 0
-149	1423400 2363 87 16685 6.00031776 298.00031776 93 528 528 49104 25926912
-150	1425763 50794 87 16805 0.1 300 3000 0 15840 491040 3652070400
-151	1476557 2270 87 16685 6.00031776 298.00031776 93 66 66 6138 405108
-152	1478827 2177 87 16685 6.00031776 298.00031776 93 0 0 0 0
-153	1481004 2177 87 16685 6.00031776 298.00031776 93 0 0 0 0
-154	1483181 2271 88 16686 6.00032368 298.00032368 93 66 66 6138 405108
-155	1485452 2271 90 16693 6.00042368 298.00042368 93 66 66 6138 405108
-156	1487723 2271 90 16693 6.00042368 298.00042368 93 66 66 6138 405108
-157	1489994 1419 94 16473 6.00042368 294.00031216 54 528 8360 198472 1158242880
-158	1491413 50734 94 16805 0.1 300 3000 0 87920 1984720 119329286400
-159	1542147 1272 94 16473 6.00042368 294.00031216 54 0 0 0 0
-160	1543419 1419 94 16473 6.00042368 294.00031216 54 528 8360 198472 1158242880
-161	1544838 50734 94 16805 0.1 300 3000 0 87920 1984720 119329286400
-162	1595572 1372 94 16473 6.00042368 294.00031216 54 66 1045 24809 18097545
-163	1596944 1272 94 16473 6.00042368 294.00031216 54 0 0 0 0
-164	1598216 1272 94 16473 6.00042368 294.00031216 54 0 0 0 0
-165	1599488 1369 95 16479 6.0004296 294.00036824 54 66 1045 24809 18097545
-166	1600857 1369 97 16481 6.0005296 294.00046824 54 66 1045 24809 18097545
-167	1602226 1369 97 16481 6.0005296 294.00046824 54 66 1045 24809 18097545
-168	1603595 411 101 16369 6.0005296 290.00037824 16 528 7648 42584 209004992
-169	1604006 51459 101 16805 0.1 300 3000 0 76480 425840 20900499200
-170	1655465 370 101 16369 6.0005296 290.00037824 16 0 0 0 0
-171	1655835 411 101 16369 6.0005296 290.00037824 16 528 7648 42584 209004992
-172	1656246 51459 101 16805 0.1 300 3000 0 76480 425840 20900499200
-173	1707705 395 101 16369 6.0005296 290.00037824 16 66 956 5323 3265703
-174	1708100 370 101 16369 6.0005296 290.00037824 16 0 0 0 0
-175	1708470 370 101 16369 6.0005296 290.00037824 16 0 0 0 0
-176	1708840 398 102 16377 6.00053552 290.00040432 16 66 956 5323 3265703
-177	1709238 398 104 16389 6.00063552 290.00050432 16 66 956 5323 3265703
-178	1709636 398 104 16389 6.00063552 290.00050432 16 66 956 5323 3265703
-179	1710034 398 105 16390 6.00063552 290.00050432 16 48 938 5035 3079259
-180	1710432 397 107 16392 6.00063552 290.00050432 16 28 918 4715 2884259
-181	1710829 517 108 16393 6.00063552 290.00050432 16 0.00031776 0.00070848 0.00707376 3.4239968512e-06
-182	1711346 397 108 16393 6.00063552 290.00050432 16 20 910 4587 2809843
-183	1711743 50740 109 16805 0.1 300 3000 0 75920 830080 45653632000
-184	1762483 462 109 16431 7 294 27 20 949 10376 7062020
-185	1762945 51060 110 16805 0.1 300 3000 0 72800 838560 42220582400
-186	1814005 362 110 15944 7 286 21 20 910 10482 6579446
-187	1814367 50642 111 16805 0.1 300 3000 0 1600 32000 51200000
-188	1865009 317 111 16253 7 290 20 20 20 400 8000
-189	1865326 50720 113 16805 0.1 300 3000 0 80560 671280 39518944000
-190	1916046 371 113 16250 7 290 21 20 997 8391 6088075
-191	1916417 833 115 16436 7 294 50 28 957 11236 7247796
-192	1917250 703 117 16718 7 299 42 28 918 11238 6764966
-193	1917953 834 125 16440 7 294 50 48 977 12236 7717236
-194	1918787 705 126 16724 7 299 42 48 938 12078 7231286
-195	1919492 884 129 16442 7 294 50 528 7960 105088 523131648
-196	1920376 50760 129 16805 0.1 300 3000 0 79600 1050880 53936870400
-197	1971136 767 129 16442 7 294 50 0 0 0 0
-198	1971903 884 129 16442 7 294 50 528 7960 105088 523131648
-199	1972787 50760 129 16805 0.1 300 3000 0 79600 1050880 53936870400
-200	2023547 834 129 16442 7 294 50 66 995 13136 8173932
-201	2024381 767 129 16442 7 294 50 0 0 0 0
-202	2025148 767 129 16442 7 294 50 0 0 0 0
-203	2025915 747 130 16727 7 299 42 528 7648 102672 491500928
-204	2026662 50845 130 16805 0.1 300 3000 0 76480 1026720 49558976000
-205	2077507 643 130 16727 7 299 42 0 0 0 0
-206	2078150 747 130 16727 7 299 42 528 7648 102672 491500928
-207	2078897 50845 130 16805 0.1 300 3000 0 76480 1026720 49558976000
-208	2129742 705 130 16727 7 299 42 66 956 12834 7679702
-209	2130447 643 130 16727 7 299 42 0 0 0 0
-210	2131090 643 130 16727 7 299 42 0 0 0 0
-211	2131733 1260 133 16446 7.00000592 294.00005608 50 66 995 13136 8173932
-212	2132993 1071 134 16729 7.00000592 299.00000592 42 66 956 12834 7679702
-213	2134064 1260 141 16455 7.00010592 294.00015608 50 66 995 13136 8173932
-214	2135324 1260 141 16455 7.00010592 294.00015608 50 66 995 13136 8173932
-215	2136584 1071 142 16735 7.00010592 299.00010592 42 66 956 12834 7679702
-216	2137655 1071 142 16735 7.00010592 299.00010592 42 66 956 12834 7679702
-217	2138726 640 228 14648 7.0003384 255.00031776 27 1 27 378 6930
-218	2139366 1563 239 16778 7.00042368 299.00032352 60 528 8352 188136 974660672
-219	2140929 50888 239 16805 0.1 300 3000 0 104640 1881360 110549369600
-220	2191817 1418 239 16778 7.00042368 299.00032352 60 0 1.864e-05 3.624e-05 6.572096e-10
-221	2193235 1563 239 16778 7.00042368 299.00032352 60 528 8352 188136 974660672
-222	2194798 50888 239 16805 0.1 300 3000 0 104640 1881360 110549369600
-223	2245686 1508 239 16778 7.00042368 299.00032352 60 66 1044 23517 15229073
-224	2247194 1451 239 16778 7.00042368 299.00032352 62 0 1 2 2
-225	2248645 1456 239 16778 7.00042368 299.00032352 62 0 4008 4536 16342848
-226	2250101 1504 240 16784 7.0004296 299.00038528 60 66 1044 23517 15229073
-227	2251605 2386 246 16697 7.00043744 298.00042368 91 528 7960 156424 665084224
-228	2253991 50919 246 16805 0.1 300 3000 0 108160 1564240 77811859200
-229	2304910 2176 246 16697 7.00043744 298.00042368 91 0 0 0 0
-230	2307086 2386 246 16697 7.00043744 298.00042368 91 528 7960 156424 665084224
-231	2309472 50919 246 16805 0.1 300 3000 0 108160 1564240 77811859200
-232	2360391 2295 246 16697 7.00043744 298.00042368 91 66 995 19553 10391941
-233	2362686 2176 246 16697 7.00043744 298.00042368 91 0 0 0 0
-234	2364862 2176 246 16697 7.00043744 298.00042368 91 0 0 0 0
-235	2367038 2251 247 16698 7.00044336 298.0004296 91 66 995 19553 10391941
-236	2369289 1504 256 16786 7.0005296 299.00048528 60 66 1044 23517 15229073
-237	2370793 1504 256 16786 7.0005296 299.00048528 60 66 1044 23517 15229073
-238	2372297 621 260 15093 7.0005296 264.0004408 24 528 7264 53512 216412224
-239	2372918 50787 260 16805 0.1 300 3000 0 72640 535120 21641222400
-240	2423705 560 260 15093 7.0005296 264.0004408 24 0 0 0 0
-241	2424265 621 260 15093 7.0005296 264.0004408 24 528 7264 53512 216412224
-242	2424886 50787 260 16805 0.1 300 3000 0 72640 535120 21641222400
-243	2475673 597 260 15093 7.0005296 264.0004408 24 66 908 6689 3381441
-244	2476270 560 260 15093 7.0005296 264.0004408 24 0 0 0 0
-245	2476830 560 260 15093 7.0005296 264.0004408 24 0 0 0 0
-246	2477390 593 261 15094 7.00053552 264.00048152 24 66 908 6689 3381441
-247	2477983 2251 263 16700 7.00054336 298.0005296 91 66 995 19553 10391941
-248	2480234 2251 263 16700 7.00054336 298.0005296 91 66 995 19553 10391941
-249	2482485 600 267 16374 7.00054336 290.00037864 23 528 7952 66272 295901312
-250	2483085 51065 267 16805 0.1 300 3000 0 79520 662720 29999014400
-251	2534150 537 267 16374 7.00054336 290.00037864 23 0 0 0 0
-252	2534687 600 267 16374 7.00054336 290.00037864 23 528 7952 66272 295901312
-253	2535287 51065 267 16805 0.1 300 3000 0 79520 662720 29999014400
-254	2586352 577 267 16374 7.00054336 290.00037864 23 66 994 8284 4623458
-255	2586929 537 267 16374 7.00054336 290.00037864 23 0 0 0 0
-256	2587466 537 267 16374 7.00054336 290.00037864 23 0 0 0 0
-257	2588003 579 268 16375 7.00054928 290.00040256 23 66 994 8284 4623458
-258	2588582 664 274 16790 7.00055024 299.00048528 25 528 8288 98384 505703552
-259	2589246 50756 274 16805 0.1 300 3000 0 82880 983840 52663232000
-260	2640002 591 274 16790 7.00055024 299.00048528 25 0 0 0 0
-261	2640593 664 274 16790 7.00055024 299.00048528 25 528 8288 98384 505703552
-262	2641257 50756 274 16805 0.1 300 3000 0 82880 983840 52663232000
-263	2692013 641 274 16790 7.00055024 299.00048528 25 66 1036 12298 7901618
-264	2692654 591 274 16790 7.00055024 299.00048528 25 0 0 0 0
-265	2693245 591 274 16790 7.00055024 299.00048528 25 0 0 0 0
-266	2693836 642 275 16791 7.00055616 299.00054704 25 66 1036 12298 7901618
-267	2694478 593 277 15101 7.00063552 264.00058152 24 66 908 6689 3381441
-268	2695071 593 277 15101 7.00063552 264.00058152 24 66 908 6689 3381441
-269	2695664 593 278 15102 7.00063552 264.00058152 24 48 890 6257 3148413
-270	2696257 593 280 15104 7.00063552 264.00058152 24 28 870 5777 2907733
-271	2696850 770 281 15105 7.00063552 264.00058152 24 0.00021632 0.00068928 0.00928472 3.9753849664e-06
-272	2697620 593 281 15105 7.00063552 264.00058152 24 20 862 5585 2816837
-273	2698213 579 282 16384 7.00064928 290.00050256 23 66 994 8284 4623458
-274	2698792 579 282 16384 7.00064928 290.00050256 23 66 994 8284 4623458
-275	2699371 579 283 16385 7.00064928 290.00050256 23 48 976 7870 4332686
-276	2699950 579 285 16387 7.00064928 290.00050256 23 28 956 7410 4027086
-277	2700529 742 286 16388 7.00064928 290.00050256 23 0.00031776 0.00072064 0.01132584 5.9260189504e-06
-278	2701271 579 286 16388 7.00064928 290.00050256 23 20 948 7226 3909998
-279	2701850 642 287 16793 7.00065616 299.00064704 25 66 1036 12298 7901618
-280	2702492 642 287 16793 7.00065616 299.00064704 25 66 1036 12298 7901618
-281	2703134 642 288 16794 7.00065616 299.00064704 25 48 1018 11848 7466990
-282	2703776 640 290 16796 7.00065616 299.00064704 25 28 998 11348 7003070
-283	2704416 811 291 16797 7.00065616 299.00064704 25 0.00021424 0.00073408 0.01087648 5.4280811008e-06
-284	2705227 640 291 16797 7.00065616 299.00064704 25 20 990 11148 6823102
-285	2705867 349 291 15944 7.00065616 286 20 79 910 10462 6579046
-286	2706216 553 323 16388 7.0012136 290.00050256 17 0.00045376 0.00072064 0.00941928 5.3201904448e-06
-287	2706769 50721 324 16805 0.1 300 3000 0 1600 36800 58880000
-288	2757490 371 324 15950 8 286 23 20 20 460 9200
-289	2757861 50788 325 16805 0.1 300 3000 0 79920 884000 45248281600
-290	2808649 414 325 14366 8 250 24 20 999 11050 7055764
-291	2809063 50867 326 16805 0.1 300 3000 0 79120 732160 35287628800
-292	2859930 514 326 16252 8 290 29 20 983 9152 5449092
-293	2860444 784 330 16497 8 295 47 28 1007 11886 7252132
-294	2861228 784 337 16503 8 295 47 48 1027 12826 7746372
-295	2862012 830 340 16506 8 295 47 528 8360 109376 526293504
-296	2862842 50745 340 16805 0.1 300 3000 0 83600 1093760 53339827200
-297	2913587 733 340 16506 8 295 47 0 3.296e-05 3.296e-05 1.0863616e-09
-298	2914320 839 340 16506 8 295 47 528 8360 109376 526293504
-299	2915159 50745 340 16805 0.1 300 3000 0 83600 1093760 53339827200
-300	2965904 794 340 16506 8 295 47 66 1045 13672 8223336
-301	2966698 739 340 16506 8 295 48 0 1 1 1
-302	2967437 741 340 16506 8 295 48 0 528 528 278784
-303	2968178 1188 343 16509 8.00000592 295.00000592 47 66 1045 13672 8223336
-304	2969366 1188 349 16515 8.00010592 295.00010592 47 66 1045 13672 8223336
-305	2970554 1188 349 16515 8.00010592 295.00010592 47 66 1045 13672 8223336
-306	2971742 343 435 15470 8.00053648 275.00015776 13 528 8328 55640 326970944
-307	2972085 51132 435 16805 0.1 300 3000 0 83280 556400 32697094400
-308	3023217 306 435 15470 8.00053648 275.00015776 13 0 0 0 0
-309	3023523 343 435 15470 8.00053648 275.00015776 13 528 8328 55640 326970944
-310	3023866 51132 435 16805 0.1 300 3000 0 83280 556400 32697094400
-311	3074998 332 435 15470 8.00053648 275.00015776 13 66 1041 6955 5108921
-312	3075330 306 435 15470 8.00053648 275.00015776 13 0 0 0 0
-313	3075636 306 435 15470 8.00053648 275.00015776 13 0 0 0 0
-314	3075942 330 436 15471 8.0005424 275.00021552 13 66 1041 6955 5108921
-315	3076272 813 442 16627 8.00054336 297.0004692 31 528 8352 109704 568835008
-316	3077085 50918 442 16805 0.1 300 3000 0 83520 1097040 59966611200
-317	3128003 728 442 16627 8.00054336 297.0004692 31 0 0 0 0
-318	3128731 813 442 16627 8.00054336 297.0004692 31 528 8352 109704 568835008
-319	3129544 50918 442 16805 0.1 300 3000 0 83520 1097040 59966611200
-320	3180462 784 442 16627 8.00054336 297.0004692 31 66 1044 13713 8888047
-321	3181246 728 442 16627 8.00054336 297.0004692 31 0 0 0 0
-322	3181974 728 442 16627 8.00054336 297.0004692 31 0 0 0 0
-323	3182702 782 443 16628 8.00054928 297.0005256 31 66 1044 13713 8888047
-324	3183484 330 445 15473 8.0006424 275.00031552 13 66 1041 6955 5108921
-325	3183814 330 445 15473 8.0006424 275.00031552 13 66 1041 6955 5108921
-326	3184144 329 446 15474 8.0006424 275.00031552 13 48 1023 6721 4862753
-327	3184473 328 448 15476 8.0006424 275.00031552 13 28 1003 6461 4599113
-328	3184801 419 449 15477 8.0006424 275.00031552 13 0.00022176 0.00073568 0.00574816 2.8895298048e-06
-329	3185220 327 449 15477 8.0006424 275.00031552 13 20 995 6357 4496569
-330	3185547 386 449 14366 8.0006424 250 22 35 999 11010 7054964
-331	3185933 782 454 16630 8.00064928 297.0006256 31 66 1044 13713 8888047
-332	3186715 782 454 16630 8.00064928 297.0006256 31 66 1044 13713 8888047
-333	3187497 781 455 16631 8.00064928 297.0006256 31 48 1026 13155 8404423
-334	3188278 780 457 16633 8.00064928 297.0006256 31 28 1006 12535 7890623
-335	3189058 1001 458 16634 8.00064928 297.0006256 31 0.00021856 0.00073664 0.01312368 6.301539968e-06
-336	3190059 779 458 16634 8.00064928 297.0006256 31 20 998 12287 7692047
-337	3190838 813 472 16634 8.00090256 297.0006256 25 0.00021856 0.00073664 0.01121712 5.6957114624e-06
-338	3191651 50661 473 16805 0.1 300 3000 0 1600 36800 58880000
-339	3242312 369 473 16493 9 295 23 20 20 460 9200
-340	3242681 50765 474 16805 0.1 300 3000 0 1600 33600 53760000
-341	3293446 341 474 16715 9 299 21 20 20 420 8400
-342	3293787 50750 530 16805 0.1 300 3000 0 76000 259200 11717542400
-343	3344537 554 530 16635 10 298 34 20 950 3240 1830866
-344	3345091 50712 531 16805 0.1 300 3000 0 81200 394000 18506310400
-345	3395803 729 531 16494 10 295 41 20 995 4925 2767491
-346	3396532 955 534 16637 10 298 59 28 958 4212 1904482
-347	3397487 1052 536 16498 10 295 61 28 1003 5813 2864595
-348	3398539 955 539 16641 10 298 59 48 978 5392 2096562
-349	3399494 1052 540 16504 10 295 61 48 1023 7033 3121515
-350	3400546 1014 541 16643 10 298 59 528 7968 51632 147826560
-351	3401560 50788 541 16805 0.1 300 3000 0 79680 516320 15183091200
-352	3452348 939 541 16643 10 298 59 0 2.896e-05 4.272e-05 9.333504e-10
-353	3453287 1041 541 16643 10 298 59 528 7968 51632 147826560
-354	3454328 50788 541 16805 0.1 300 3000 0 79680 516320 15183091200
-355	3505116 982 541 16643 10 298 59 66 996 6454 2309790
-356	3506098 962 541 16643 10 298 62 0 1 3 3
-357	3507060 968 541 16643 10 298 62 0 528 1584 836352
-358	3508028 1112 542 16507 10 295 61 528 8328 65048 217245888
-359	3509140 50768 542 16805 0.1 300 3000 0 88560 650480 24804729600
-360	3559908 1029 542 16507 10 295 61 0 8.72e-06 2.248e-05 1.707072e-10
-361	3560937 1139 542 16507 10 295 61 528 8328 65048 217245888
-362	3562076 50768 542 16805 0.1 300 3000 0 88560 650480 24804729600
-363	3612844 1079 542 16507 10 295 61 66 1041 8131 3394467
-364	3613923 1051 542 16507 10 295 64 0 1 3 3
-365	3614974 1057 542 16507 10 295 64 0 528 1584 836352
-366	3616031 1481 543 16645 10.00000592 298.00000592 59 66 996 6454 2309790
-367	3617512 1538 544 16510 10.00000592 295.00000592 61 66 1041 8131 3394467
-368	3619050 1481 547 16649 10.00010592 298.00010592 59 66 996 6454 2309790
-369	3620531 1481 547 16649 10.00010592 298.00010592 59 66 996 6454 2309790
-370	3622012 1538 548 16516 10.00010592 295.00010592 61 66 1041 8131 3394467
-371	3623550 1538 548 16516 10.00010592 295.00010592 61 66 1041 8131 3394467
-372	3625088 737 615 16704 10.0005296 298.0005296 29 528 6808 27048 89684288
-373	3625825 50731 615 16805 0.1 300 3000 0 68080 270480 8968428800
-374	3676556 677 615 16704 10.0005296 298.0005296 29 0 0 0 0
-375	3677233 737 615 16704 10.0005296 298.0005296 29 528 6808 27048 89684288
-376	3677970 50731 615 16805 0.1 300 3000 0 68080 270480 8968428800
-377	3728701 708 615 16704 10.0005296 298.0005296 29 66 851 3381 1401317
-378	3729409 677 615 16704 10.0005296 298.0005296 29 0 0 0 0
-379	3730086 677 615 16704 10.0005296 298.0005296 29 0 0 0 0
-380	3730763 718 616 16705 10.00053552 298.00053552 29 66 851 3381 1401317
-381	3731481 1307 622 16589 10.00053648 295.00053648 50 528 7968 106640 518870400
-382	3732788 50829 622 16805 0.1 300 3000 0 102880 1066400 58066880000
-383	3783617 1197 622 16589 10.00053648 295.00053648 50 0 2.896e-05 2.896e-05 8.386816e-10
-384	3784814 1308 622 16589 10.00053648 295.00053648 50 528 7968 106640 518870400
-385	3786122 50829 622 16805 0.1 300 3000 0 102880 1066400 58066880000
-386	3836951 1258 622 16589 10.00053648 295.00053648 50 66 996 13330 8107350
-387	3838209 1213 622 16589 10.00053648 295.00053648 51 0 1 1 1
-388	3839422 1215 622 16589 10.00053648 295.00053648 51 0 528 528 278784
-389	3840637 1272 623 16590 10.0005424 295.0005424 50 66 996 13330 8107350
-390	3841909 718 625 16707 10.00063552 298.00063552 29 66 851 3381 1401317
-391	3842627 718 625 16707 10.00063552 298.00063552 29 66 851 3381 1401317
-392	3843345 718 626 16708 10.00063552 298.00063552 29 48 833 2859 1288997
-393	3844063 718 628 16710 10.00063552 298.00063552 29 28 813 2279 1186237
-394	3844781 948 629 16711 10.00063552 298.00063552 29 0.00031776 0.00033744 0.00923792 2.9431093504e-06
-395	3845729 718 629 16711 10.00063552 298.00063552 29 20 805 2047 1151629
-396	3846447 1272 630 16592 10.0006424 295.0006424 50 66 996 13330 8107350
-397	3847719 1272 630 16592 10.0006424 295.0006424 50 66 996 13330 8107350
-398	3848991 1272 631 16593 10.0006424 295.0006424 50 48 978 12430 7643670
-399	3850263 1272 633 16595 10.0006424 295.0006424 50 28 958 11430 7166470
-400	3851535 1649 634 16596 10.0006424 295.0006424 50 0.00021696 0.00072096 0.01881856 8.0053796864e-06
-401	3853184 1272 634 16596 10.0006424 295.0006424 50 20 950 11030 6986790
-402	3854456 50807 635 16805 0.1 300 3000 0 78880 593280 32929280000
-403	3905263 256 635 13735 11 238 15 20 986 7416 5108360
-404	3905519 50638 636 16805 0.1 300 3000 0 77440 497600 28705036800
-405	3956157 253 636 16602 11 297 14 20 968 6220 4466362
-406	3956410 50785 637 16799 0.1 300 3000 0 1600 33600 53760000
-407	4007195 358 637 16799 11 300 22 20 20 440 8800
-408	4007553 597 639 16142 11 289 36 28 994 8124 5244440
-409	4008150 559 641 16717 11 299 33 28 976 6864 4581674
-410	4008709 394 642 16801 11 300 24 28 507 1361 330941
-411	4009103 598 646 16148 11 289 36 48 1014 8844 5583800
-412	4009701 559 647 16723 11 299 33 48 996 7524 4869434
-413	4010260 394 648 16803 11 300 24 48 527 1841 394981
-414	4010654 633 649 16151 11 289 36 528 8256 75936 378486272
-415	4011287 50720 649 16805 0.1 300 3000 0 82640 759360 38665548800
-416	4062007 548 649 16151 11 289 36 0 0 0 0
-417	4062555 633 649 16151 11 289 36 528 8256 75936 378486272
-418	4063188 50720 649 16805 0.1 300 3000 0 82640 759360 38665548800
-419	4113908 598 649 16151 11 289 36 66 1032 9492 5913848
-420	4114506 548 649 16151 11 289 36 0 0 0 0
-421	4115054 548 649 16151 11 289 36 0 0 0 0
-422	4115602 592 650 16726 11 299 33 528 8112 64944 329663360
-423	4116194 50666 650 16805 0.1 300 3000 0 81120 649440 33441113600
-424	4166860 515 650 16726 11 299 33 0 0 0 0
-425	4167375 592 650 16726 11 299 33 528 8112 64944 329663360
-426	4167967 50666 650 16805 0.1 300 3000 0 81120 649440 33441113600
-427	4218633 561 650 16726 11 299 33 66 1014 8118 5150990
-428	4219194 515 650 16726 11 299 33 0 0 0 0
-429	4219709 515 650 16726 11 299 33 0 0 0 0
-430	4220224 418 651 16804 11 300 24 528 4360 18184 30018112
-431	4220642 50793 651 16804 0.1 300 3000 0 43600 176560 2973932800
-432	4271435 368 651 16804 11 300 24 0 0 0 0
-433	4271803 418 651 16804 11 300 24 528 4360 18184 30018112
-434	4272221 50793 651 16804 0.1 300 3000 0 43600 176560 2973932800
-435	4323014 394 651 16804 11 300 24 66 545 2273 469033
-436	4323408 368 651 16804 11 300 24 0 0 0 0
-437	4323776 368 651 16804 11 300 24 0 0 0 0
-438	4324144 909 652 16153 11.00000592 289.00000592 36 66 1032 9492 5913848
-439	4325053 836 653 16728 11.00000592 299.00000592 33 66 1014 8118 5150990
-440	4325889 584 654 16444 11.00000592 294.00000592 23 66 545 2207 464677
-441	4326473 909 658 16159 11.00010592 289.00010592 36 66 1032 9492 5913848
-442	4327382 909 658 16159 11.00010592 289.00010592 36 66 1032 9492 5913848
-443	4328291 837 659 16734 11.00010592 299.00010592 33 66 1014 8118 5150990
-444	4329128 837 659 16734 11.00010592 299.00010592 33 66 1014 8118 5150990
-445	4329965 584 660 16448 11.00010592 294.00010592 23 66 545 2207 464677
-446	4330549 584 660 16448 11.00010592 294.00010592 23 66 545 2207 464677
-447	4331133 805 745 16485 11.0005296 294.00046824 30 528 8344 142800 874178816
-448	4331938 50785 745 16805 0.1 300 3000 0 130320 1428000 95400089600
-449	4382723 727 745 16485 11.0005296 294.00046824 30 0 1.888e-05 1.888e-05 3.564544e-10
-450	4383450 805 745 16485 11.0005296 294.00046824 30 528 8344 142800 874178816
-451	4384255 50785 745 16805 0.1 300 3000 0 130320 1428000 95400089600
-452	4435040 781 745 16485 11.0005296 294.00046824 30 66 1043 17850 13659044
-453	4435821 744 745 16485 11.0005296 294.00046824 31 0 1 1 1
-454	4436565 747 745 16485 11.0005296 294.00046824 31 0 8112 8112 65804544
-455	4437312 780 746 16486 11.00053552 294.00052432 30 66 1043 17850 13659044
-456	4438092 392 752 15189 11.00054336 266.00050192 15 528 8360 64448 412469376
-457	4438484 50939 752 16805 0.1 300 3000 0 83600 644480 41246937600
-458	4489423 350 752 15189 11.00054336 266.00050192 15 0 0 0 0
-459	4489773 392 752 15189 11.00054336 266.00050192 15 528 8360 64448 412469376
-460	4490165 50939 752 16805 0.1 300 3000 0 83600 644480 41246937600
-461	4541104 379 752 15189 11.00054336 266.00050192 15 66 1045 8056 6444834
-462	4541483 350 752 15189 11.00054336 266.00050192 15 0 0 0 0
-463	4541833 350 752 15189 11.00054336 266.00050192 15 0 0 0 0
-464	4542183 381 753 15195 11.00054928 266.00056272 15 66 1045 8056 6444834
-465	4542564 780 755 16488 11.00063552 294.00062432 30 66 1043 17850 13659044
-466	4543344 780 755 16488 11.00063552 294.00062432 30 66 1043 17850 13659044
-467	4544124 778 756 16489 11.00063552 294.00062432 30 48 1025 17310 13026164
-468	4544902 775 758 16491 11.00063552 294.00062432 30 28 1005 16710 12345764
-469	4545677 982 759 16492 11.00063552 294.00062432 30 0.0002384 0.00073632 0.01460272 7.9855651584e-06
-470	4546659 774 759 16492 11.00063552 294.00062432 30 20 997 16470 12080324
-471	4547433 381 760 15197 11.00064928 266.00066272 15 66 1045 8056 6444834
-472	4547814 381 760 15197 11.00064928 266.00066272 15 66 1045 8056 6444834
-473	4548195 381 761 15198 11.00064928 266.00066272 15 48 1027 7786 6159678
-474	4548576 379 763 15200 11.00064928 266.00066272 15 28 1007 7486 5854238
-475	4548955 481 764 15201 11.00064928 266.00066272 15 0.000296 0.00073696 0.00695776 3.557989632e-06
-476	4549436 378 764 15201 11.00064928 266.00066272 15 20 999 7366 5735422
-477	4549814 377 841 16712 12.00063552 299 20 186 998 11436 7727654
-478	4550191 781 873 16797 12.00124128 299.00064704 24 0.00021424 0.00073408 0.01055872 5.3271096832e-06
-479	4550972 50639 953 16805 0.1 300 3000 0 1600 30400 48640000
-480	4601611 306 953 16714 14 299 19 20 20 380 7600
-481	4601917 227 1144 13735 17.0006424 238 13 180 986 7376 5107560
-482	4602144 386 1176 15201 17.0009984 266.00066272 12 0.000296 0.00073696 0.00600448 3.2550753792e-06
-483	4602530 426 1305 16252 19 290 23 48 983 9032 5446692
-484	4602956 358 1355 15477 19.00034816 275.00031552 11 0.00022176 0.00073568 0.00511264 2.6875869696e-06
-485	4603314 50775 1376 16805 0.1 300 3000 0 1600 33600 53760000
-486	4654089 341 1376 16139 20 289 21 20 20 420 8400
-487	4654430 51022 1508 16805 0.1 300 3000 0 1600 32000 51200000
-488	4705452 322 1508 15205 22 267 20 20 20 400 8000
-489	4705774 209 1628 16602 22.00063552 297 11 119 968 6160 4465162
-490	4705983 298 1751 16393 23.00055808 290.00050432 9 0.00032912 0.00070848 0.00484944 2.717196928e-06
-491	4706281 50787 1806 16805 0.1 300 3000 0 1600 40000 64000000
-492	4757068 401 1806 16402 25 291 25 20 20 500 10000
-493	4757469 920 1991 16492 27.00136288 294.00062432 28 0.0002384 0.00073632 0.0139672 7.7836223232e-06
-494	4758389 50931 1997 16805 0.1 300 3000 0 1600 36800 58880000
-495	4809320 372 1997 16495 28 295 23 20 20 460 9200
-496	4809692 563 2002 16499 28 295 34 28 956 5266 2701504
-497	4810255 563 2012 16505 28 295 34 48 976 5946 2925744
-498	4810818 597 2017 16508 28 295 34 528 7952 52464 201652224
-499	4811415 50942 2017 16805 0.1 300 3000 0 79520 524640 20411059200
-500	4862357 534 2017 16508 28 295 34 0 6.88e-06 6.88e-06 4.73344e-11
-501	4862891 606 2017 16508 28 295 34 528 7952 52464 201652224
-502	4863497 50942 2017 16805 0.1 300 3000 0 79520 524640 20411059200
-503	4914439 572 2017 16508 28 295 34 66 994 6558 3150816
-504	4915011 543 2017 16508 28 295 35 0 1 1 1
-505	4915554 546 2017 16508 28 295 35 0 2328 2328 5419584
-506	4916100 865 2020 16511 28.00000592 295.00000592 34 66 994 6558 3150816
-507	4916965 865 2030 16517 28.00010592 295.00010592 34 66 994 6558 3150816
-508	4917830 865 2030 16517 28.00010592 295.00010592 34 66 994 6558 3150816
-509	4918695 330 2133 16431 28.0006424 294 18 35 949 10196 7058420
-510	4919025 283 2702 16250 34.00063552 290 15 33 997 8271 6085675
-511	4919308 493 2738 15105 34.0008872 264.00058152 15 0.00021632 0.00068928 0.00640728 3.055147296e-06
-512	4919801 249 3149 15273 38.00063552 271 11 21 995 4325 2755491
-513	4920050 214 3384 16383 42.00118536 290.00045384 8 648 8264 31880 180432192
-514	4920264 50753 3384 16805 0.1 300 3000 0 82640 318800 18043219200
-515	4971017 191 3384 16383 42.00118536 290.00045384 8 0 0 0 0
-516	4971208 214 3384 16383 42.00118536 290.00045384 8 648 8264 31880 180432192
-517	4971422 50753 3384 16805 0.1 300 3000 0 82640 318800 18043219200
-518	5022175 207 3384 16383 42.00118536 290.00045384 8 81 1033 3985 2819253
-519	5022382 191 3384 16383 42.00118536 290.00045384 8 0 0 0 0
-520	5022573 191 3384 16383 42.00118536 290.00045384 8 0 0 0 0
-521	5022764 207 3385 16394 42.00126864 290.00050512 8 81 1033 3985 2819253
-522	5022971 207 3387 16396 42.00136864 290.00060512 8 81 1033 3985 2819253
-523	5023178 207 3387 16396 42.00136864 290.00060512 8 81 1033 3985 2819253
-524	5023385 207 3388 16397 42.00136864 290.00060512 8 63 1015 3841 2678385
-525	5023592 206 3390 16399 42.00136864 290.00060512 8 43 995 3681 2527945
-526	5023798 261 3391 16400 42.00136864 290.00060512 8 0.00042848 0.00073312 0.00449568 2.61181696e-06
-527	5024059 206 3391 16400 42.00136864 290.00060512 8 35 987 3617 2469561
-528	5024265 261 3391 16400 42.00136864 290.00060512 8 0.00042848 0.00073312 0.00449568 2.61181696e-06
-529	5024526 191 5014 16251 68 290 11 114 948 4534 2610224
-530	5024717 50875 5014 16805 0.1 300 3000 0 75840 362720 16705433600
-531	5075592 191 5014 16251 68 290 11 114 948 4534 2610224
-532	5075783 665 5880 15575 80.00071264 279.00028848 20 0.00021696 0.00072096 0.0092568 4.9569938176e-06
-533	5076448 67 9355 12643 144.00097296 215.00032096 2 0.00032096 0.00033744 0.0006584 2.168810752e-07
-534	5076515 124 9518 14566 149 255 7 52 950 2700 1820066
-535	5076639 56 14689 15313 255.00076008 271.00011376 2 1312 2392 3704 7443008
-536	5076695 52310 14689 16805 0.1 300 3000 0 23920 37040 744300800
-537	5129005 50 14689 15313 255.00076008 271.00011376 2 0 0 0 0
-538	5129055 56 14689 15313 255.00076008 271.00011376 2 1312 2392 3704 7443008
-539	5129111 52310 14689 16805 0.1 300 3000 0 23920 37040 744300800
-540	5181421 54 14689 15313 255.00076008 271.00011376 2 164 299 463 116297
-541	5181475 50 14689 15313 255.00076008 271.00011376 2 0 0 0 0
-542	5181525 50 14689 15313 255.00076008 271.00011376 2 0 0 0 0
-543	5181575 54 14690 15314 255.00078464 271.00012752 2 164 299 463 116297
-544	5181629 54 14692 15330 255.00088464 271.00022752 2 164 299 463 116297
-545	5181683 54 14692 15330 255.00088464 271.00022752 2 164 299 463 116297
-546	5181737 54 14693 15331 255.00088464 271.00022752 2 146 281 427 100277
-547	5181791 54 14695 15333 255.00088464 271.00022752 2 126 261 387 83997
-548	5181845 68 14696 15334 255.00088464 271.00022752 2 0.00022752 0.00024912 0.00047664 1.138261248e-07
-549	5181913 54 14696 15334 255.00088464 271.00022752 2 118 253 371 77933
-550	5181967 68 14696 15334 255.00088464 271.00022752 2 0.00022752 0.00024912 0.00047664 1.138261248e-07
-551	5182035 36 15020 15555 263 279 2 230 499 729 301901
-552	5182071 52310 15020 16805 0.1 300 3000 0 39920 58320 1932166400
-553	5234381 36 15020 15555 263 279 2 230 499 729 301901
+0	131076 7954 0 17208 0 299.0002212 338 0 337 56953 12814425
+1	139030 8 0 0 0 0 1 0 0 0 0
+2	139038 8 0 0 0 0 1 0 0 0 0
+3	139046 681 0 15554 0 267.00030248 31 0 30 465 9455
+4	139727 8 0 0 0 0 1 0 0 0 0
+5	139735 8 0 0 0 0 1 0 0 0 0
+6	139743 853 0 16697 0 290.00024992 39 0 38 741 19019
+7	140596 8 0 0 0 0 1 0 0 0 0
+8	140604 8 0 0 0 0 1 0 0 0 0
+9	140612 724 0 17087 0 297.00007584 33 0 32 528 11440
+10	141336 9 0 0 0 0 1 0 0 0 0
+11	141345 9 0 0 0 0 1 0 0 0 0
+12	141354 187 0 14405 0 245.00004128 9 0 8 36 204
+13	141541 9 0 0 0 0 1 0 0 0 0
+14	141550 9 0 0 0 0 1 0 0 0 0
+15	141559 305 0 16902 0 294.000096 14 0 13 91 819
+16	141864 9 0 0 0 0 1 0 0 0 0
+17	141873 9 0 0 0 0 1 0 0 0 0
+18	141882 908 0 16804 0 292.00009552 39 0 38 741 19019
+19	142790 9 0 0 0 0 1 0 0 0 0
+20	142799 9 0 0 0 0 1 0 0 0 0
+21	142808 827 0 15988 0 277.0001024 36 0 35 630 14910
+22	143635 9 0 0 0 0 1 0 0 0 0
+23	143644 9 0 0 0 0 1 0 0 0 0
+24	143653 191 0 14718 0 248.00037632 9 0 8 36 204
+25	143844 9 0 0 0 0 1 0 0 0 0
+26	143853 9 0 0 0 0 1 0 0 0 0
+27	143862 143 0 15705 0 271.00027776 7 0 6 21 91
+28	144005 9 0 0 0 0 1 0 0 0 0
+29	144014 9 0 0 0 0 1 0 0 0 0
+30	144023 1152 0 17227 0 299.0003864 49 0 48 1176 38024
+31	145175 9 0 0 0 0 1 0 0 0 0
+32	145184 9 0 0 0 0 1 0 0 0 0
+33	145193 640 0 17213 0 299.00022688 28 0 27 378 6930
+34	145833 9 0 0 0 0 1 0 0 0 0
+35	145842 9 0 0 0 0 1 0 0 0 0
+36	145851 79 0 13466 0 226.00009616 4 0 3 6 14
+37	145930 9 0 0 0 0 1 0 0 0 0
+38	145939 9 0 0 0 0 1 0 0 0 0
+39	145948 47582 3 17240 0.1 300 3000 0 1600 32000 51200000
+40	193530 295 3 16432 5 288 20 20 20 400 8000
+41	193825 47612 4 17240 0.1 300 3000 0 1600 32000 51200000
+42	241437 296 4 16835 5 294 20 20 20 400 8000
+43	241733 785 6 17233 5 300 49 28 893 10517 6320085
+44	242518 763 7 17232 5 300 48 28 1005 13152 9274074
+45	243281 786 10 17237 5 300 49 48 913 11497 6760365
+46	244067 765 11 17236 5 300 48 48 1025 14112 9819354
+47	244832 835 12 17239 5 300 49 528 7448 99032 460168512
+48	245667 47716 12 17239 0.1 300 3000 0 74480 938960 44918227200
+49	293383 735 12 17239 5 300 49 0 5.984e-05 5.984e-05 3.5808256e-09
+50	294118 844 12 17239 5 300 49 528 7448 99032 460168512
+51	294962 47716 12 17239 0.1 300 3000 0 74480 938960 44918227200
+52	342678 795 12 17239 5 300 49 66 931 12379 7190133
+53	343473 740 12 17239 5 300 50 0 1 1 1
+54	344213 742 12 17239 5 300 50 0 528 528 278784
+55	344955 811 13 17238 5 300 48 528 8344 119808 661948032
+56	345766 47721 13 17238 0.1 300 3000 0 87280 1171360 67410368000
+57	393487 694 13 17238 5 300 48 0 0 0 0
+58	394181 811 13 17238 5 300 48 528 8344 119808 661948032
+59	394992 47721 13 17238 0.1 300 3000 0 87280 1171360 67410368000
+60	442713 765 13 17238 5 300 48 66 1043 14976 10342938
+61	443478 694 13 17238 5 300 48 0 0 0 0
+62	444172 694 13 17238 5 300 48 0 0 0 0
+63	444866 1148 14 16850 5.00000592 294.000014 48 66 931 11737 6777969
+64	446014 1136 15 16848 5.00000592 294.00000592 47 66 1043 14642 10231382
+65	447150 1148 18 16859 5.00001592 294.000024 48 66 931 11737 6777969
+66	448298 1148 18 16859 5.00001592 294.000024 48 66 931 11737 6777969
+67	449446 1136 19 16852 5.00001592 294.00001592 47 66 1043 14642 10231382
+68	450582 1136 19 16852 5.00001592 294.00001592 47 66 1043 14642 10231382
+69	451718 6023 20 17169 5.00001592 299.00010088 249 48 1024 76295 48188843
+70	457741 5808 21 17218 5.00001592 299.0002924 240 48 1025 62956 41091588
+71	463549 6023 24 17171 5.00001592 299.00010088 249 48 1024 76295 48188843
+72	469572 5809 25 17220 5.00001592 299.0002924 240 48 1025 62956 41091588
+73	475381 3531 26 17172 5.00001592 299.00010088 141 528 8336 255088 1205970048
+74	478912 47940 26 17240 0.1 300 3000 0 134720 2550880 150081907200
+75	526852 3354 26 17188 5.00001592 299.00018936 141 0 8.848e-05 0.00039568 1.89865216e-08
+76	530206 3519 26 17188 5.00001592 299.00018936 141 528 8336 255088 1205970048
+77	533725 47940 26 17240 0.1 300 3000 0 134720 2550880 150081907200
+78	581665 3380 26 17188 5.00001592 299.00018936 141 66 1042 31886 18843282
+79	585045 3687 26 17188 5.00001592 299.00018936 163 0 2 26 30
+80	588732 3740 26 17188 5.00001592 299.00018936 163 0 8864 40192 224811136
+81	592472 3929 27 17048 5.00001592 297.00001592 156 528 8344 279480 1354149312
+82	596401 47963 27 17240 0.1 300 3000 0 137120 2794800 155281504000
+83	644364 3667 27 17048 5.00001592 297.00001592 156 0 3.992e-05 0.00013792 2.3414144e-09
+84	648031 3916 27 17048 5.00001592 297.00001592 156 528 8344 279480 1354149312
+85	651947 47963 27 17240 0.1 300 3000 0 137120 2794800 155281504000
+86	699910 3764 27 17048 5.00001592 297.00001592 156 66 1043 34935 21158583
+87	703674 3902 27 17048 5.00001592 297.00001592 171 0 2 17 19
+88	707576 3937 27 17048 5.00001592 297.00001592 171 0 7864 18752 73976960
+89	711513 3394 28 17189 5.00002184 299.00019528 141 66 1042 31886 18843282
+90	714907 3781 29 17054 5.00002184 297.00002184 156 66 1043 34935 21158583
+91	718688 3394 32 17196 5.00003184 299.00020528 141 66 1042 31886 18843282
+92	722082 3394 32 17196 5.00003184 299.00020528 141 66 1042 31886 18843282
+93	725476 3781 33 17058 5.00003184 297.00003184 156 66 1043 34935 21158583
+94	729257 3781 33 17058 5.00003184 297.00003184 156 66 1043 34935 21158583
+95	733038 13913 34 17197 5.00003184 299.00020528 577 48 1025 102743 60046219
+96	746951 13913 38 17199 5.00003184 299.00020528 577 48 1025 102743 60046219
+97	760864 8397 40 17200 5.00003184 299.00020528 337 528 528 177936 93950208
+98	769261 48197 40 17240 0.1 300 3000 0 26400 1779360 19654272000
+99	817458 8447 40 17200 5.00003184 299.00020528 337 0 2.064e-05 0.00085312 7.8575104e-09
+100	825905 8711 40 17200 5.00003184 299.00020528 337 528 528 177936 93950208
+101	834616 51197 40 17240 0.1 300 3000 0 26400 1779360 19654272000
+102	885813 8374 40 17200 5.00003184 299.00020528 337 66 66 22242 1467972
+103	894187 10525 40 17200 5.00003184 299.00020528 441 0 3 144 188
+104	904712 10791 40 17200 5.00003184 299.00020528 441 0 1584 76032 52411392
+105	915503 8391 42 17201 5.00003776 299.0002112 337 66 66 22242 1467972
+106	923894 8391 46 17205 5.00004776 299.0002212 337 66 66 22242 1467972
+107	932285 8391 46 17205 5.00004776 299.0002212 337 66 66 22242 1467972
+108	940676 8391 47 17206 5.00004776 299.0002212 337 48 48 16176 776448
+109	949067 8391 49 17208 5.00004776 299.0002212 337 28 28 9436 264208
+110	957458 10745 50 17209 5.00004776 299.0002212 337 4.776e-05 0.0002212 0.017982 1.0493315136e-06
+111	968203 8391 50 17209 5.00004776 299.0002212 337 20 20 6740 134800
+112	976594 10745 50 17209 5.00004776 299.0002212 337 4.776e-05 0.0002212 0.017982 1.0493315136e-06
+113	987339 50623 57 17240 0.1 300 3000 0 76800 719360 34964224000
+114	1037962 625 57 17029 6 297 37 20 960 8992 5426360
+115	1038587 996 59 17032 6 297 60 28 968 9932 5590632
+116	1039583 996 61 17036 6 297 60 48 988 11132 6011912
+117	1040579 1056 62 17038 6 297 60 528 8048 97696 411654656
+118	1041635 50686 62 17240 0.1 300 3000 0 80480 976960 42321996800
+119	1092321 967 62 17038 6 297 60 0 6.88e-06 2.064e-05 1.420032e-10
+120	1093288 1083 62 17038 6 297 60 528 8048 97696 411654656
+121	1094371 50686 62 17240 0.1 300 3000 0 80480 976960 42321996800
+122	1145057 1025 62 17038 6 297 60 66 1006 12212 6432104
+123	1146082 992 62 17038 6 297 63 0 1 3 3
+124	1147074 999 62 17038 6 297 63 0 1800 2856 3797568
+125	1148073 1515 63 17042 6.00000592 297.00000896 60 66 1006 12212 6432104
+126	1149588 1515 65 17049 6.00001592 297.00001896 60 66 1006 12212 6432104
+127	1151103 1515 65 17049 6.00001592 297.00001896 60 66 1006 12212 6432104
+128	1152618 7106 66 17134 6.00001592 299.00001592 282 48 1025 69230 45052440
+129	1159724 7107 68 17136 6.00001592 299.00001592 282 48 1025 69230 45052440
+130	1166831 4946 69 17137 6.00001592 299.00001592 188 528 8336 321888 1505875072
+131	1171777 51007 69 17240 0.1 300 3000 0 105920 3218880 175676595200
+132	1222784 4646 69 17137 6.00001592 299.00001592 188 0 6.2e-05 0.00022648 6.0030784e-09
+133	1227430 4930 69 17137 6.00001592 299.00001592 188 528 8336 321888 1505875072
+134	1232360 51007 69 17240 0.1 300 3000 0 105920 3218880 175676595200
+135	1283367 4750 69 17137 6.00001592 299.00001592 188 66 1042 40236 23529298
+136	1288117 4984 69 17137 6.00001592 299.00001592 208 0 2 22 24
+137	1293101 5029 69 17137 6.00001592 299.00001592 208 0 4920 20488 48954304
+138	1298130 4767 70 17138 6.00002184 299.00002184 188 66 1042 40236 23529298
+139	1302897 4767 72 17140 6.00003184 299.00003184 188 66 1042 40236 23529298
+140	1307664 4767 72 17140 6.00003184 299.00003184 188 66 1042 40236 23529298
+141	1312431 1625 83 16950 6.00004776 295.00004776 66 1 66 2211 98021
+142	1314056 50723 83 17240 0.1 300 3000 0 4800 147200 317440000
+143	1364779 2256 83 16950 6.00004776 295.00004776 92 20 20 1840 36800
+144	1367035 2256 84 16951 6.00004776 295.00004776 92 28 28 2576 72128
+145	1369291 2256 86 16953 6.00004776 295.00004776 92 48 48 4416 211968
+146	1371547 2348 87 16954 6.00004776 295.00004776 92 528 528 48576 25648128
+147	1373895 50737 87 17240 0.1 300 3000 0 15840 485760 3456921600
+148	1424632 2164 87 16954 6.00004776 295.00004776 92 0 0 0 0
+149	1426796 2348 87 16954 6.00004776 295.00004776 92 528 528 48576 25648128
+150	1429144 50737 87 17240 0.1 300 3000 0 15840 485760 3456921600
+151	1479881 2256 87 16954 6.00004776 295.00004776 92 66 66 6072 400752
+152	1482137 2164 87 16954 6.00004776 295.00004776 92 0 0 0 0
+153	1484301 2164 87 16954 6.00004776 295.00004776 92 0 0 0 0
+154	1486465 2259 88 16955 6.00005368 295.00005368 92 66 66 6072 400752
+155	1488724 2259 90 16957 6.00006368 295.00006368 92 66 66 6072 400752
+156	1490983 2259 90 16957 6.00006368 295.00006368 92 66 66 6072 400752
+157	1493242 2287 94 16882 6.00006368 294.000048 87 528 8344 243360 1400599680
+158	1495529 50841 94 17240 0.1 300 3000 0 137120 2433600 152573952000
+159	1546370 2073 94 16882 6.00006368 294.000048 87 0 0 0 0
+160	1548443 2287 94 16882 6.00006368 294.000048 87 528 8344 243360 1400599680
+161	1550730 50841 94 17240 0.1 300 3000 0 137120 2433600 152573952000
+162	1601571 2204 94 16882 6.00006368 294.000048 87 66 1043 30420 21884370
+163	1603775 2073 94 16882 6.00006368 294.000048 87 0 0 0 0
+164	1605848 2073 94 16882 6.00006368 294.000048 87 0 0 0 0
+165	1607921 2169 95 16883 6.0000696 294.000062 87 66 1043 30420 21884370
+166	1610090 2169 97 16885 6.0000796 294.000072 87 66 1043 30420 21884370
+167	1612259 2169 97 16885 6.0000796 294.000072 87 66 1043 30420 21884370
+168	1614428 898 101 15977 6.0000796 277.00008648 35 528 8304 87136 437506048
+169	1615326 50850 101 17240 0.1 300 3000 0 83040 871360 43952512000
+170	1666176 812 101 15977 6.0000796 277.00008648 35 0 0 0 0
+171	1666988 898 101 15977 6.0000796 277.00008648 35 528 8304 87136 437506048
+172	1667886 50850 101 17240 0.1 300 3000 0 83040 871360 43952512000
+173	1718736 864 101 15977 6.0000796 277.00008648 35 66 1038 10892 6836032
+174	1719600 812 101 15977 6.0000796 277.00008648 35 0 0 0 0
+175	1720412 812 101 15977 6.0000796 277.00008648 35 0 0 0 0
+176	1721224 879 102 15978 6.00008552 277.0000924 35 66 1038 10892 6836032
+177	1722103 879 104 15985 6.00009552 277.0001024 35 66 1038 10892 6836032
+178	1722982 879 104 15985 6.00009552 277.0001024 35 66 1038 10892 6836032
+179	1723861 879 105 15986 6.00009552 277.0001024 35 48 1020 10262 6455260
+180	1724740 879 107 15988 6.00009552 277.0001024 35 28 1000 9562 6058780
+181	1725619 1114 108 15989 6.00009552 277.0001024 35 4.776e-05 0.00037472 0.00424928 9.04152192e-07
+182	1726733 878 108 15989 6.00009552 277.0001024 35 20 992 9282 5908028
+183	1727611 50738 109 17240 0.1 300 3000 0 79360 865360 49597088000
+184	1778349 357 109 17109 7 299 21 20 992 10817 7733105
+185	1778706 50761 110 17240 0.1 300 3000 0 79680 613840 31255379200
+186	1829467 324 110 17111 7 299 19 20 996 7673 4866213
+187	1829791 50821 111 17240 0.1 300 3000 0 1600 36800 58880000
+188	1880612 371 111 16806 7 293 23 20 20 460 9200
+189	1880983 50771 113 17229 0.1 300 3000 0 79920 966400 57982528000
+190	1931754 494 113 17229 7 300 28 20 997 12368 9058714
+191	1932248 676 115 17115 7 299 41 28 1000 11545 7923201
+192	1932924 666 117 17118 7 299 40 28 1004 8413 5006661
+193	1933590 676 125 17123 7 299 41 48 1020 12365 8401401
+194	1934266 666 126 17126 7 299 40 48 1024 9213 5359181
+195	1934932 716 129 17127 7 299 41 528 8304 104824 567028800
+196	1935648 50766 129 17240 0.1 300 3000 0 83040 1048240 57530784000
+197	1986414 633 129 17127 7 299 41 0 6.88e-06 6.88e-06 4.73344e-11
+198	1987047 725 129 17127 7 299 41 528 8304 104824 567028800
+199	1987772 50766 129 17240 0.1 300 3000 0 83040 1048240 57530784000
+200	2038538 685 129 17127 7 299 41 66 1038 13103 8859825
+201	2039223 640 129 17127 7 299 42 0 1 1 1
+202	2039863 642 129 17127 7 299 42 0 528 528 278784
+203	2040505 705 130 17130 7 299 40 528 8336 79464 365043776
+204	2041210 50821 130 17240 0.1 300 3000 0 88640 794640 37791852800
+205	2092031 627 130 17160 7 299.00008496 40 0 8.496e-05 8.496e-05 7.2182016e-09
+206	2092658 714 130 17160 7 299.00008496 40 528 8336 79464 365043776
+207	2093372 50821 130 17240 0.1 300 3000 0 88640 794640 37791852800
+208	2144193 675 130 17160 7 299.00008496 40 66 1042 9933 5703809
+209	2144868 635 130 17160 7 299.00008496 41 0 1 1 1
+210	2145503 637 130 17160 7 299.00008496 41 0 528 528 278784
+211	2146140 1032 133 17147 7.00000592 299.00004672 41 66 1038 13103 8859825
+212	2147172 1013 134 17161 7.00000592 299.00009088 40 66 1042 9933 5703809
+213	2148185 1032 141 17154 7.00001592 299.00005672 41 66 1038 13103 8859825
+214	2149217 1032 141 17154 7.00001592 299.00005672 41 66 1038 13103 8859825
+215	2150249 1013 142 17168 7.00001592 299.00010088 40 66 1042 9933 5703809
+216	2151262 1013 142 17168 7.00001592 299.00010088 40 66 1042 9933 5703809
+217	2152275 2088 226 17068 7.00006368 297.00003792 79 528 8336 269056 1420865408
+218	2154363 50853 226 17240 0.1 300 3000 0 145040 2690560 197424512000
+219	2205216 1910 226 17068 7.00006368 297.00003792 79 0 3.832e-05 0.00011264 3.2225664e-09
+220	2207126 2087 226 17068 7.00006368 297.00003792 79 528 8336 269056 1420865408
+221	2209213 50853 226 17240 0.1 300 3000 0 145040 2690560 197424512000
+222	2260066 2015 226 17068 7.00006368 297.00003792 79 66 1042 33632 22201022
+223	2262081 1994 226 17068 7.00006368 297.00003792 84 0 1 5 5
+224	2264075 2008 226 17068 7.00006368 297.00003792 84 0 7000 21976 119011776
+225	2266083 2003 238 17070 7.0000696 297.00004688 79 66 1042 33632 22201022
+226	2268086 1952 246 17195 7.00007744 299.0001984 74 528 8336 214680 1176227264
+227	2270038 50819 246 17240 0.1 300 3000 0 129440 2146800 130052640000
+228	2320857 1776 246 17195 7.00007744 299.0001984 74 0 5.592e-05 5.592e-05 3.1270464e-09
+229	2322633 1954 246 17195 7.00007744 299.0001984 74 528 8336 214680 1176227264
+230	2324587 50819 246 17240 0.1 300 3000 0 129440 2146800 130052640000
+231	2375406 1883 246 17195 7.00007744 299.0001984 74 66 1042 26835 18378551
+232	2377289 1789 246 17195 7.00007744 299.0001984 75 0 1 1 1
+233	2379078 1792 246 17195 7.00007744 299.0001984 75 0 2360 2360 5569600
+234	2380870 2003 247 17077 7.0000796 297.00005688 79 66 1042 33632 22201022
+235	2382873 2003 247 17077 7.0000796 297.00005688 79 66 1042 33632 22201022
+236	2384876 796 251 15541 7.0000796 267.0002416 30 528 8200 123952 685213056
+237	2385672 50752 251 17240 0.1 300 3000 0 135120 1239520 80560960000
+238	2436424 717 251 15543 7.0000796 267.00024264 30 0 1.04e-06 1.04e-06 1.0816e-12
+239	2437141 797 251 15543 7.0000796 267.00024264 30 528 8200 123952 685213056
+240	2437938 50752 251 17240 0.1 300 3000 0 135120 1239520 80560960000
+241	2488690 769 251 15543 7.0000796 267.00024264 30 66 1025 15494 10706454
+242	2489459 734 251 15543 7.0000796 267.00024264 31 0 1 1 1
+243	2490193 737 251 15543 7.0000796 267.00024264 31 0 4920 4920 24206400
+244	2490930 1855 252 17215 7.00008336 299.0002824 74 66 1042 26835 18378551
+245	2492785 771 259 15549 7.00008552 267.00029248 30 66 1025 15494 10706454
+246	2493556 1856 263 17217 7.00009336 299.0002924 74 66 1042 26835 18378551
+247	2495412 1856 263 17217 7.00009336 299.0002924 74 66 1042 26835 18378551
+248	2497268 712 267 17186 7.00009336 299.00017016 27 528 8128 110848 678768768
+249	2497980 50970 267 17240 0.1 300 3000 0 81280 1108480 67957977600
+250	2548950 639 267 17186 7.00009336 299.00017016 27 0 0 0 0
+251	2549589 712 267 17186 7.00009336 299.00017016 27 528 8128 110848 678768768
+252	2550301 50970 267 17240 0.1 300 3000 0 81280 1108480 67957977600
+253	2601271 687 267 17186 7.00009336 299.00017016 27 66 1016 13856 10605762
+254	2601958 639 267 17186 7.00009336 299.00017016 27 0 0 0 0
+255	2602597 639 267 17186 7.00009336 299.00017016 27 0 0 0 0
+256	2603236 771 268 15551 7.00009552 267.00030248 30 66 1025 15494 10706454
+257	2604007 771 268 15551 7.00009552 267.00030248 30 66 1025 15494 10706454
+258	2604778 770 269 15552 7.00009552 267.00030248 30 48 1007 14954 10158390
+259	2605548 768 271 15554 7.00009552 267.00030248 30 28 987 14354 9572230
+260	2606316 974 272 15555 7.00009552 267.00030248 30 4.776e-05 0.00037056 0.00570584 1.3784870976e-06
+261	2607290 768 272 15555 7.00009552 267.00030248 30 20 979 14114 9344486
+262	2608058 688 273 17203 7.00009928 299.00021688 27 66 1016 13856 10605762
+263	2608746 207 279 14390 7.00010024 245.00002064 8 528 6312 24192 118316032
+264	2608953 50632 279 17240 0.1 300 3000 0 63120 241920 11831603200
+265	2659585 185 279 14390 7.00010024 245.00002064 8 0 0 0 0
+266	2659770 207 279 14390 7.00010024 245.00002064 8 528 6312 24192 118316032
+267	2659977 50632 279 17240 0.1 300 3000 0 63120 241920 11831603200
+268	2710609 199 279 14390 7.00010024 245.00002064 8 66 789 3024 1848688
+269	2710808 185 279 14390 7.00010024 245.00002064 8 0 0 0 0
+270	2710993 185 279 14390 7.00010024 245.00002064 8 0 0 0 0
+271	2711178 200 280 14393 7.00010616 245.00003128 8 66 789 3024 1848688
+272	2711378 688 282 17210 7.00010928 299.00022688 27 66 1016 13856 10605762
+273	2712066 688 282 17210 7.00010928 299.00022688 27 66 1016 13856 10605762
+274	2712754 686 283 17211 7.00010928 299.00022688 27 48 998 13370 10115694
+275	2713440 686 285 17213 7.00010928 299.00022688 27 28 978 12830 9591694
+276	2714126 868 286 17214 7.00010928 299.00022688 27 4.776e-05 0.00036768 0.00548752 1.5017070976e-06
+277	2714994 686 286 17214 7.00010928 299.00022688 27 20 970 12614 9388142
+278	2715680 200 287 14402 7.00011616 245.00004128 8 66 789 3024 1848688
+279	2715880 200 287 14402 7.00011616 245.00004128 8 66 789 3024 1848688
+280	2716080 200 288 14403 7.00011616 245.00004128 8 48 771 2880 1742416
+281	2716280 199 290 14405 7.00011616 245.00004128 8 28 751 2720 1630416
+282	2716479 252 291 14406 7.00011616 245.00004128 8 4.128e-05 0.00027744 0.00103152 2.028105856e-07
+283	2716731 199 291 14406 7.00011616 245.00004128 8 20 743 2656 1587408
+284	2716930 50742 292 17240 0.1 300 3000 0 1600 32000 51200000
+285	2767672 318 292 16433 8 288 20 20 20 400 8000
+286	2767990 50731 293 17240 0.1 300 3000 0 76080 808480 41332774400
+287	2818721 382 293 16198 8 284 22 20 951 10106 6414446
+288	2819103 50848 294 17231 0.1 300 3000 0 70800 730320 37288275200
+289	2869951 519 294 17231 8 300 29 20 885 9725 6146949
+290	2870470 686 298 16617 8 290 41 28 959 10814 6592446
+291	2871156 687 305 16623 8 290 41 48 979 11634 7041406
+292	2871843 728 308 16626 8 290 41 528 7976 98976 478304896
+293	2872571 50770 308 17240 0.1 300 3000 0 79760 989760 50603123200
+294	2923341 672 308 16626 8 290 41 0 7.096e-05 0.00013984 8.926656e-09
+295	2924013 753 308 16626 8 290 41 528 7976 98976 478304896
+296	2924766 50770 308 17240 0.1 300 3000 0 79760 989760 50603123200
+297	2975536 712 308 16626 8 290 41 66 997 12372 7473514
+298	2976248 696 308 16626 8 290 44 0 1 3 3
+299	2976944 703 308 16626 8 290 44 0 3784 4840 14876224
+300	2977647 1032 311 16629 8.00000592 290.00000592 41 66 997 12372 7473514
+301	2978679 1032 317 16633 8.00001592 290.00001592 41 66 997 12372 7473514
+302	2979711 1032 317 16633 8.00001592 290.00001592 41 66 997 12372 7473514
+303	2980743 613 367 14548 8.00005464 246.00005464 26 1 26 351 6201
+304	2981356 1007 403 16691 8.00008648 290.00018744 38 528 8336 154376 816595392
+305	2982363 50764 403 17240 0.1 300 3000 0 113760 1543760 89630867200
+306	3033127 896 403 16691 8.00008648 290.00018744 38 0 0 0 0
+307	3034023 1007 403 16691 8.00008648 290.00018744 38 528 8336 154376 816595392
+308	3035030 50764 403 17240 0.1 300 3000 0 113760 1543760 89630867200
+309	3085794 972 403 16691 8.00008648 290.00018744 38 66 1042 19297 12759303
+310	3086766 896 403 16691 8.00008648 290.00018744 38 0 0 0 0
+311	3087662 896 403 16691 8.00008648 290.00018744 38 0 0 0 0
+312	3088558 968 404 16692 8.0000924 290.00023992 38 66 1042 19297 12759303
+313	3089526 834 410 17081 8.00009336 297.00005688 32 528 7768 88608 438938368
+314	3090360 50817 410 17240 0.1 300 3000 0 102960 886080 49408230400
+315	3141177 752 410 17081 8.00009336 297.00005688 32 0 0 0 0
+316	3141929 834 410 17081 8.00009336 297.00005688 32 528 7768 88608 438938368
+317	3142763 50817 410 17240 0.1 300 3000 0 102960 886080 49408230400
+318	3193580 804 410 17081 8.00009336 297.00005688 32 66 971 11076 6858412
+319	3194384 752 410 17081 8.00009336 297.00005688 32 0 0 0 0
+320	3195136 752 410 17081 8.00009336 297.00005688 32 0 0 0 0
+321	3195888 809 411 17082 8.00009928 297.00006584 32 66 971 11076 6858412
+322	3196697 968 413 16694 8.0001024 290.00024992 38 66 1042 19297 12759303
+323	3197665 968 413 16694 8.0001024 290.00024992 38 66 1042 19297 12759303
+324	3198633 966 414 16695 8.0001024 290.00024992 38 48 1024 18613 12076923
+325	3199599 966 416 16697 8.0001024 290.00024992 38 28 1004 17853 11347603
+326	3200565 1209 417 16698 8.0001024 290.00024992 38 4.776e-05 0.000376 0.00640024 1.4097563072e-06
+327	3201774 964 417 16698 8.0001024 290.00024992 38 20 996 17549 11064387
+328	3202738 354 417 16198 8.0001024 284 20 79 951 10066 6413646
+329	3203092 809 422 17084 8.00010928 297.00007584 32 66 971 11076 6858412
+330	3203901 809 422 17084 8.00010928 297.00007584 32 66 971 11076 6858412
+331	3204710 808 423 17085 8.00010928 297.00007584 32 48 953 10500 6470044
+332	3205518 807 425 17087 8.00010928 297.00007584 32 28 933 9860 6062844
+333	3206325 1027 426 17088 8.00010928 297.00007584 32 3.536e-05 0.00035328 0.00395016 7.628047552e-07
+334	3207352 807 426 17088 8.00010928 297.00007584 32 20 925 9604 5907132
+335	3208159 719 440 17088 8.00016464 297.00007584 22 3.536e-05 0.00035328 0.00345864 7.384711744e-07
+336	3208878 50799 441 17240 0.1 300 3000 0 1600 30400 48640000
+337	3259677 304 441 16614 9 290 19 20 20 380 7600
+338	3259981 50914 473 17240 0.1 300 3000 0 74000 559280 29471686400
+339	3310895 245 473 15456 10 267 14 20 925 6991 4593631
+340	3311140 50727 474 17240 0.1 300 3000 0 76960 681840 35877164800
+341	3361867 729 474 16925 10 295 41 20 962 8523 5468527
+342	3362596 556 477 16979 10 296 33 28 933 7635 4721279
+343	3363152 1053 479 16926 10 295 61 28 970 9411 5623199
+344	3364205 556 482 16983 10 296 33 48 953 8295 5039879
+345	3364761 1053 483 16928 10 295 61 48 990 10631 6024039
+346	3365814 589 484 16985 10 296 33 528 7768 71112 342348224
+347	3366403 50971 484 17240 0.1 300 3000 0 77680 711120 34512761600
+348	3417374 510 484 16985 10 296 33 0 0 0 0
+349	3417884 589 484 16985 10 296 33 528 7768 71112 342348224
+350	3418473 50971 484 17240 0.1 300 3000 0 77680 711120 34512761600
+351	3469444 556 484 16985 10 296 33 66 971 8889 5349191
+352	3470000 510 484 16985 10 296 33 0 0 0 0
+353	3470510 510 484 16985 10 296 33 0 0 0 0
+354	3471020 1114 485 16929 10 295 61 528 8064 93832 411297216
+355	3472134 50783 485 17240 0.1 300 3000 0 80640 938320 44681260800
+356	3522917 1010 485 16929 10 295 61 0 6.88e-06 1.376e-05 9.46688e-11
+357	3523927 1132 485 16929 10 295 61 528 8064 93832 411297216
+358	3525059 50783 485 17240 0.1 300 3000 0 80640 938320 44681260800
+359	3575842 1073 485 16929 10 295 61 66 1008 11729 6426519
+360	3576915 1026 485 16929 10 295 63 0 1 2 2
+361	3577941 1030 485 16929 10 295 63 0 648 1176 698688
+362	3578971 842 486 16987 10.00000592 296.00000592 33 66 971 8889 5349191
+363	3579813 1537 487 16930 10.00000592 295.00000592 61 66 1008 11729 6426519
+364	3581350 842 490 16991 10.00001592 296.00001592 33 66 971 8889 5349191
+365	3582192 842 490 16991 10.00001592 296.00001592 33 66 971 8889 5349191
+366	3583034 1537 491 16932 10.00001592 295.00001592 61 66 1008 11729 6426519
+367	3584571 1537 491 16932 10.00001592 295.00001592 61 66 1008 11729 6426519
+368	3586108 154 558 15699 10.0000796 271.00021 6 528 7640 21704 115896768
+369	3586262 51185 558 17240 0.1 300 3000 0 76400 217040 11589676800
+370	3637447 137 558 15699 10.0000796 271.00021 6 0 0 0 0
+371	3637584 154 558 15699 10.0000796 271.00021 6 528 7640 21704 115896768
+372	3637738 51185 558 17240 0.1 300 3000 0 76400 217040 11589676800
+373	3688923 148 558 15699 10.0000796 271.00021 6 66 955 2713 1810887
+374	3689071 137 558 15699 10.0000796 271.00021 6 0 0 0 0
+375	3689208 137 558 15699 10.0000796 271.00021 6 0 0 0 0
+376	3689345 151 559 15700 10.00008552 271.00026776 6 66 955 2713 1810887
+377	3689496 1253 565 17221 10.00008648 299.0002924 48 528 8336 114072 571751360
+378	3690749 50776 565 17240 0.1 300 3000 0 83360 1140720 57175136000
+379	3741525 1137 565 17221 10.00008648 299.0002924 48 0 0 0 0
+380	3742662 1253 565 17221 10.00008648 299.0002924 48 528 8336 114072 571751360
+381	3743915 50776 565 17240 0.1 300 3000 0 83360 1140720 57175136000
+382	3794691 1206 565 17221 10.00008648 299.0002924 48 66 1042 14259 8933615
+383	3795897 1137 565 17221 10.00008648 299.0002924 48 0 0 0 0
+384	3797034 1137 565 17221 10.00008648 299.0002924 48 0 0 0 0
+385	3798171 1221 566 17222 10.0000924 299.0003764 48 66 1042 14259 8933615
+386	3799392 151 568 15702 10.00009552 271.00027776 6 66 955 2713 1810887
+387	3799543 151 568 15702 10.00009552 271.00027776 6 66 955 2713 1810887
+388	3799694 151 569 15703 10.00009552 271.00027776 6 48 937 2605 1715163
+389	3799845 151 571 15705 10.00009552 271.00027776 6 28 917 2485 1613363
+390	3799996 191 572 15706 10.00009552 271.00027776 6 4.776e-05 0.00034816 0.00117024 2.905591936e-07
+391	3800187 151 572 15706 10.00009552 271.00027776 6 20 909 2437 1573987
+392	3800338 231 572 15456 10.00009552 267 13 159 925 6971 4593231
+393	3800569 1221 577 17224 10.0001024 299.0003864 48 66 1042 14259 8933615
+394	3801790 1221 577 17224 10.0001024 299.0003864 48 66 1042 14259 8933615
+395	3803011 1221 578 17225 10.0001024 299.0003864 48 48 1024 13395 8435843
+396	3804232 1221 580 17227 10.0001024 299.0003864 48 28 1004 12435 7919243
+397	3805453 1550 581 17228 10.0001024 299.0003864 48 3.296e-05 0.0003864 0.00544352 1.037994816e-06
+398	3807003 1220 581 17228 10.0001024 299.0003864 48 20 996 12051 7723355
+399	3808223 329 581 15714 10.0001024 274 16 35 962 8023 5458527
+400	3808552 1151 627 16698 10.00019072 290.00024992 36 5.072e-05 0.000376 0.00630472 1.405194272e-06
+401	3809703 915 641 15555 10.0002484 267.00030248 28 5.696e-05 0.00037056 0.00561032 1.3739250624e-06
+402	3810618 50939 642 17240 0.1 300 3000 0 79680 666400 40122483200
+403	3861557 274 642 16615 11 290 16 20 996 8330 6237338
+404	3861831 50688 643 17240 0.1 300 3000 0 57520 450640 17890144000
+405	3912519 622 643 16755 11 292 37 20 719 5633 2765895
+406	3913141 50736 644 17240 0.1 300 3000 0 1600 28800 46080000
+407	3963877 288 644 17031 11 297 18 20 20 360 7200
+408	3964165 595 646 16618 11 290 36 28 1004 9018 6387322
+409	3964760 977 648 17117 11 299 59 28 727 6545 2875639
+410	3965737 410 649 17091 11 298 25 28 900 4231 2692465
+411	3966147 595 653 16624 11 290 36 48 1024 9738 6762442
+412	3966742 978 654 17125 11 299 59 48 747 7725 3161039
+413	3967720 410 655 17093 11 298 25 48 920 4731 2871705
+414	3968130 630 656 16627 11 290 36 528 8336 83088 455979136
+415	3968760 50723 656 17240 0.1 300 3000 0 83360 830880 47364390400
+416	4019483 580 656 16627 11 290 36 0 6.888e-05 0.0001032 5.9223168e-09
+417	4020063 648 656 16627 11 290 36 528 8336 83088 455979136
+418	4020711 50723 656 17240 0.1 300 3000 0 83360 830880 47364390400
+419	4071434 616 656 16627 11 290 36 66 1042 10386 7124674
+420	4072050 594 656 16627 11 290 38 0 1 2 2
+421	4072644 598 656 16627 11 290 38 0 528 1056 557568
+422	4073242 1037 657 17129 11 299 59 528 6120 70296 221328320
+423	4074279 50750 657 17240 0.1 300 3000 0 69280 702960 23687264000
+424	4125029 940 657 17129 11 299 59 0 1.856e-05 2.544e-05 3.91808e-10
+425	4125969 1055 657 17129 11 299 59 528 6120 70296 221328320
+426	4127024 50750 657 17240 0.1 300 3000 0 69280 702960 23687264000
+427	4177774 996 657 17129 11 299 59 66 765 8787 3458255
+428	4178770 955 657 17129 11 299 61 0 1 2 2
+429	4179725 959 657 17129 11 299 61 0 528 1056 557568
+430	4180684 435 658 17094 11 298 25 528 7504 41448 195207744
+431	4181119 50763 658 17240 0.1 300 3000 0 75040 414480 19520774400
+432	4231882 379 658 17094 11 298 25 0 0 0 0
+433	4232261 435 658 17094 11 298 25 528 7504 41448 195207744
+434	4232696 50763 658 17240 0.1 300 3000 0 75040 414480 19520774400
+435	4283459 410 658 17094 11 298 25 66 938 5181 3050121
+436	4283869 379 658 17094 11 298 25 0 0 0 0
+437	4284248 379 658 17094 11 298 25 0 0 0 0
+438	4284627 910 659 16666 11.00000592 290.00005248 36 66 1042 10386 7124674
+439	4285537 1490 660 17131 11.00000592 299.00000592 59 66 765 8787 3458255
+440	4287027 634 661 17095 11.00000592 298.0000188 25 66 938 5181 3050121
+441	4287661 910 665 16673 11.00001592 290.00006248 36 66 1042 10386 7124674
+442	4288571 910 665 16673 11.00001592 290.00006248 36 66 1042 10386 7124674
+443	4289481 1490 666 17133 11.00001592 299.00001592 59 66 765 8787 3458255
+444	4290971 1490 666 17133 11.00001592 299.00001592 59 66 765 8787 3458255
+445	4292461 634 667 17097 11.00001592 298.0000288 25 66 938 5181 3050121
+446	4293095 634 667 17097 11.00001592 298.0000288 25 66 938 5181 3050121
+447	4293729 344 750 16889 11.0000796 294.000072 13 528 7976 66560 428901120
+448	4294073 50893 750 17240 0.1 300 3000 0 79760 665600 42890112000
+449	4344966 306 750 16889 11.0000796 294.000072 13 0 0 0 0
+450	4345272 344 750 16889 11.0000796 294.000072 13 528 7976 66560 428901120
+451	4345616 50893 750 17240 0.1 300 3000 0 79760 665600 42890112000
+452	4396509 331 750 16889 11.0000796 294.000072 13 66 997 8320 6701580
+453	4396840 306 750 16889 11.0000796 294.000072 13 0 0 0 0
+454	4397146 306 750 16889 11.0000796 294.000072 13 0 0 0 0
+455	4397452 330 753 16897 11.00008552 294.000086 13 66 997 8320 6701580
+456	4397782 985 759 16798 11.00009336 292.0000796 38 528 8064 79584 407750784
+457	4398767 50758 759 17240 0.1 300 3000 0 80640 795840 40775078400
+458	4449525 897 759 16798 11.00009336 292.0000796 38 0 0 0 0
+459	4450422 985 759 16798 11.00009336 292.0000796 38 528 8064 79584 407750784
+460	4451407 50758 759 17240 0.1 300 3000 0 80640 795840 40775078400
+461	4502165 949 759 16798 11.00009336 292.0000796 38 66 1008 9948 6371106
+462	4503114 897 759 16798 11.00009336 292.0000796 38 0 0 0 0
+463	4504011 897 759 16798 11.00009336 292.0000796 38 0 0 0 0
+464	4504908 330 760 16899 11.00009552 294.000096 13 66 997 8320 6701580
+465	4505238 330 760 16899 11.00009552 294.000096 13 66 997 8320 6701580
+466	4505568 330 761 16900 11.00009552 294.000096 13 48 979 8086 6406272
+467	4505898 330 763 16902 11.00009552 294.000096 13 28 959 7826 6088032
+468	4506228 417 764 16903 11.00009552 294.000096 13 4.776e-05 0.0003616 0.00319976 9.34638752e-07
+469	4506645 330 764 16903 11.00009552 294.000096 13 20 951 7722 5963648
+470	4506975 260 764 16615 11.00009552 290 15 25 996 8310 6236938
+471	4507235 960 769 16799 11.00009928 292.00008552 38 66 1008 9948 6371106
+472	4508195 960 771 16801 11.00010928 292.00009552 38 66 1008 9948 6371106
+473	4509155 960 771 16801 11.00010928 292.00009552 38 66 1008 9948 6371106
+474	4510115 958 772 16802 11.00010928 292.00009552 38 48 990 9264 6025290
+475	4511073 958 774 16804 11.00010928 292.00009552 38 28 970 8504 5669930
+476	4512031 1223 775 16805 11.00010928 292.00009552 38 4.776e-05 0.00039704 0.00421368 8.830914112e-07
+477	4513254 958 775 16805 11.00010928 292.00009552 38 20 962 8200 5536298
+478	4514212 329 858 17109 13 299 19 42 992 10777 7732305
+479	4514541 297 970 17111 13.00010928 299 17 27 996 7633 4865413
+480	4514838 161 1009 15706 13.00034816 271.00027776 5 9.44e-05 0.00034816 0.00112248 2.88278176e-07
+481	4514999 50998 1010 17240 0.1 300 3000 0 1600 35200 56320000
+482	4565997 355 1010 17112 14 299 22 20 20 440 8800
+483	4566352 50932 1106 17240 0.1 300 3000 0 1600 32000 51200000
+484	4617284 323 1106 16700 15 291 20 20 20 400 8000
+485	4617607 50761 1191 17240 0.1 300 3000 0 1600 36800 58880000
+486	4668368 375 1191 16978 18 296 23 20 20 460 9200
+487	4668743 672 1195 16980 18 296 40 28 976 10981 7844369
+488	4669415 673 1199 16984 18 296 40 48 996 11781 8299609
+489	4670088 712 1201 16986 18 296 40 528 8112 100008 559147840
+490	4670800 50828 1201 17240 0.1 300 3000 0 81120 1000080 55914784000
+491	4721628 616 1201 16986 18 296 40 0 0 0 0
+492	4722244 712 1201 16986 18 296 40 528 8112 100008 559147840
+493	4722956 50828 1201 17240 0.1 300 3000 0 81120 1000080 55914784000
+494	4773784 674 1201 16986 18 296 40 66 1014 12501 8736685
+495	4774458 616 1201 16986 18 296 40 0 0 0 0
+496	4775074 616 1201 16986 18 296 40 0 0 0 0
+497	4775690 1030 1203 16988 18.00000592 296.00000592 40 66 1014 12501 8736685
+498	4776720 1030 1207 16992 18.00001592 296.00001592 40 66 1014 12501 8736685
+499	4777750 1030 1207 16992 18.00001592 296.00001592 40 66 1014 12501 8736685
+500	4778780 406 1268 17229 18.00009552 300 22 34 997 12248 9056314
+501	4779186 50935 1581 17240 0.1 300 3000 0 1600 33600 53760000
+502	4830121 341 1581 17113 22 299 21 20 20 420 8400
+503	4830462 387 1688 16903 22.00028416 294.000096 12 9.6e-05 0.0003616 0.003152 9.323577344e-07
+504	4830849 50782 1766 17240 0.1 300 3000 0 1600 32000 51200000
+505	4881631 320 1766 16434 24 288 20 20 20 400 8000
+506	4881951 51199 1768 17240 0.1 300 3000 0 1600 30400 48640000
+507	4933150 311 1768 16977 24 296 19 20 20 380 7600
+508	4933461 236 1957 15457 26.0001024 267 13 48 719 5153 2756295
+509	4933697 515 2092 15455 27.00033904 266.00027872 16 5.52e-05 0.00037472 0.00334184 8.608128576e-07
+510	4934212 213 2286 14712 29.00016392 248.00028224 8 640 8344 39280 268676608
+511	4934425 50843 2286 17240 0.1 300 3000 0 83440 392800 26867660800
+512	4985268 190 2286 14712 29.00016392 248.00028224 8 0 0 0 0
+513	4985458 213 2286 14712 29.00016392 248.00028224 8 640 8344 39280 268676608
+514	4985671 50843 2286 17240 0.1 300 3000 0 83440 392800 26867660800
+515	5036514 206 2286 14712 29.00016392 248.00028224 8 80 1043 4910 4198072
+516	5036720 190 2286 14712 29.00016392 248.00028224 8 0 0 0 0
+517	5036910 190 2286 14712 29.00016392 248.00028224 8 0 0 0 0
+518	5037100 206 2287 14713 29.00017672 248.00036632 8 80 1043 4910 4198072
+519	5037306 206 2289 14715 29.00018672 248.00037632 8 80 1043 4910 4198072
+520	5037512 206 2289 14715 29.00018672 248.00037632 8 80 1043 4910 4198072
+521	5037718 206 2290 14716 29.00018672 248.00037632 8 62 1025 4766 4023904
+522	5037924 206 2292 14718 29.00018672 248.00037632 8 42 1005 4606 3836464
+523	5038130 258 2293 14719 29.00018672 248.00037632 8 6.816e-05 0.00037632 0.00191168 5.781139456e-07
+524	5038388 205 2293 14719 29.00018672 248.00037632 8 34 997 4542 3763280
+525	5038593 258 2293 14719 29.00018672 248.00037632 8 6.816e-05 0.00037632 0.00191168 5.781139456e-07
+526	5038851 329 2315 17029 30 297 18 58 960 8612 5418760
+527	5039180 370 2403 17231 30.00009552 300 19 117 885 9525 6142949
+528	5039550 754 2456 17228 30.00030528 299.0003864 23 3.296e-05 0.0003864 0.00424952 9.80969376e-07
+529	5040304 193 2650 14406 34.00037296 245.00004128 6 4.128e-05 0.00027744 0.000936 1.982485504e-07
+530	5040497 686 3272 17214 43.00016224 299.00022688 21 7.072e-05 0.00036768 0.00520096 1.488020992e-06
+531	5041183 458 3440 15746 45.0003544 274.0002528 14 7.536e-05 0.00039704 0.00306744 8.283469888e-07
+532	5041641 297 5875 16833 86 294 17 77 968 10201 7662033
+533	5041938 50928 5875 17240 0.1 300 3000 0 77440 816080 49037011200
+534	5092866 297 5875 16833 86 294 17 77 968 10201 7662033
+535	5093163 82 8196 13455 127.0001776 226.00004808 3 1904 6456 12104 59322688
+536	5093245 51044 8196 17240 0.1 300 3000 0 64560 121040 5932268800
+537	5144289 73 8196 13455 127.0001776 226.00004808 3 0 0 0 0
+538	5144362 82 8196 13455 127.0001776 226.00004808 3 1904 6456 12104 59322688
+539	5144444 51044 8196 17240 0.1 300 3000 0 64560 121040 5932268800
+540	5195488 79 8196 13455 127.0001776 226.00004808 3 238 807 1513 926917
+541	5195567 73 8196 13455 127.0001776 226.00004808 3 0 0 0 0
+542	5195640 73 8196 13455 127.0001776 226.00004808 3 0 0 0 0
+543	5195713 79 8199 13461 127.0002428 226.00008616 3 238 807 1513 926917
+544	5195792 79 8206 13463 127.0002528 226.00009616 3 238 807 1513 926917
+545	5195871 79 8206 13463 127.0002528 226.00009616 3 238 807 1513 926917
+546	5195950 79 8207 13464 127.0002528 226.00009616 3 220 789 1459 873421
+547	5196029 79 8209 13466 127.0002528 226.00009616 3 200 769 1399 816261
+548	5196108 97 8210 13467 127.0002528 226.00009616 3 5.936e-05 0.0001504 0.00030592 3.53905152e-08
+549	5196205 79 8210 13467 127.0002528 226.00009616 3 192 761 1375 794069
+550	5196284 97 8210 13467 127.0002528 226.00009616 3 5.936e-05 0.0001504 0.00030592 3.53905152e-08
+551	5196381 122 8218 17089 128 298 7 27 892 3671 2619169
+552	5196503 50899 8218 17240 0.1 300 3000 0 71360 293680 16762681600
+553	5247402 122 8218 17089 128 298 7 27 892 3671 2619169
 

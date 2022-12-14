@@ -45,3 +45,4 @@ src/bunker-net-sim
 *.json
 .cmdenv-log
 .ipynb_checkpoints/
+plots/
