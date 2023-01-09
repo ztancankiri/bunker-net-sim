@@ -22,7 +22,7 @@ network Network
         int bunker3_host_number;
         double cableLength @unit(m);
         double cableBandwidth @unit(bps);
-        @display("bgb=1581.255,800.28");
+        @display("bgb=2369.5752,1650.3813");
 
     types:
         channel cable extends DatarateChannel
@@ -48,63 +48,63 @@ network Network
         }
         // =====[ Main ]======
         mainrouter: Router {
-            @display("p=642,229");
+            @display("p=1115.4438,227.84377");
         }
         server: StandardHost {
-            @display("p=642,87");
+            @display("p=1115.4438,47.550003");
         }
 
         upf: Upf {
-            @display("p=640.575,386.1");
+            @display("p=1115.4438,384.36252");
         }
         // =====[ Bunker 1 ]======
         bunker1host[bunker1_host_number]: NRUe {
             parameters:
-                @display("p=59,412");
+                @display("p=81,227");
         }
 
         bunker1iUpf: Upf {
-            @display("p=177,126");
+            @display("p=602,384");
         }
 
         bunker1gnb1: gNodeB {
-            @display("p=59,677;is=vl");
+            @display("p=318,211;is=vl");
         }
 
         bunker1gnb2: gNodeB {
-            @display("p=59,229;is=vl");
+            @display("p=318,671;is=vl");
         }
         // =====[ Bunker 2 ]======
         bunker2host[bunker2_host_number]: NRUe {
             parameters:
-                @display("p=575,712");
+                @display("p=735,1509");
         }
         bunker2iUpf: Upf {
-            @display("p=923,454");
+            @display("p=1115.4438,1022.3251");
         }
 
         bunker2gnb1: gNodeB {
-            @display("p=440,645;is=vl");
+            @display("p=735,1228;is=vl");
         }
 
         bunker2gnb2: gNodeB {
-            @display("p=996,645;is=vl");
+            @display("p=1557,1228;is=vl");
         }
         // =====[ Bunker 3 ]======
         bunker3host[bunker3_host_number]: NRUe {
             parameters:
-                @display("p=1307,108");
+                @display("p=2280,100");
         }
         bunker3iUpf: Upf {
-            @display("p=991,66");
+            @display("p=1559.2438,384.36252");
         }
 
         bunker3gnb1: gNodeB {
-            @display("p=1163,387;is=vl");
+            @display("p=1890,124;is=vl");
         }
 
         bunker3gnb2: gNodeB {
-            @display("p=1163,82;is=vl");
+            @display("p=1890,643;is=vl");
         }
     connections:
         server.pppg++ <--> cable <--> mainrouter.pppg++;
