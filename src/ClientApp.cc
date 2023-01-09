@@ -20,18 +20,42 @@ namespace inet {
 Define_Module(ClientApp);
 
 void ClientApp::possibleSurvivorsInit() {
-    std::string host_prefix = std::string(par("host_prefix"));
-    int bunker_number = par("bunker_number");
-    int host_number = par("host_number");
-    int nonExist_host_number = par("nonExist_host_number");
+    std::string bunker1_host_prefix = std::string(par("bunker1_host_prefix"));
+    std::string bunker2_host_prefix = std::string(par("bunker2_host_prefix"));
+    std::string bunker3_host_prefix = std::string(par("bunker3_host_prefix"));
 
-    int total_host_number = bunker_number * host_number;
+    int bunker1_host_number = par("bunker1_host_number");
+    int bunker2_host_number = par("bunker2_host_number");
+    int bunker3_host_number = par("bunker3_host_number");
+    int nonExist_host_number = par("nonExist_host_number");
 
     std::vector<std::string> hosts;
 
-    for (int i = 0; i < total_host_number; i++) {
+    for (int i = 0; i < bunker1_host_number; i++) {
         std::stringstream tmp;
-        tmp << host_prefix << "[" << i << "]";
+        tmp << bunker1_host_prefix << "[" << i << "]";
+        std::string result;
+        tmp >> result;
+
+        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
+            hosts.push_back(result);
+        }
+    }
+
+    for (int i = 0; i < bunker2_host_number; i++) {
+        std::stringstream tmp;
+        tmp << bunker2_host_prefix << "[" << i << "]";
+        std::string result;
+        tmp >> result;
+
+        if (strcmp(result.c_str(), ownName.c_str()) != 0) {
+            hosts.push_back(result);
+        }
+    }
+
+    for (int i = 0; i < bunker3_host_number; i++) {
+        std::stringstream tmp;
+        tmp << bunker3_host_prefix << "[" << i << "]";
         std::string result;
         tmp >> result;
 

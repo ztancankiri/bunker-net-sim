@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for bunker-net-sim
 #
 # This file was generated with the command:
-#  opp_makemake -f -pINET -KINET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -linet -lINET$$\(D\)
+#  opp_makemake -f -pINET -KINET4_4_PROJ=../../inet4.4 -KSIMU5G_1_2_1_PROJ=../../Simu5G-1.2.1 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -L$$\(SIMU5G_1_2_1_PROJ\)/src -linet -lINET$$\(D\) -lsimu5g$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -25,7 +25,7 @@ INCLUDE_PATH = -I$(INET4_4_PROJ)/src/
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET4_4_PROJ)/src  -linet -lINET$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET4_4_PROJ)/src $(LDFLAG_LIBPATH)$(SIMU5G_1_2_1_PROJ)/src  -linet -lINET$(D) -lsimu5g$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -43,7 +43,8 @@ MSGFILES = \
 SMFILES =
 
 # Other makefile variables (-K)
-INET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4
+INET4_4_PROJ=../../inet4.4
+SIMU5G_1_2_1_PROJ=../../Simu5G-1.2.1
 
 #------------------------------------------------------------------------------
 
@@ -64,7 +65,7 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(PLATFORM),win32)
-LIBS += -Wl,-rpath,$(abspath $(INET4_4_PROJ)/src)
+LIBS += -Wl,-rpath,$(abspath $(INET4_4_PROJ)/src) -Wl,-rpath,$(abspath $(SIMU5G_1_2_1_PROJ)/src)
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
