@@ -22,7 +22,7 @@ network Network
         int bunker3_host_number;
         double cableLength @unit(m);
         double cableBandwidth @unit(bps);
-        @display("bgb=2369.5752,1650.3813");
+        @display("bgb=3000,3000");
 
     types:
         channel cable extends DatarateChannel
@@ -68,11 +68,11 @@ network Network
         }
 
         bunker1gnb1: gNodeB {
-            @display("p=318,211;is=vl");
+            @display("p=318,211");
         }
 
         bunker1gnb2: gNodeB {
-            @display("p=318,671;is=vl");
+            @display("p=318,671");
         }
         // =====[ Bunker 2 ]======
         bunker2host[bunker2_host_number]: NRUe {
@@ -84,11 +84,11 @@ network Network
         }
 
         bunker2gnb1: gNodeB {
-            @display("p=735,1228;is=vl");
+            @display("p=735,1228");
         }
 
         bunker2gnb2: gNodeB {
-            @display("p=1557,1228;is=vl");
+            @display("p=1557,1228");
         }
         // =====[ Bunker 3 ]======
         bunker3host[bunker3_host_number]: NRUe {
@@ -100,11 +100,11 @@ network Network
         }
 
         bunker3gnb1: gNodeB {
-            @display("p=1890,124;is=vl");
+            @display("p=1890,124");
         }
 
         bunker3gnb2: gNodeB {
-            @display("p=1890,643;is=vl");
+            @display("p=1890,643");
         }
     connections:
         server.pppg++ <--> cable <--> mainrouter.pppg++;
