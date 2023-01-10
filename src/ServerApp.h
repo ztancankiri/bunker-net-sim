@@ -30,6 +30,10 @@ class INET_API ServerApp : public UdpBasicAppX {
         simsignal_t unsuccessfulLookup;
 
         simsignal_t endtoenddelay;
+        simsignal_t senderBunkerId;
+        simsignal_t receiverBunkerId;
+        simsignal_t senderHostId;
+        simsignal_t receiverHostId;
 };
 
 

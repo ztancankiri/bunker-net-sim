@@ -42,6 +42,10 @@ class INET_API ClientApp : public UdpBasicAppX
     protected:
         simsignal_t chunkLength;
         simsignal_t endtoenddelay;
+        simsignal_t senderBunkerId;
+        simsignal_t receiverBunkerId;
+        simsignal_t senderHostId;
+        simsignal_t receiverHostId;
 };
 
 } // namespace inet

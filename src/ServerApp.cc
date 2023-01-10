@@ -24,11 +24,29 @@ void ServerApp::initialize(int stage)
         unsuccessfulLookup = registerSignal("unsuccessfulLookup");
 
         endtoenddelay = registerSignal("endtoenddelay");
+
+        senderBunkerId = registerSignal("senderBunkerId");
+        senderHostId = registerSignal("senderHostId");
+        receiverBunkerId = registerSignal("receiverBunkerId");
+        receiverHostId = registerSignal("receiverHostId");
     }
 }
 
 void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
+
+
+    int senderBunkerIdInt = 0;
+    int senderHostIdInt = 0;
+    int receivedBunkerIdInt = 0;
+    int receivedHostIdInt = 0;
+
+    emit(senderBunkerId, senderBunkerIdInt);
+    emit(receiverBunkerId, receivedBunkerIdInt);
+    emit(senderHostId, senderHostIdInt);
+    emit(receiverHostId, receivedHostIdInt);
+
+
     emit(endtoenddelay, simTime() - pk->getCreationTime());
 
     emit(packetReceivedSignal, pk);

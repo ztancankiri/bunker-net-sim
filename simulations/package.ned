@@ -22,6 +22,8 @@ network Network
         int bunker3_host_number;
         double cableLength @unit(m);
         double cableBandwidth @unit(bps);
+        double closeCableLength @unit(m);
+        double closeCableBandwidth @unit(bps);
         @display("bgb=3000,3000");
 
     types:
@@ -29,6 +31,11 @@ network Network
         {
             delay = replaceUnit(parent.cableLength / 2e8, "s");
             datarate = parent.cableBandwidth;
+        }
+        channel closeCable extends DatarateChannel
+        {
+            delay = replaceUnit(parent.closeCableLength / 2e8, "s");
+            datarate = parent.closeCableBandwidth;
         }
     submodules:
         configurator: Ipv4NetworkConfigurator {
@@ -107,25 +114,25 @@ network Network
             @display("p=1890,643");
         }
     connections:
-        server.pppg++ <--> cable <--> mainrouter.pppg++;
+        server.pppg++ <--> closeCable <--> mainrouter.pppg++;
 
 
-        upf.filterGate <--> cable <--> mainrouter.pppg++;
+        upf.filterGate <--> closeCable <--> mainrouter.pppg++;
         upf.pppg++ <--> cable <--> bunker1iUpf.pppg++;
-        bunker1gnb1.ppp <--> cable <--> bunker1iUpf.pppg++;
-        bunker1gnb2.ppp <--> cable <--> bunker1iUpf.pppg++;
-        bunker1gnb1.x2++ <--> cable <--> bunker1gnb2.x2++;
+        bunker1gnb1.ppp <--> closeCable <--> bunker1iUpf.pppg++;
+        bunker1gnb2.ppp <--> closeCable <--> bunker1iUpf.pppg++;
+        bunker1gnb1.x2++ <--> closeCable <--> bunker1gnb2.x2++;
 
 
         upf.pppg++ <--> cable <--> bunker2iUpf.pppg++;
-        bunker2gnb1.ppp <--> cable <--> bunker2iUpf.pppg++;
-        bunker2gnb2.ppp <--> cable <--> bunker2iUpf.pppg++;
-        bunker2gnb1.x2++ <--> cable <--> bunker2gnb2.x2++;
+        bunker2gnb1.ppp <--> closeCable <--> bunker2iUpf.pppg++;
+        bunker2gnb2.ppp <--> closeCable <--> bunker2iUpf.pppg++;
+        bunker2gnb1.x2++ <--> closeCable <--> bunker2gnb2.x2++;
 
 
         upf.pppg++ <--> cable <--> bunker3iUpf.pppg++;
-        bunker3gnb1.ppp <--> cable <--> bunker3iUpf.pppg++;
-        bunker3gnb2.ppp <--> cable <--> bunker3iUpf.pppg++;
-        bunker3gnb1.x2++ <--> cable <--> bunker3gnb2.x2++;
+        bunker3gnb1.ppp <--> closeCable <--> bunker3iUpf.pppg++;
+        bunker3gnb2.ppp <--> closeCable <--> bunker3iUpf.pppg++;
+        bunker3gnb1.x2++ <--> closeCable <--> bunker3gnb2.x2++;
 
 }

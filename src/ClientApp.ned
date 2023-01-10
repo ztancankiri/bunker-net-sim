@@ -37,6 +37,18 @@ simple ClientApp like IApp
         @signal[endtoenddelay](type="long");
         @statistic[endtoenddelay](title="End-to-end Delay"; source="endtoenddelay"; record=vector; interpolationmode=linear);
         
+        @signal[senderBunkerId](type="long");
+        @statistic[senderBunkerId](title="Sender Bunker ID"; source="senderBunkerId"; record=vector; interpolationmode=linear);
+        
+        @signal[senderHostId](type="long");
+        @statistic[senderHostId](title="Sender Host ID"; source="senderHostId"; record=vector; interpolationmode=linear);
+        
+        @signal[receiverBunkerId](type="long");
+        @statistic[receiverBunkerId](title="Receiver Bunker ID"; source="receiverBunkerId"; record=vector; interpolationmode=linear);
+        
+        @signal[receiverHostId](type="long");
+        @statistic[receiverHostId](title="Receiver Host ID"; source="receiverHostId"; record=vector; interpolationmode=linear);
+        
         @signal[packetSent](type=inet::Packet);
         @signal[packetReceived](type=inet::Packet);
         @statistic[packetReceived](title="packets received"; source=packetReceived; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);

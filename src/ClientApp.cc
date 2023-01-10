@@ -14,6 +14,8 @@
 
 #include <algorithm>
 #include <random>
+#include <regex>
+#include <string>
 
 namespace inet {
 
@@ -100,6 +102,11 @@ void ClientApp::initialize(int stage)
         learntFromMessages = 0;
 
         endtoenddelay = registerSignal("endtoenddelay");
+
+        senderBunkerId = registerSignal("senderBunkerId");
+        senderHostId = registerSignal("senderHostId");
+        receiverBunkerId = registerSignal("receiverBunkerId");
+        receiverHostId = registerSignal("receiverHostId");
     }
 }
 
@@ -213,10 +220,7 @@ void ClientApp::sendPacket()
 
 void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
-    emit(endtoenddelay, simTime() - pk->getCreationTime());
 
-    emit(packetReceivedSignal, pk);
-    numReceived++;
 
     auto data = pk->peekData<BunkerPacket>();
 
@@ -224,6 +228,42 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     std::string survivorName = std::string(data->getSurvivorName());
     auto bunkerId = data->getBunkerId();
     auto ip = data->getIp();
+
+
+    int senderBunkerIdInt = -1;
+    int senderHostIdInt = -1;
+    int receivedBunkerIdInt = -1;
+    int receivedHostIdInt = -1;
+
+    if (packetType == 2) {
+        senderBunkerIdInt = 0;
+        senderHostIdInt = 0;
+    }
+    else if (packetType == 3){
+        std::smatch matchSender;
+        if (regex_match(survivorName, matchSender, std::regex("bunker([0-9]+)host\\[([0-9]+)\\]") )) {
+
+            senderBunkerIdInt = atoi(matchSender[1].str().c_str());
+            senderHostIdInt = atoi(matchSender[2].str().c_str());
+        }
+    }
+
+
+    std::smatch matchReceived;
+    if (regex_match(ownName, matchReceived, std::regex("bunker([0-9]+)host\\[([0-9]+)\\]") )) {
+
+        receivedBunkerIdInt = atoi(matchReceived[1].str().c_str());
+        receivedHostIdInt = atoi(matchReceived[2].str().c_str());
+
+    }
+
+    emit(endtoenddelay, simTime() - pk->getCreationTime());
+    emit(senderBunkerId, senderBunkerIdInt);
+    emit(receiverBunkerId, receivedBunkerIdInt);
+    emit(senderHostId, senderHostIdInt);
+    emit(receiverHostId, receivedHostIdInt);
+    emit(packetReceivedSignal, pk);
+    numReceived++;
 
     if (packetType == 2) {
         if (bunkerId == -1) { // Not Found
