@@ -32,19 +32,19 @@ network Network
         }
     submodules:
         configurator: Ipv4NetworkConfigurator {
-            @display("p=61,31");
+            @display("p=43,29");
         }
         carrierAggregation: CarrierAggregation {
-            @display("p=347,35");
+            @display("p=276,29");
         }
         channelControl: LteChannelControl {
-            @display("p=257,28");
+            @display("p=387,32");
         }
         binder: Binder {
-            @display("p=196,29");
+            @display("p=186,29");
         }
         visualizer: IntegratedCanvasVisualizer {
-            @display("p=128,29");
+            @display("p=119,29");
         }
         // =====[ Main ]======
         mainrouter: Router {
