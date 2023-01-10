@@ -22,9 +22,14 @@ namespace inet {
 Define_Module(ClientApp);
 
 void ClientApp::possibleSurvivorsInit() {
-    std::string bunker1_host_prefix = std::string(par("bunker1_host_prefix"));
-    std::string bunker2_host_prefix = std::string(par("bunker2_host_prefix"));
-    std::string bunker3_host_prefix = std::string(par("bunker3_host_prefix"));
+    const char* ch1 = par("bunker1_host_prefix");
+    std::string bunker1_host_prefix(ch1);
+
+    const char* ch2 = par("bunker2_host_prefix");
+    std::string bunker2_host_prefix(ch2);
+
+    const char* ch3 = par("bunker3_host_prefix");
+    std::string bunker3_host_prefix(ch3);
 
     int bunker1_host_number = par("bunker1_host_number");
     int bunker2_host_number = par("bunker2_host_number");

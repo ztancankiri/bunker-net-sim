@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for bunker-net-sim
 #
 # This file was generated with the command:
-#  opp_makemake -f -pINET -KINET4_4_PROJ=../../inet4.4 -KSIMU5G_1_2_1_PROJ=../../Simu5G-1.2.1 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -L$$\(SIMU5G_1_2_1_PROJ\)/src -linet -lINET$$\(D\) -lsimu5g$$\(D\)
+#  opp_makemake -f -pINET -KINET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4 -KSIMU5G_1_2_1_PROJ=/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1 -DINET_IMPORT -I$$\(INET4_4_PROJ\)/src/ -L$$\(INET4_4_PROJ\)/src -L$$\(SIMU5G_1_2_1_PROJ\)/src -linet -lINET$$\(D\) -lsimu5g$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -43,8 +43,8 @@ MSGFILES = \
 SMFILES =
 
 # Other makefile variables (-K)
-INET4_4_PROJ=../../inet4.4
-SIMU5G_1_2_1_PROJ=../../Simu5G-1.2.1
+INET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4
+SIMU5G_1_2_1_PROJ=/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1
 
 #------------------------------------------------------------------------------
 
