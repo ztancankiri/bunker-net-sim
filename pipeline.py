@@ -17,6 +17,7 @@ parser.add_argument('--simu5g', type = str, required = False)
 parser.add_argument('--config', type = str, required = False)
 parser.add_argument('--build', action='store_true')
 parser.add_argument('--clean', action='store_true')
+parser.add_argument('--plotonly', action='store_true')
 args = parser.parse_args()
 
 scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
@@ -59,7 +60,7 @@ for matchNum, match in enumerate(matches, start = 1):
 
 def clean_project():
     print('Cleaning bunker-net-sim...')
-    subprocess.run(['make', 'clean'], stdout = subprocess.PIPE)
+    subprocess.run(['make', 'clean'], stderr = sys.stderr, stdout = sys.stdout)
     
     results_folder = os.path.join('.', 'simulations', 'results')
     if os.path.exists(results_folder):
@@ -77,59 +78,50 @@ def build_project():
         '-KINET4_4_PROJ=' + INET_path,
         '-KSIMU5G_1_2_1_PROJ=' + Simu5G_path,
         '-DINET_IMPORT',
-        '-I' + INET_path + '/src',
-        '-L' + INET_path + '/src',
-        '-L' + Simu5G_path + '/src',
+        '-I' + os.path.join(INET_path, 'src'),
+        '-L' + os.path.join(INET_path, 'src'),
+        '-L' + os.path.join(Simu5G_path, 'src'),
         '-lINET',
         '-lsimu5g'],
-        stdout = subprocess.PIPE)
+        stderr = sys.stderr, stdout = sys.stdout)
 
-    result = subprocess.run(['make'], stdout = subprocess.PIPE)
-    runLog = result.stdout.decode('utf-8').splitlines()
-    print(runLog)
+    result = subprocess.run(['make'], stderr = sys.stderr, stdout = sys.stdout)
 
 def run_config(config):
-    print('Running config ' + config + '...')
-    result = subprocess.run([
-        './bunker-net-sim',
-        '-r',
-        '0',
-        '-m',
-        '-u',
-        'Cmdenv',
-        '-n',
-        './simulations:./src:' + INET_path + '/src:' + Simu5G_path + '/src',
-        '-l',
-        INET_path + '/src/INET',
-        '-l',
-        Simu5G_path + '/src/simu5g',
-        '-c',
-        config,
-        './simulations/omnetpp.ini'],
-        stdout = subprocess.PIPE)
+    if not args.plotonly:
+        print('Running simulation of ' + config + '...')
+        result = subprocess.run([
+            './bunker-net-sim',
+            '-r',
+            '0',
+            '-m',
+            '-u',
+            'Cmdenv',
+            '-n',
+            '{}:{}:{}:{}'.format(os.path.join('.', 'simulations'),  os.path.join('.', 'src'), os.path.join(INET_path, 'src'), os.path.join(Simu5G_path, 'src')),
+            '-l',
+            os.path.join(INET_path, 'src', 'INET'),
+            '-l',
+            os.path.join(Simu5G_path, 'src', 'simu5g'),
+            '-c',
+            config,
+            os.path.join('.', 'simulations', 'omnetpp.ini')],
+            stderr = sys.stderr, stdout = sys.stdout)
+        
+        print('Parsing results of ' + config + '...')
+        res = subprocess.run([
+            scavetool_path, 'x', 
+            os.path.join('.', 'simulations', 'results', config, config + '.vec'), 
+            '-F', 'JSON', '-o', 
+            os.path.join('.', 'simulations', 'results', config, config + '.vec.json')],
+            stderr = sys.stderr, stdout = sys.stdout)
 
-    runLog = result.stdout.decode('utf-8').splitlines()
-    #     print(*runLog, sep='\n')
-    
-    res = subprocess.run([
-        scavetool_path, 'x', 
-        os.path.join('.', 'simulations', 'results', config, config + '.vec'), 
-        '-F', 'JSON', '-o', 
-        os.path.join('.', 'simulations', 'results', config, config + '.vec.json')],
-        stdout = subprocess.PIPE)
-
-    runLog = res.stdout.decode('utf-8').splitlines()
-    #     print(*runLog, sep = '\n')
-
-    res = subprocess.run([
-        scavetool_path, 'x', 
-        os.path.join('.', 'simulations', 'results', config, config + '.sca'), 
-        '-F', 'JSON', '-o', 
-        os.path.join('.', 'simulations', 'results', config, config + '.sca.json')],
-        stdout = subprocess.PIPE)
-
-    runLog = res.stdout.decode('utf-8').splitlines()
-    #     print(*runLog, sep = '\n')
+        res = subprocess.run([
+            scavetool_path, 'x', 
+            os.path.join('.', 'simulations', 'results', config, config + '.sca'), 
+            '-F', 'JSON', '-o', 
+            os.path.join('.', 'simulations', 'results', config, config + '.sca.json')],
+            stderr = sys.stderr, stdout = sys.stdout)
 
     def convert_dict_to_nested_objects(d):
         result = {}
@@ -259,7 +251,8 @@ def run_config(config):
     os.makedirs(config_folder)
 
     bandwidth = scalars['Network']['cableBandwidth']
-
+############################################################################################################################################
+    print('Plotting LinkLayerThroughput of ' + config + '...')
     linkLayerThroughputFolder = os.path.join(config_folder, 'LinkLayerThroughput')
     if not os.path.exists(linkLayerThroughputFolder):
         os.makedirs(linkLayerThroughputFolder)
@@ -285,7 +278,8 @@ def run_config(config):
                     plt.grid()
                     plt.savefig(os.path.join(linkLayerThroughputFolder, module + "-" + str(i) + "-LinkLayerThroughput.png"), bbox_inches = 'tight')
                     plt.clf()
-
+############################################################################################################################################
+    print('Plotting LinkUtilization of ' + config + '...')
     linkUtilizationFolder = os.path.join(config_folder, 'LinkUtilization')
     if not os.path.exists(linkUtilizationFolder):
         os.makedirs(linkUtilizationFolder)
@@ -311,7 +305,8 @@ def run_config(config):
                     plt.grid()
                     plt.savefig(os.path.join(linkUtilizationFolder, module + "-" + str(i) + "-LinkUtilization.png"), bbox_inches = 'tight')
                     plt.clf()
-
+############################################################################################################################################
+    print('Plotting ApplicationLayerThroughput of ' + config + '...')
     applicationLayerThroughput = os.path.join(config_folder, 'ApplicationLayerThroughput')
     if not os.path.exists(applicationLayerThroughput):
         os.makedirs(applicationLayerThroughput)
@@ -337,7 +332,8 @@ def run_config(config):
                     plt.grid()
                     plt.savefig(os.path.join(applicationLayerThroughput, module + "-" + str(i) + "-ApplicationLayerThroughput.png"), bbox_inches = 'tight')
                     plt.clf()
-
+############################################################################################################################################
+    print('Plotting Latency of ' + config + '...')
     latencyFolder = os.path.join(config_folder, 'Latency')
     if not os.path.exists(latencyFolder):
         os.makedirs(latencyFolder)
@@ -374,7 +370,214 @@ def run_config(config):
                         plt.grid()
                         plt.savefig(os.path.join(latencyFolder, module + "-" + str(i) + "-Latency.png"), bbox_inches = 'tight')
                         plt.clf()
+############################################################################################################################################
+    print('Plotting B2BLatency of ' + config + '...')
+    B2BLatencyFolder = os.path.join(config_folder, 'B2BLatency')
+    if not os.path.exists(B2BLatencyFolder):
+        os.makedirs(B2BLatencyFolder)
 
+    time = []
+
+    B1toB1 = []
+    B1toB2 = []
+    B1toB3 = []
+
+    B2toB1 = []
+    B2toB2 = []
+    B2toB3 = []
+
+    B3toB1 = []
+    B3toB2 = []
+    B3toB3 = []
+
+    B1toB1counter = 0
+    B1toB2counter = 0
+    B1toB3counter = 0
+
+    B2toB1counter = 0
+    B2toB2counter = 0
+    B2toB3counter = 0
+
+    B3toB1counter = 0
+    B3toB2counter = 0
+    B3toB3counter = 0
+
+    for key in vectors.keys():
+        for module in vectors[key].keys():
+            for i in range(len(vectors[key][module])):
+                if 'app' in vectors[key][module][i]:
+                    for j in range(len(vectors[key][module][i]['app'])):
+                        if 'endtoenddelay:vector' in vectors[key][module][i]['app'][j]:
+                            if len(time) == 0:
+                                length = len(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['time'])
+                                time = np.array(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['time'])
+                            
+                            if len(B1toB1) == 0:
+                                B1toB1 = np.zeros(length)
+                            if len(B1toB2) == 0:
+                                B1toB2 = np.zeros(length)
+                            if len(B1toB3) == 0:
+                                B1toB3 = np.zeros(length)
+                            if len(B2toB1) == 0:
+                                B2toB1 = np.zeros(length)
+                            if len(B2toB2) == 0:
+                                B2toB2 = np.zeros(length)
+                            if len(B2toB3) == 0:
+                                B2toB3 = np.zeros(length)
+                            if len(B3toB1) == 0:
+                                B3toB1 = np.zeros(length)
+                            if len(B3toB2) == 0:
+                                B3toB2 = np.zeros(length)
+                            if len(B3toB3) == 0:
+                                B3toB3 = np.zeros(length)
+
+                            for z in range(len(vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'])):
+                                if vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 1 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 1:
+                                    B1toB1[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B1toB1counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 1 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 2:
+                                    B1toB2[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B1toB2counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 1 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 3:
+                                    B1toB3[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B1toB3counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 2 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 1:
+                                    B2toB1[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B2toB1counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 2 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 2:
+                                    B2toB2[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B2toB2counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 2 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 3:
+                                    B2toB3[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B2toB3counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 3 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 1:
+                                    B3toB1[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B3toB1counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 3 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 2:
+                                    B3toB2[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B3toB2counter += 1
+                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 3 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 3:
+                                    B3toB3[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
+                                    B3toB3counter += 1
+
+    if B1toB1counter > 0:
+        B1toB1 /= B1toB1counter
+
+    if B1toB2counter > 0:
+        B1toB2 /= B1toB2counter
+
+    if B1toB3counter > 0:
+        B1toB3 /= B1toB3counter
+
+    if B2toB1counter > 0:
+        B2toB1 /= B2toB1counter
+
+    if B2toB2counter > 0:
+        B2toB2 /= B2toB2counter
+
+    if B2toB3counter > 0:
+        B2toB3 /= B2toB3counter
+
+    if B3toB1counter > 0:
+        B3toB1 /= B3toB1counter
+
+    if B3toB2counter > 0:
+        B3toB2 /= B3toB2counter
+
+    if B3toB3counter > 0:
+        B3toB3 /= B3toB3counter
+
+    plt.title('Latency of Bunker 1 to Bunker 1')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B1toB1 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker1-Bunker1.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 1 to Bunker 2')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B1toB2 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker1-Bunker2.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 1 to Bunker 3')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B1toB3 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker1-Bunker3.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 2 to Bunker 1')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B2toB1 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker2-Bunker1.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 2 to Bunker 2')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B2toB2 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker2-Bunker2.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 2 to Bunker 3')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B2toB3 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker2-Bunker3.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 3 to Bunker 1')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B3toB1 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker3-Bunker1.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 3 to Bunker 2')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B3toB2 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker3-Bunker2.png"), bbox_inches = 'tight')
+    plt.clf()
+
+    plt.title('Latency of Bunker 3 to Bunker 3')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Latency (ms)')
+    xpoints = time
+    ypoints = B3toB3 * 1000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker3-Bunker3.png"), bbox_inches = 'tight')
+    plt.clf()
+############################################################################################################################################
+    print('Plotting Lookup of ' + config + '...')
     lookupFolder = os.path.join(config_folder, 'Lookup')
     if not os.path.exists(lookupFolder):
         os.makedirs(lookupFolder)
@@ -435,7 +638,7 @@ def run_config(config):
 
                         plt.savefig(os.path.join(lookupFolder, module + "-" + str(i) + "-Lookups.png"), bbox_inches = 'tight')
                         plt.clf()
-
+############################################################################################################################################
 def run_everything():
     print('Running all simulations...')
     for config in config_list:
@@ -474,11 +677,20 @@ while (menuOpen):
     print('The configurations are getting from omnet.ini file directly.')
     print('To add new configurations, update the omnet.ini file accordingly.')
     print('==================================================================')
-    print('To run a configuration silently, you can use the following:')
+    print('To build the project, you can use the following:')
+    print('  USAGE: python ' + sys.argv[0] + ' --build')
+    print('==================================================================')
+    print('To clean the working directory, you can use the following:')
+    print('  USAGE: python ' + sys.argv[0] + ' --clean')
+    print('==================================================================')
+    print('To run a configuration unattended, you can use the following:')
     print('  USAGE: python ' + sys.argv[0] + ' --config <CONFIG_NAME>')
     print('==================================================================')
-    print('To run a all simulations silently, you can use the following:')
+    print('To run a all simulations unattended, you can use the following:')
     print('  USAGE: python ' + sys.argv[0] + ' --config all')
+    print('==================================================================')
+    print('To plot the results without running the simulations again: ')
+    print('  USAGE: python ' + sys.argv[0] + ' --plotonly')
     print('==================================================================')
     print('Or... You can use the following interactive menu for simulations.')
     print('==================================================================')
@@ -488,7 +700,10 @@ while (menuOpen):
         print(' ' + str(i + 1) + '.\t' + config_list[i])
     print('==================================================================')
     print(' A.\tRun everything!')
-    print(' Q.\tQuit!')
+    print('==================================================================')
+    print(' B.\tBuild the project.')
+    print(' C.\tClean working directory.')
+    print(' Q.\tQuit.')
     print('==================================================================')
 
     selection = input("Your selection:").upper()
@@ -497,6 +712,10 @@ while (menuOpen):
         run_config(config_list[int(selection) - 1])
     elif selection == 'A':
         run_everything()
+    elif selection == 'B':
+        build_project()
+    elif selection == 'C':
+        clean_project()
     elif selection == 'Q':
         menuOpen = False
     else:
