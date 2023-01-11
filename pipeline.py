@@ -20,7 +20,11 @@ parser.add_argument('--clean', action='store_true', help = 'Cleans the working d
 parser.add_argument('--plotonly', action='store_true', help = 'Use if you just want plots of results without running simulations')
 args = parser.parse_args()
 
-scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
+try:
+    scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
+except:
+    print('*** You need to use "source setenv" in the root directory of OMNeT++ to load required environment variables before running the pipeline.')
+    sys.exit()
 
 if args.inet == None:
     INET_path = os.path.join(scavetool_path.replace('/bin/opp_scavetool', ''), 'samples', 'inet4.4')
@@ -58,6 +62,10 @@ for matchNum, match in enumerate(matches, start = 1):
         groupNum = groupNum + 1
         config_list.append(match.group(groupNum))
 
+def clean_screen():
+    for i in range(100):
+        print()
+
 def clean_project():
     print('Cleaning bunker-net-sim...')
     subprocess.run(['make', 'clean'], stderr = sys.stderr, stdout = sys.stdout)
@@ -89,9 +97,15 @@ def build_project():
 
 def run_config(config):
     if not args.plotonly:
+        if not os.path.exists(os.path.join('.', 'bunker-net-sim')):
+            clean_screen()
+            print('*** You need to build the simulator before running the simulations.')
+            print()
+            return
+
         print('Running simulation of ' + config + '...')
         result = subprocess.run([
-            './bunker-net-sim',
+            os.path.join('.', 'bunker-net-sim'),
             '-r',
             '0',
             '-m',
@@ -640,14 +654,15 @@ def run_config(config):
                         plt.clf()
 ############################################################################################################################################
 def run_everything():
+    if not os.path.exists(os.path.join('.', 'bunker-net-sim')):
+        clean_screen()
+        print('*** You need to build the simulator before running the simulations.')
+        print()
+        return
     print('Running all simulations...')
     for config in config_list:
         run_config(config)
     print('All simulations finished...')
-
-def clean_screen():
-    for i in range(100):
-        print()
 
 if args.clean:
     clean_project()
