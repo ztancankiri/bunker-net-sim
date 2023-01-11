@@ -15,6 +15,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--inet', type = str, required = False)
 parser.add_argument('--simu5g', type = str, required = False)
 parser.add_argument('--config', type = str, required = False)
+parser.add_argument('--build', action='store_true')
+parser.add_argument('--clean', action='store_true')
 args = parser.parse_args()
 
 scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
@@ -55,10 +57,41 @@ for matchNum, match in enumerate(matches, start = 1):
         groupNum = groupNum + 1
         config_list.append(match.group(groupNum))
 
+def clean_project():
+    print('Cleaning bunker-net-sim...')
+    subprocess.run(['make', 'clean'], stdout = subprocess.PIPE)
+    
+    results_folder = os.path.join('.', 'simulations', 'results')
+    if os.path.exists(results_folder):
+        shutil.rmtree(results_folder)
+
+def build_project():
+    clean_project()
+
+    print('Building bunker-net-sim...')
+    subprocess.run([
+        'opp_makemake',
+        '--deep',
+        '-f',
+        '-pINET',
+        '-KINET4_4_PROJ=' + INET_path,
+        '-KSIMU5G_1_2_1_PROJ=' + Simu5G_path,
+        '-DINET_IMPORT',
+        '-I' + INET_path + '/src',
+        '-L' + INET_path + '/src',
+        '-L' + Simu5G_path + '/src',
+        '-lINET',
+        '-lsimu5g'],
+        stdout = subprocess.PIPE)
+
+    result = subprocess.run(['make'], stdout = subprocess.PIPE)
+    runLog = result.stdout.decode('utf-8').splitlines()
+    print(runLog)
+
 def run_config(config):
     print('Running config ' + config + '...')
     result = subprocess.run([
-        './src/bunker-net-sim',
+        './bunker-net-sim',
         '-r',
         '0',
         '-m',
@@ -66,7 +99,6 @@ def run_config(config):
         'Cmdenv',
         '-n',
         './simulations:./src:' + INET_path + '/src:' + Simu5G_path + '/src',
-        '--image-path=' + INET_path + '/images',
         '-l',
         INET_path + '/src/INET',
         '-l',
@@ -78,14 +110,22 @@ def run_config(config):
 
     runLog = result.stdout.decode('utf-8').splitlines()
     #     print(*runLog, sep='\n')
-
-    res = subprocess.run([scavetool_path, 'x', './simulations/results/'+ config + '.vec', '-F', 'JSON', '-o', './simulations/results/'+ config + '.vec.json'],
+    
+    res = subprocess.run([
+        scavetool_path, 'x', 
+        os.path.join('.', 'simulations', 'results', config, config + '.vec'), 
+        '-F', 'JSON', '-o', 
+        os.path.join('.', 'simulations', 'results', config, config + '.vec.json')],
         stdout = subprocess.PIPE)
 
     runLog = res.stdout.decode('utf-8').splitlines()
     #     print(*runLog, sep = '\n')
 
-    res = subprocess.run([scavetool_path, 'x', './simulations/results/'+ config + '.sca', '-F', 'JSON', '-o', './simulations/results/'+ config + '.sca.json'],
+    res = subprocess.run([
+        scavetool_path, 'x', 
+        os.path.join('.', 'simulations', 'results', config, config + '.sca'), 
+        '-F', 'JSON', '-o', 
+        os.path.join('.', 'simulations', 'results', config, config + '.sca.json')],
         stdout = subprocess.PIPE)
 
     runLog = res.stdout.decode('utf-8').splitlines()
@@ -195,27 +235,24 @@ def run_config(config):
         return result
 
     scalars = None
-    with open('./simulations/results/'+ config + '.sca.json') as f:
+    with open(os.path.join('.', 'simulations', 'results', config, config + '.sca.json')) as f:
         scalars = json.loads(f.read())
 
     scalars = clean_scalars(scalars)
 
-    with open('./simulations/results/'+ config + '.clean.sca.json', 'w') as f:
+    with open(os.path.join('.', 'simulations', 'results', config, config + '.clean.sca.json'), 'w') as f:
         f.write(json.dumps(scalars, indent = 4))
-
+    
     vectors = None
-    with open('./simulations/results/'+ config + '.vec.json') as f:
+    with open(os.path.join('.', 'simulations', 'results', config, config + '.vec.json')) as f:
         vectors = json.loads(f.read())
 
     vectors = clean_vectors(vectors)
 
-    with open('./simulations/results/'+ config + '.clean.vec.json', 'w') as f:
+    with open(os.path.join('.', 'simulations', 'results', config, config + '.clean.vec.json'), 'w') as f:
         f.write(json.dumps(vectors, indent = 4))
 
-    if not os.path.exists('./simulations/results/plots'):
-        os.makedirs('./simulations/results/plots')
-
-    config_folder = os.path.join('./simulations/results/plots', config)
+    config_folder = os.path.join('.', 'simulations', 'results', config, 'plots')
     if os.path.exists(config_folder):
         shutil.rmtree(config_folder)
 
@@ -230,48 +267,23 @@ def run_config(config):
     for key in vectors.keys():
         for module in vectors[key].keys():
             for i in range(len(vectors[key][module])):
-                time = np.array(vectors[key][module][i]['eth'][0]['queue']['outgoingDataRate:vector']['time'])
-                value = np.zeros(len(time))
-
-                for j in range(len(vectors[key][module][i]['eth'])):
-                    value += np.array(vectors[key][module][i]['eth'][j]['queue']['outgoingDataRate:vector']['value'])
-
-                value /= len(vectors[key][module][i]['eth'])
-
-                plt.title('Link Layer Throughput of ' + module + " - " + str(i))
-                plt.xlabel('Time (s)')
-                plt.ylabel('Throughput (Mbps)')
-                xpoints = time
-                ypoints = value / 1000
-                plt.plot(xpoints, ypoints, linestyle = 'solid')
-                plt.grid()
-                plt.savefig(os.path.join(linkLayerThroughputFolder, module + "-" + str(i) + "-LinkLayerThroughput.png"), bbox_inches = 'tight')
-                plt.clf()
-
-    linkLayerThroughputFolder = os.path.join(config_folder, 'ApplicationLayerThroughput')
-    if not os.path.exists(linkLayerThroughputFolder):
-        os.makedirs(linkLayerThroughputFolder)
-
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'app' in vectors[key][module][i]:
-                    time = np.array(vectors[key][module][i]['app'][0]['throughput:vector']['time'])
+                if 'cellularNic' not in vectors[key][module][i]:
+                    time = np.array(vectors[key][module][i]['ppp'][0]['queue']['outgoingDataRate:vector']['time'])
                     value = np.zeros(len(time))
 
-                    for j in range(len(vectors[key][module][i]['app'])):
-                        value += np.array(vectors[key][module][i]['app'][j]['throughput:vector']['value'])
+                    for j in range(len(vectors[key][module][i]['ppp'])):
+                        value += np.array(vectors[key][module][i]['ppp'][j]['queue']['outgoingDataRate:vector']['value'])
 
-                    value /= len(vectors[key][module][i]['app'])
+                    value /= len(vectors[key][module][i]['ppp'])
 
-                    plt.title('Application Layer Throughput of ' + module + " - " + str(i))
+                    plt.title('Link Layer Throughput of ' + module + " - " + str(i))
                     plt.xlabel('Time (s)')
                     plt.ylabel('Throughput (Mbps)')
                     xpoints = time
                     ypoints = value / 1000
                     plt.plot(xpoints, ypoints, linestyle = 'solid')
                     plt.grid()
-                    plt.savefig(os.path.join(linkLayerThroughputFolder, module + "-" + str(i) + "-ApplicationLayerThroughput.png"), bbox_inches = 'tight')
+                    plt.savefig(os.path.join(linkLayerThroughputFolder, module + "-" + str(i) + "-LinkLayerThroughput.png"), bbox_inches = 'tight')
                     plt.clf()
 
     linkUtilizationFolder = os.path.join(config_folder, 'LinkUtilization')
@@ -298,6 +310,32 @@ def run_config(config):
                     plt.plot(xpoints, ypoints, linestyle = 'solid')
                     plt.grid()
                     plt.savefig(os.path.join(linkUtilizationFolder, module + "-" + str(i) + "-LinkUtilization.png"), bbox_inches = 'tight')
+                    plt.clf()
+
+    applicationLayerThroughput = os.path.join(config_folder, 'ApplicationLayerThroughput')
+    if not os.path.exists(applicationLayerThroughput):
+        os.makedirs(applicationLayerThroughput)
+
+    for key in vectors.keys():
+        for module in vectors[key].keys():
+            for i in range(len(vectors[key][module])):
+                if 'app' in vectors[key][module][i]:
+                    time = np.array(vectors[key][module][i]['app'][0]['throughput:vector']['time'])
+                    value = np.zeros(len(time))
+
+                    for j in range(len(vectors[key][module][i]['app'])):
+                        value += np.array(vectors[key][module][i]['app'][j]['throughput:vector']['value'])
+
+                    value /= len(vectors[key][module][i]['app'])
+
+                    plt.title('Application Layer Throughput of ' + module + " - " + str(i))
+                    plt.xlabel('Time (s)')
+                    plt.ylabel('Throughput (Mbps)')
+                    xpoints = time
+                    ypoints = value / 1000
+                    plt.plot(xpoints, ypoints, linestyle = 'solid')
+                    plt.grid()
+                    plt.savefig(os.path.join(applicationLayerThroughput, module + "-" + str(i) + "-ApplicationLayerThroughput.png"), bbox_inches = 'tight')
                     plt.clf()
 
     latencyFolder = os.path.join(config_folder, 'Latency')
@@ -407,6 +445,14 @@ def run_everything():
 def clean_screen():
     for i in range(100):
         print()
+
+if args.clean:
+    clean_project()
+    sys.exit()
+
+if args.build:
+    build_project()
+    sys.exit()
 
 if args.config != None:
     if args.config == 'all':
