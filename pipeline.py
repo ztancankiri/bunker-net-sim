@@ -8,9 +8,39 @@ import os
 import shutil
 import re
 import time
+import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--inet', type = str, required = False)
+parser.add_argument('--simu5g', type = str, required = False)
+parser.add_argument('--config', type = str, required = False)
+args = parser.parse_args()
 
 scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
-INET_path = os.path.join(scavetool_path.replace('/bin/opp_scavetool', ''), 'samples', 'inet4.4')
+
+if args.inet == None:
+    INET_path = os.path.join(scavetool_path.replace('/bin/opp_scavetool', ''), 'samples', 'inet4.4')
+else:
+    INET_path = args.inet
+
+if args.simu5g == None:
+    Simu5G_path = os.path.join(scavetool_path.replace('/bin/opp_scavetool', ''), 'samples', 'Simu5G-1.2.1')
+else:
+    Simu5G_path = args.simu5g
+
+if INET_path == None:
+    print('Use "source setenv" in OMNeT++ root directory if INET Framework is placed in "omnetpp-6.0.1/samples/inet4.4"')
+    print('Otherwise, use "--inet" argument to specify the directory of INET Framework.')
+    sys.exit()
+
+if Simu5G_path == None:
+    print('Use "source setenv" in OMNeT++ root directory if INET Framework is placed in "omnetpp-6.0.1/samples/Simu5G-1.2.1"')
+    print('Otherwise, use "--simu5g" argument to specify the directory of Simu5G Framework.')
+    sys.exit()
+
+print('INET Path:\t' + INET_path)
+print('Simu5G Path:\t' + Simu5G_path)
 
 if not os.path.exists('./simulations/results'):
     os.makedirs('./simulations/results')
@@ -25,7 +55,7 @@ for matchNum, match in enumerate(matches, start = 1):
         groupNum = groupNum + 1
         config_list.append(match.group(groupNum))
 
-for config in config_list:
+def run_config(config):
     print('Running config ' + config + '...')
     result = subprocess.run([
         './src/bunker-net-sim',
@@ -35,10 +65,12 @@ for config in config_list:
         '-u',
         'Cmdenv',
         '-n',
-        './simulations:./src:' + INET_path + '/src',
+        './simulations:./src:' + INET_path + '/src:' + Simu5G_path + '/src',
         '--image-path=' + INET_path + '/images',
         '-l',
         INET_path + '/src/INET',
+        '-l',
+        Simu5G_path + '/src/simu5g',
         '-c',
         config,
         './simulations/omnetpp.ini'],
@@ -366,4 +398,62 @@ for config in config_list:
                         plt.savefig(os.path.join(lookupFolder, module + "-" + str(i) + "-Lookups.png"), bbox_inches = 'tight')
                         plt.clf()
 
-print('All simulations finished...')
+def run_everything():
+    print('Running all simulations...')
+    for config in config_list:
+        run_config(config)
+    print('All simulations finished...')
+
+def clean_screen():
+    for i in range(100):
+        print()
+
+if args.config != None:
+    if args.config == 'all':
+        run_everything()
+    else:
+        if args.config in config_list:
+            run_config(args.config)
+        else:
+            print()
+            print('Unknown configuration!')
+    sys.exit()
+
+selection = ""
+menuOpen = True
+while (menuOpen):
+    print('==================================================================')
+    print('Welcome to bunker-net-sim pipeline tool.')
+    print('You can run different configurations with this tool.')
+    print('The configurations are getting from omnet.ini file directly.')
+    print('To add new configurations, update the omnet.ini file accordingly.')
+    print('==================================================================')
+    print('To run a configuration silently, you can use the following:')
+    print('  USAGE: python ' + sys.argv[0] + ' --config <CONFIG_NAME>')
+    print('==================================================================')
+    print('To run a all simulations silently, you can use the following:')
+    print('  USAGE: python ' + sys.argv[0] + ' --config all')
+    print('==================================================================')
+    print('Or... You can use the following interactive menu for simulations.')
+    print('==================================================================')
+    print('Select the configuration that you would like to put into pipeline:')
+    print('==================================================================')
+    for i in range(len(config_list)):
+        print(' ' + str(i + 1) + '.\t' + config_list[i])
+    print('==================================================================')
+    print(' A.\tRun everything!')
+    print(' Q.\tQuit!')
+    print('==================================================================')
+
+    selection = input("Your selection:").upper()
+    
+    if selection.isnumeric() and int(selection) >= 1 and int(selection) <= len(config_list):
+        run_config(config_list[int(selection) - 1])
+    elif selection == 'A':
+        run_everything()
+    elif selection == 'Q':
+        menuOpen = False
+    else:
+        clean_screen()
+        print('Unknown input!')
+        print()
