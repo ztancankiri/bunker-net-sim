@@ -47,3 +47,6 @@ src/bunker-net-sim
 .ipynb_checkpoints/
 plots/
 results/
+src/*_m.cc
+src/*_m.h
+bunker-net-sim

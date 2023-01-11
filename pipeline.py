@@ -11,13 +11,13 @@ import time
 import sys
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--inet', type = str, required = False)
-parser.add_argument('--simu5g', type = str, required = False)
-parser.add_argument('--config', type = str, required = False)
-parser.add_argument('--build', action='store_true')
-parser.add_argument('--clean', action='store_true')
-parser.add_argument('--plotonly', action='store_true')
+parser = argparse.ArgumentParser(description = 'CLI pipeline tool for Bunker-Net-Sim simulator.')
+parser.add_argument('--inet', type = str, required = False, metavar = '<INET_Path>', help = 'The path of the root directory of INET Framework')
+parser.add_argument('--simu5g', type = str, required = False, metavar = '<Simu5G_Path>', help = 'The path of the root directory of Simu5G Framework')
+parser.add_argument('--config', type = str, required = False, metavar = '<Config_Name>', help = 'The name of the config of the desired simulation')
+parser.add_argument('--build', action='store_true', help = 'Builds the bunker-net-sim simulator')
+parser.add_argument('--clean', action='store_true', help = 'Cleans the working directory and removes the results')
+parser.add_argument('--plotonly', action='store_true', help = 'Use if you just want plots of results without running simulations')
 args = parser.parse_args()
 
 scavetool_path = os.path.join(list(filter(lambda x: 'omnetpp-6.0.1/bin' in x, os.getenv('PATH').split(':')))[0], 'opp_scavetool')
