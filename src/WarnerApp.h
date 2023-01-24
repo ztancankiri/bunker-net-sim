@@ -51,7 +51,7 @@ class INET_API WarnerApp : public ClockUserModuleMixin<ApplicationBase>, public 
     virtual void handleStopOperation(LifecycleOperation *operation) override;
     virtual void handleCrashOperation(LifecycleOperation *operation) override;
 
-    virtual void socketDataArrived(UdpSocket *socket, Packet *packet) override;
+    virtual void socketDataArrived(UdpSocket *sock, Packet *packet) override;
     virtual void socketErrorArrived(UdpSocket *socket, Indication *indication) override;
     virtual void socketClosed(UdpSocket *socket) override;
 

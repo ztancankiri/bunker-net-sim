@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for bunker-net-sim
 #
 # This file was generated with the command:
-#  opp_makemake --deep -f -pINET -KINET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4 -KSIMU5G_1_2_1_PROJ=/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1 -DINET_IMPORT -I/Users/ztan/omnetpp-6.0.1/samples/inet4.4/src -L/Users/ztan/omnetpp-6.0.1/samples/inet4.4/src -L/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1/src -lINET -lsimu5g
+#  opp_makemake --deep -f -pINET -psimu5g -KINET4_4_PROJ=/Users/ztan/omnetpp-6.0.1/samples/inet4.4 -KSIMU5G_1_2_1_PROJ=/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1 -DINET_IMPORT -I/Users/ztan/omnetpp-6.0.1/samples/inet4.4/src -I/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1/src -L/Users/ztan/omnetpp-6.0.1/samples/inet4.4/src -L/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1/src -lINET -lsimu5g
 #
 
 # Name of target to be created (-o option)
@@ -19,7 +19,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(QTENV_LIBS) $(CMDENV_LIBS)
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/Users/ztan/omnetpp-6.0.1/samples/inet4.4/src
+INCLUDE_PATH = -I/Users/ztan/omnetpp-6.0.1/samples/inet4.4/src -I/Users/ztan/omnetpp-6.0.1/samples/Simu5G-1.2.1/src
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -33,7 +33,14 @@ PROJECTRELATIVE_PATH =
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/src/ClientApp.o $O/src/HeartBeatApp.o $O/src/ServerApp.o $O/src/UdpBasicAppX.o $O/src/BunkerPacket_m.o
+OBJS = \
+    $O/src/ClientApp.o \
+    $O/src/HeartBeatApp.o \
+    $O/src/ServerApp.o \
+    $O/src/UdpBasicAppX.o \
+    $O/src/WarnerAdminApp.o \
+    $O/src/WarnerApp.o \
+    $O/src/BunkerPacket_m.o
 
 # Message files
 MSGFILES = \
@@ -69,7 +76,7 @@ LIBS += -Wl,-rpath,$(abspath /Users/ztan/omnetpp-6.0.1/samples/inet4.4/src) -Wl,
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
-MSGCOPTS = $(INCLUDE_PATH) -PINET_API
+MSGCOPTS = $(INCLUDE_PATH) -Psimu5g_API
 SMCOPTS =
 
 # we want to recompile everything if COPTS changes,

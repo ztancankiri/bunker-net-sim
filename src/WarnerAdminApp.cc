@@ -8,9 +8,10 @@
 #include "inet/networklayer/common/L3AddressResolver.h"
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
 #include "BunkerPacket_m.h"
+#include "inet/transportlayer/common/L4PortTag_m.h"
 #include "apps/mec/DeviceApp/DeviceAppMessages/DeviceAppPacket_m.h"
 #include "apps/mec/DeviceApp/DeviceAppMessages/DeviceAppPacket_Types.h"
-#include "WarnerAdminAppApp.h"
+#include "WarnerAdminApp.h"
 
 namespace inet {
 

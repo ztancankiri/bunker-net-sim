@@ -117,7 +117,7 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         for (auto& survivor: survivorDatabase) {
             if (survivor.second.bunkerId == bunkerId)  {
                 ip_list.append(survivor.second.ip.str());
-                ip_list.append("|");
+                ip_list.append(",");
             }
         }
 

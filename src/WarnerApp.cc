@@ -8,6 +8,7 @@
 #include "inet/common/packet/Packet.h"
 #include "inet/networklayer/common/FragmentationTag_m.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
+#include "inet/transportlayer/common/L4PortTag_m.h"
 #include "inet/transportlayer/contract/udp/UdpControlInfo_m.h"
 #include "BunkerPacket_m.h"
 
@@ -115,7 +116,7 @@ void WarnerApp::handleMessageWhenUp(cMessage *msg)
         socket.processMessage(msg);
 }
 
-void WarnerApp::socketDataArrived(UdpSocket *socket, Packet *packet)
+void WarnerApp::socketDataArrived(UdpSocket *sock, Packet *packet)
 {
     EV_INFO << "Received packet from Warner" << endl;
 
@@ -133,9 +134,6 @@ void WarnerApp::socketDataArrived(UdpSocket *socket, Packet *packet)
         const auto& payload = makeShared<BunkerPacket>();
         payload->setChunkLength(B(20));
         payload->setType(5);  // Warning Lookup Request
-
-        const auto& payload = makeShared<BunkerPacket>();
-        payload->setChunkLength(B(20));
         payload->setBunkerId(data->getBunkerId());
 
         payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
@@ -143,17 +141,18 @@ void WarnerApp::socketDataArrived(UdpSocket *socket, Packet *packet)
 
         emit(packetSentSignal, packet);
         socket.sendTo(packet, serverAddress, serverPort);
-        numSent++;
     }
     else if(packetType == 5) { // Warning Lookup request
         auto ip_list = data->getWarningIPs();
 
-        char *ip_str = strtok(ip_list, "|");
+        cStringTokenizer tokenizer(ip_list);
+        const char *token;
 
-        while (ip_str != NULL) {
-            L3Address ip(ip_str);
+        while ((token = tokenizer.nextToken()) != nullptr) {
+            L3Address ip;
+            L3AddressResolver().tryResolve(token, ip);
 
-            EV_INFO << "WARNING MESSAGE SENDING: WARNER APP " << "---->" << ip_str << endl;
+            EV_INFO << "WARNING MESSAGE SENDING: WARNER APP " << "---->" << token << endl;
             Packet *packet = new Packet("Warning Message");
             packet->addTag<FragmentationReq>()->setDontFragment(true);
 
@@ -161,16 +160,12 @@ void WarnerApp::socketDataArrived(UdpSocket *socket, Packet *packet)
 
             payload->setChunkLength(B(20));
             payload->setType(7);
-            payload->setTextMessage(warningMessage);
+            payload->setTextMessage(warningMessage.c_str());
 
             payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
             packet->insertAtBack(payload);
 
-            emit(packetSentSignal, packet);
             socket.sendTo(packet, ip, 5555);
-            numSent++;
-
-            ip_str = strtok(NULL, "|");
         }
     }
 
