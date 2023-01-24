@@ -33,7 +33,14 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/ClientApp.o $O/HeartBeatApp.o $O/ServerApp.o $O/UdpBasicAppX.o $O/BunkerPacket_m.o
+OBJS = \
+    $O/ClientApp.o \
+    $O/HeartBeatApp.o \
+    $O/ServerApp.o \
+    $O/UdpBasicAppX.o \
+    $O/WarnerAdminApp.o \
+    $O/WarnerApp.o \
+    $O/BunkerPacket_m.o
 
 # Message files
 MSGFILES = \

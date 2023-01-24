@@ -108,6 +108,34 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         emit(packetSentSignal, packet);
         numSent++;
     }
+    else if (packetType == 5) { // Warning Lookup Request
+        Packet *packet = new Packet("Warning Lookup Response");
+        packet->addTag<FragmentationReq>()->setDontFragment(true);
+        int bunkerId = data->getBunkerId();
+
+        std::string ip_list = "";
+        for (auto& survivor: survivorDatabase) {
+            if (survivor.second.bunkerId == bunkerId)  {
+                ip_list.append(survivor.second.ip.str());
+                ip_list.append("|");
+            }
+        }
+
+        if (ip_list.size() > 0) {
+            ip_list.pop_back();
+        }
+
+        const auto& payload = makeShared<BunkerPacket>();
+        payload->setChunkLength(B(20));
+        payload->setType(6);  // Warning Lookup Response
+        payload->setWarningIPs(ip_list.c_str());
+
+        packet->insertAtBack(payload);
+        socket->sendTo(packet, remoteAddress, srcPort);
+
+        emit(packetSentSignal, packet);
+        numSent++;
+    }
 
     delete pk;
 }

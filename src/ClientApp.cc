@@ -83,7 +83,7 @@ void ClientApp::possibleSurvivorsInit() {
     int size = intrand(hosts.size());
     EV_INFO << "-------" << ownName << "'s Survivor Search List-------" << endl;
 
-    std::shuffle(std::begin(hosts), std::end(hosts), std::random_device());
+    std::shuffle(std::begin(hosts), std::end(hosts), std::default_random_engine(intrand(10000)));
 
     for (int i = 0; i < size; i++) {
         possibleSurvivors.push_back(hosts[i]);
