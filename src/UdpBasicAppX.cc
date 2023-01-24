@@ -52,6 +52,8 @@ void UdpBasicAppX::initialize(int stage)
             destPort = par("destPort");
         }
     }
+
+    EV_INFO << "UDP-START" << endl;
 }
 
 void UdpBasicAppX::finish()

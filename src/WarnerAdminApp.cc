@@ -1,5 +1,3 @@
-#include "WarnerAdminApp.h"
-
 #include "inet/applications/base/ApplicationPacket_m.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/TagBase_m.h"
@@ -12,6 +10,7 @@
 #include "BunkerPacket_m.h"
 #include "apps/mec/DeviceApp/DeviceAppMessages/DeviceAppPacket_m.h"
 #include "apps/mec/DeviceApp/DeviceAppMessages/DeviceAppPacket_Types.h"
+#include "WarnerAdminAppApp.h"
 
 namespace inet {
 
@@ -58,6 +57,8 @@ void WarnerAdminApp::initialize(int stage)
        deviceAppAddress_ = L3AddressResolver().resolve(deviceSimbolicAppAddress_);
        mecAppName = par("mecAppName").stringValue();
        mecAppPort_ = -10;
+
+       EV_INFO << "ADMIN-START" << endl;
    }
 }
 
@@ -71,7 +72,7 @@ void WarnerAdminApp::finish()
 
 void WarnerAdminApp::sendPacket() {
     if (mecAppPort_ > 0) {
-        EV_INFO << "HEARTBEAT REQUEST CREATED BY: " << ownName;
+        EV_INFO << "WARNING REQUEST CREATED BY: " << ownName;
         Packet *packet = new Packet("HeartBeatData");
         packet->addTag<FragmentationReq>()->setDontFragment(true);
 
@@ -90,6 +91,8 @@ void WarnerAdminApp::sendPacket() {
         mecAppPort_ = -11;
         sendStartMEWarningAlertApp();
     }
+
+    EV_INFO << "SEND PACKET ZAFER";
 }
 
 void WarnerAdminApp::sendStartMEWarningAlertApp()

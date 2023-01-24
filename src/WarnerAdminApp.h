@@ -1,5 +1,5 @@
-#ifndef WARNERADMINAPP_H_
-#define WARNERADMINAPP_H_
+#ifndef WarnerAdminApp_H_
+#define WarnerAdminApp_H_
 
 #include <vector>
 
@@ -23,8 +23,6 @@ class INET_API WarnerAdminApp : public ClockUserModuleMixin<ApplicationBase>, pu
     const char *packetName = nullptr;
 
     bool sendingEnabled;
-    L3Address destAddress;
-    int destPort;
 
     bool listeningEnabled;
     int localPort;
@@ -74,4 +72,4 @@ class INET_API WarnerAdminApp : public ClockUserModuleMixin<ApplicationBase>, pu
 
 } // namespace inet
 
-#endif /* WARNERADMINAPP_H_ */
+#endif /* WarnerAdminApp_H_ */
