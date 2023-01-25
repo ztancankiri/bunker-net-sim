@@ -42,7 +42,6 @@ src/bunker-net-sim
 *.vci
 *.vec
 *.csv
-*.json
 .cmdenv-log
 .ipynb_checkpoints/
 plots/
