@@ -107,22 +107,22 @@ def run_config(config):
 
         print('Running simulation of ' + config + '...')
         result = subprocess.run([
-            os.path.join('.', 'bunker-net-sim'),
+            os.path.join('..', 'bunker-net-sim'),
             '-r',
             '0',
             '-m',
             '-u',
             'Cmdenv',
             '-n',
-            '{}:{}:{}:{}'.format(os.path.join('.', 'simulations'),  os.path.join('.', 'src'), os.path.join(INET_path, 'src'), os.path.join(Simu5G_path, 'src')),
+            '{}:{}:{}:{}'.format('.', os.path.join('..', 'src'), os.path.join(INET_path, 'src'), os.path.join(Simu5G_path, 'src')),
             '-l',
             os.path.join(INET_path, 'src', 'INET'),
             '-l',
             os.path.join(Simu5G_path, 'src', 'simu5g'),
             '-c',
             config,
-            os.path.join('.', 'simulations', 'omnetpp.ini')],
-            stderr = sys.stderr, stdout = sys.stdout)
+            os.path.join('.', 'omnetpp.ini')],
+            stderr = sys.stderr, stdout = sys.stdout, cwd = os.path.join('.', 'simulations'))
         
         print('Parsing results of ' + config + '...')
         res = subprocess.run([
@@ -276,7 +276,7 @@ def run_config(config):
     for key in vectors.keys():
         for module in vectors[key].keys():
             for i in range(len(vectors[key][module])):
-                if 'cellularNic' not in vectors[key][module][i]:
+                if 'cellularNic' not in vectors[key][module][i] and module != "ualcmp" and "mecHost" not in module:
                     time = np.array(vectors[key][module][i]['ppp'][0]['queue']['outgoingDataRate:vector']['time'])
                     value = np.zeros(len(time))
 

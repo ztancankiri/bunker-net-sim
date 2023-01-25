@@ -225,8 +225,6 @@ void ClientApp::sendPacket()
 
 void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
-
-
     auto data = pk->peekData<BunkerPacket>();
 
     auto packetType = data->getType();

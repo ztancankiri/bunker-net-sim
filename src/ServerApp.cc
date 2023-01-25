@@ -118,8 +118,6 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         payload->setChunkLength(B(20));
         payload->setType(6);  // Warning Lookup Response
 
-        EV_INFO << "BEFORE FOR" << endl;
-
         int bunkerId = data->getBunkerId();
         std::string ip_list = "";
         for (auto& survivor: survivorDatabase) {
@@ -133,11 +131,7 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
             ip_list.pop_back();
         }
 
-        EV_INFO << "AFTER FOR" << endl;
-
         payload->setWarningIPs(ip_list.c_str());
-
-        EV_INFO << "IP LIST: " << ip_list << endl;
 
         packet->insertAtBack(payload);
         socket->sendTo(packet, remoteAddress, srcPort);
