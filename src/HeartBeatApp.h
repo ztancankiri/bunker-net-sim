@@ -9,7 +9,10 @@ class INET_API HeartBeatApp : public UdpBasicAppX
 {
     protected:
         typedef UdpBasicAppX super;
+
+        int bunkerId;
     protected:
+        void initialize(int stage) override;
         void sendPacket() override;
         void finish() override;
 };

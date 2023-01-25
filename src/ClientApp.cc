@@ -310,6 +310,10 @@ void ClientApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 
         EV_INFO << "TEXT MESSAGE FROM " << survivorName << " RECEIVED BY: " << ownName << endl;
     }
+    else if (packetType == 7) {
+        auto textMessage = data->getTextMessage();
+        EV_INFO << "WARNING MESSAGE RECEIVED: " << textMessage << endl;
+    }
 
     delete pk;
 }

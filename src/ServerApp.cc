@@ -34,8 +34,6 @@ void ServerApp::initialize(int stage)
 
 void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
 {
-
-
     int senderBunkerIdInt = 0;
     int senderHostIdInt = 0;
     int receivedBunkerIdInt = 0;
@@ -45,7 +43,6 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     emit(receiverBunkerId, receivedBunkerIdInt);
     emit(senderHostId, senderHostIdInt);
     emit(receiverHostId, receivedHostIdInt);
-
 
     emit(endtoenddelay, simTime() - pk->getCreationTime());
 
@@ -64,16 +61,20 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
     auto survivorName = data->getSurvivorName();
 
     if (packetType == 0) { // Heartbeat Packet
-        survivorDatabase[survivorName].bunkerId = 0;
+        EV_INFO << "SERVER PACKET IS Heartbeat" << endl;
+
+        survivorDatabase[survivorName].bunkerId = data->getBunkerId();
         survivorDatabase[survivorName].ip = remoteAddress;
         survivorDatabase[survivorName].ts = simTime();
         EV_INFO << "--- SERVER: HEARTBEAT RECEIVED FROM: " << survivorName << endl;
     }
     else if (packetType == 1) { // Lookup Request
+        EV_INFO << "SERVER PACKET IS Lookup Request" << endl;
+
         Packet *packet = new Packet("Lookup Response");
         packet->addTag<FragmentationReq>()->setDontFragment(true);
         const auto& payload = makeShared<BunkerPacket>();
-        payload->setChunkLength(B(20));
+        payload->setChunkLength(B(300));
         payload->setType(2);  // Lookup Response
 
         if (survivorDatabase.find(survivorName) == survivorDatabase.end()) { // Not Exists
@@ -109,10 +110,17 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         numSent++;
     }
     else if (packetType == 5) { // Warning Lookup Request
+        EV_INFO << "SERVER PACKET IS Warning Lookup Request" << endl;
+
         Packet *packet = new Packet("Warning Lookup Response");
         packet->addTag<FragmentationReq>()->setDontFragment(true);
-        int bunkerId = data->getBunkerId();
+        const auto& payload = makeShared<BunkerPacket>();
+        payload->setChunkLength(B(20));
+        payload->setType(6);  // Warning Lookup Response
 
+        EV_INFO << "BEFORE FOR" << endl;
+
+        int bunkerId = data->getBunkerId();
         std::string ip_list = "";
         for (auto& survivor: survivorDatabase) {
             if (survivor.second.bunkerId == bunkerId)  {
@@ -125,10 +133,11 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
             ip_list.pop_back();
         }
 
-        const auto& payload = makeShared<BunkerPacket>();
-        payload->setChunkLength(B(20));
-        payload->setType(6);  // Warning Lookup Response
+        EV_INFO << "AFTER FOR" << endl;
+
         payload->setWarningIPs(ip_list.c_str());
+
+        EV_INFO << "IP LIST: " << ip_list << endl;
 
         packet->insertAtBack(payload);
         socket->sendTo(packet, remoteAddress, srcPort);

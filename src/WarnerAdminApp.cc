@@ -49,6 +49,8 @@ void WarnerAdminApp::initialize(int stage)
         numReceived = 0;
         WATCH(numSent);
         WATCH(numReceived);
+
+        bunkerId = par("bunkerId");
     }
 
     if (stage == INITSTAGE_APPLICATION_LAYER) {
@@ -77,7 +79,9 @@ void WarnerAdminApp::sendPacket() {
 
         const auto& payload = makeShared<BunkerPacket>();
         payload->setChunkLength(B(20));
-        payload->setType(0);
+        payload->setType(4);
+        payload->setBunkerId(bunkerId);
+        payload->setTextMessage("INCOMING MISSLE! THIS IS NOT A DRILL !!!");
 
         payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
         packet->insertAtBack(payload);

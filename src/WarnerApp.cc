@@ -129,6 +129,9 @@ void WarnerApp::socketDataArrived(UdpSocket *sock, Packet *packet)
     auto packetType = data->getType();
 
     if (packetType == 4) { // Warning Trigger Message
+        Packet *pk = new Packet("Warning Lookup Request");
+        pk->addTag<FragmentationReq>()->setDontFragment(true);
+
         warningMessage = std::string(data->getTextMessage());
 
         const auto& payload = makeShared<BunkerPacket>();
@@ -136,16 +139,16 @@ void WarnerApp::socketDataArrived(UdpSocket *sock, Packet *packet)
         payload->setType(5);  // Warning Lookup Request
         payload->setBunkerId(data->getBunkerId());
 
-        payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
-        packet->insertAtBack(payload);
+        pk->addTag<CreationTimeTag>()->setCreationTime(simTime());
+        pk->insertAtBack(payload);
 
-        emit(packetSentSignal, packet);
-        socket.sendTo(packet, serverAddress, serverPort);
+        emit(packetSentSignal, pk);
+        socket.sendTo(pk, serverAddress, serverPort);
     }
-    else if(packetType == 5) { // Warning Lookup request
+    else if(packetType == 6) { // Warning Lookup request
         auto ip_list = data->getWarningIPs();
 
-        cStringTokenizer tokenizer(ip_list);
+        cStringTokenizer tokenizer(ip_list, ",");
         const char *token;
 
         while ((token = tokenizer.nextToken()) != nullptr) {
@@ -168,8 +171,6 @@ void WarnerApp::socketDataArrived(UdpSocket *sock, Packet *packet)
             socket.sendTo(packet, ip, 5555);
         }
     }
-
-    delete packet;
 }
 
 void WarnerApp::socketErrorArrived(UdpSocket *socket, Indication *indication)

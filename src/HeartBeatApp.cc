@@ -16,6 +16,15 @@ namespace inet {
 
 Define_Module(HeartBeatApp);
 
+void HeartBeatApp::initialize(int stage)
+{
+    super::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        bunkerId = par("bunkerId");
+    }
+}
+
 void HeartBeatApp::sendPacket()
 {
     int k = intrand(100);
@@ -30,6 +39,7 @@ void HeartBeatApp::sendPacket()
         payload->setChunkLength(B(20));
         payload->setType(0);
         payload->setSurvivorName(ownName.c_str());
+        payload->setBunkerId(bunkerId);
 
         payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
         packet->insertAtBack(payload);
