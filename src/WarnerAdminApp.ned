@@ -10,7 +10,7 @@ simple WarnerAdminApp like IApp
 		int bunkerId;
 
         bool sendingEnabled = default(true);
-        int localPort = default(5555);
+        int localPort = default(6666);
         
         int deviceAppPort = default(4500);
         string deviceAppAddress;

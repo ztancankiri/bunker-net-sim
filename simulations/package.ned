@@ -81,9 +81,6 @@ network Network
             @display("p=318,211");
         }
 
-        bunker1gnb2: gNodeB {
-            @display("p=318,671");
-        }
         // =====[ Bunker 2 ]======
         bunker2host[bunker2_host_number]: NRUe {
             parameters:
@@ -93,9 +90,6 @@ network Network
             @display("p=735,1228");
         }
 
-        bunker2gnb2: gNodeB {
-            @display("p=1557,1228");
-        }
         // =====[ Bunker 3 ]======
         bunker3host[bunker3_host_number]: NRUe {
             parameters:
@@ -105,9 +99,6 @@ network Network
             @display("p=1890,124");
         }
 
-        bunker3gnb2: gNodeB {
-            @display("p=1890,643");
-        }
         ualcmp: UALCMP {
             @display("p=1307.215,98.865");
         }
@@ -128,15 +119,9 @@ network Network
         mecHost.ppp++ <--> closeCable <--> iUpf.pppg++;
 
         bunker1gnb1.ppp <--> cable <--> iUpf.pppg++;
-        bunker1gnb2.ppp <--> cable <--> iUpf.pppg++;
         bunker2gnb1.ppp <--> cable <--> iUpf.pppg++;
-        bunker2gnb2.ppp <--> cable <--> iUpf.pppg++;
         bunker3gnb1.ppp <--> cable <--> iUpf.pppg++;
-        bunker3gnb2.ppp <--> cable <--> iUpf.pppg++;
+        
 
-
-        bunker1gnb1.x2++ <--> closeCable <--> bunker1gnb2.x2++;
-        bunker2gnb1.x2++ <--> closeCable <--> bunker2gnb2.x2++;
-        bunker3gnb1.x2++ <--> closeCable <--> bunker3gnb2.x2++;
 
 }
