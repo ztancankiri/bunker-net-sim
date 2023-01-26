@@ -255,10 +255,10 @@ def run_config(config):
     with open(os.path.join('.', 'simulations', 'results', config, config + '.vec.json')) as f:
         vectors = json.loads(f.read())
 
-    vectors = clean_vectors(vectors)
+    # vectors = clean_vectors(vectors)
 
-    with open(os.path.join('.', 'simulations', 'results', config, config + '.clean.vec.json'), 'w') as f:
-        f.write(json.dumps(vectors, indent = 4))
+    # with open(os.path.join('.', 'simulations', 'results', config, config + '.clean.vec.json'), 'w') as f:
+    #     f.write(json.dumps(vectors, indent = 4))
 
     config_folder = os.path.join('.', 'simulations', 'results', config, 'plots')
     if os.path.exists(config_folder):
@@ -273,324 +273,41 @@ def run_config(config):
     if not os.path.exists(linkLayerThroughputFolder):
         os.makedirs(linkLayerThroughputFolder)
 
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'cellularNic' not in vectors[key][module][i] and module != "ualcmp" and "mecHost" not in module:
-                    time = np.array(vectors[key][module][i]['ppp'][0]['queue']['outgoingDataRate:vector']['time'])
-                    value = np.zeros(len(time))
-
-                    for j in range(len(vectors[key][module][i]['ppp'])):
-                        value += np.array(vectors[key][module][i]['ppp'][j]['queue']['outgoingDataRate:vector']['value'])
-
-                    value /= len(vectors[key][module][i]['ppp'])
-
-                    plt.title('Link Layer Throughput of ' + module + " - " + str(i))
-                    plt.xlabel('Time (s)')
-                    plt.ylabel('Throughput (Mbps)')
-                    xpoints = time
-                    ypoints = value / 1000
-                    plt.plot(xpoints, ypoints, linestyle = 'solid')
-                    plt.grid()
-                    plt.savefig(os.path.join(linkLayerThroughputFolder, module + "-" + str(i) + "-LinkLayerThroughput.png"), bbox_inches = 'tight')
-                    plt.clf()
+    first_key = list(vectors.keys())[0]
+    vector_data = vectors[first_key]['vectors']
+    vector_data = list(filter(lambda item: (item['module'] == "Network.server.ppp[0].queue" and item['name'] == "outgoingDataRate:vector"), vector_data))[0]
+    time = np.array(vector_data['time'])
+    value = np.array(vector_data['value'])
+    
+    plt.title("Link Layer Throughput of Server")
+    plt.xlabel('Time (s)')
+    plt.ylabel('Throughput (Mbps)')
+    xpoints = time
+    ypoints = value / 1000000
+    plt.plot(xpoints, ypoints, linestyle = 'solid')
+    plt.grid()
+    plt.savefig(os.path.join(linkLayerThroughputFolder, "server-LinkLayerThroughput.png"), bbox_inches = 'tight')
+    plt.clf()
 ############################################################################################################################################
     print('Plotting LinkUtilization of ' + config + '...')
     linkUtilizationFolder = os.path.join(config_folder, 'LinkUtilization')
     if not os.path.exists(linkUtilizationFolder):
         os.makedirs(linkUtilizationFolder)
 
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'app' in vectors[key][module][i]:
-                    time = np.array(vectors[key][module][i]['app'][0]['throughput:vector']['time'])
-                    value = np.zeros(len(time))
-
-                    for j in range(len(vectors[key][module][i]['app'])):
-                        value += np.array(vectors[key][module][i]['app'][j]['throughput:vector']['value'])
-
-                    value /= len(vectors[key][module][i]['app'])
-
-                    plt.title('Link Utilization of ' + module + " - " + str(i))
-                    plt.xlabel('Time (s)')
-                    plt.ylabel('Link Utilization (%)')
-                    xpoints = time
-                    ypoints = value * 100 / bandwidth
-                    plt.plot(xpoints, ypoints, linestyle = 'solid')
-                    plt.grid()
-                    plt.savefig(os.path.join(linkUtilizationFolder, module + "-" + str(i) + "-LinkUtilization.png"), bbox_inches = 'tight')
-                    plt.clf()
-############################################################################################################################################
-    print('Plotting ApplicationLayerThroughput of ' + config + '...')
-    applicationLayerThroughput = os.path.join(config_folder, 'ApplicationLayerThroughput')
-    if not os.path.exists(applicationLayerThroughput):
-        os.makedirs(applicationLayerThroughput)
-
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'app' in vectors[key][module][i]:
-                    time = np.array(vectors[key][module][i]['app'][0]['throughput:vector']['time'])
-                    value = np.zeros(len(time))
-
-                    for j in range(len(vectors[key][module][i]['app'])):
-                        value += np.array(vectors[key][module][i]['app'][j]['throughput:vector']['value'])
-
-                    value /= len(vectors[key][module][i]['app'])
-
-                    plt.title('Application Layer Throughput of ' + module + " - " + str(i))
-                    plt.xlabel('Time (s)')
-                    plt.ylabel('Throughput (Mbps)')
-                    xpoints = time
-                    ypoints = value / 1000
-                    plt.plot(xpoints, ypoints, linestyle = 'solid')
-                    plt.grid()
-                    plt.savefig(os.path.join(applicationLayerThroughput, module + "-" + str(i) + "-ApplicationLayerThroughput.png"), bbox_inches = 'tight')
-                    plt.clf()
-############################################################################################################################################
-    print('Plotting Latency of ' + config + '...')
-    latencyFolder = os.path.join(config_folder, 'Latency')
-    if not os.path.exists(latencyFolder):
-        os.makedirs(latencyFolder)
-
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'app' in vectors[key][module][i]:
-                    length = 0
-                    value = 0
-                    time = 0
-                    counter = 0
-
-                    for j in range(len(vectors[key][module][i]['app'])):
-                        if 'endtoenddelay:vector' in vectors[key][module][i]['app'][j]:
-                            if length == 0:
-                                length = len(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['time'])
-                                value = np.zeros(length)
-                                time = np.array(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['time'])
-
-                            value += np.array(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'])
-                            counter += 1
-
-                    if counter > 0:
-                        value /= counter
-
-                    if type(value) != int:
-                        plt.title('Latency of ' + module + " - " + str(i))
-                        plt.xlabel('Time (s)')
-                        plt.ylabel('Latency (ms)')
-                        xpoints = time
-                        ypoints = value * 1000
-                        plt.plot(xpoints, ypoints, linestyle = 'solid')
-                        plt.grid()
-                        plt.savefig(os.path.join(latencyFolder, module + "-" + str(i) + "-Latency.png"), bbox_inches = 'tight')
-                        plt.clf()
-############################################################################################################################################
-    print('Plotting B2BLatency of ' + config + '...')
-    B2BLatencyFolder = os.path.join(config_folder, 'B2BLatency')
-    if not os.path.exists(B2BLatencyFolder):
-        os.makedirs(B2BLatencyFolder)
-
-    time = []
-
-    B1toB1 = []
-    B1toB2 = []
-    B1toB3 = []
-
-    B2toB1 = []
-    B2toB2 = []
-    B2toB3 = []
-
-    B3toB1 = []
-    B3toB2 = []
-    B3toB3 = []
-
-    B1toB1counter = 0
-    B1toB2counter = 0
-    B1toB3counter = 0
-
-    B2toB1counter = 0
-    B2toB2counter = 0
-    B2toB3counter = 0
-
-    B3toB1counter = 0
-    B3toB2counter = 0
-    B3toB3counter = 0
-
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'app' in vectors[key][module][i]:
-                    for j in range(len(vectors[key][module][i]['app'])):
-                        if 'endtoenddelay:vector' in vectors[key][module][i]['app'][j]:
-                            if len(time) == 0:
-                                length = len(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['time'])
-                                time = np.array(vectors[key][module][i]['app'][j]['endtoenddelay:vector']['time'])
-                            
-                            if len(B1toB1) == 0:
-                                B1toB1 = np.zeros(length)
-                            if len(B1toB2) == 0:
-                                B1toB2 = np.zeros(length)
-                            if len(B1toB3) == 0:
-                                B1toB3 = np.zeros(length)
-                            if len(B2toB1) == 0:
-                                B2toB1 = np.zeros(length)
-                            if len(B2toB2) == 0:
-                                B2toB2 = np.zeros(length)
-                            if len(B2toB3) == 0:
-                                B2toB3 = np.zeros(length)
-                            if len(B3toB1) == 0:
-                                B3toB1 = np.zeros(length)
-                            if len(B3toB2) == 0:
-                                B3toB2 = np.zeros(length)
-                            if len(B3toB3) == 0:
-                                B3toB3 = np.zeros(length)
-
-                            for z in range(len(vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'])):
-                                if vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 1 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 1:
-                                    B1toB1[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B1toB1counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 1 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 2:
-                                    B1toB2[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B1toB2counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 1 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 3:
-                                    B1toB3[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B1toB3counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 2 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 1:
-                                    B2toB1[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B2toB1counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 2 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 2:
-                                    B2toB2[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B2toB2counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 2 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 3:
-                                    B2toB3[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B2toB3counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 3 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 1:
-                                    B3toB1[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B3toB1counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 3 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 2:
-                                    B3toB2[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B3toB2counter += 1
-                                elif vectors[key][module][i]['app'][j]['senderBunkerId:vector']['value'][z] == 3 and vectors[key][module][i]['app'][j]['receiverBunkerId:vector']['value'][z] == 3:
-                                    B3toB3[z] += vectors[key][module][i]['app'][j]['endtoenddelay:vector']['value'][z]
-                                    B3toB3counter += 1
-
-    if B1toB1counter > 0:
-        B1toB1 /= B1toB1counter
-
-    if B1toB2counter > 0:
-        B1toB2 /= B1toB2counter
-
-    if B1toB3counter > 0:
-        B1toB3 /= B1toB3counter
-
-    if B2toB1counter > 0:
-        B2toB1 /= B2toB1counter
-
-    if B2toB2counter > 0:
-        B2toB2 /= B2toB2counter
-
-    if B2toB3counter > 0:
-        B2toB3 /= B2toB3counter
-
-    if B3toB1counter > 0:
-        B3toB1 /= B3toB1counter
-
-    if B3toB2counter > 0:
-        B3toB2 /= B3toB2counter
-
-    if B3toB3counter > 0:
-        B3toB3 /= B3toB3counter
-
-    plt.title('Latency of Bunker 1 to Bunker 1')
+    first_key = list(vectors.keys())[0]
+    vector_data = vectors[first_key]['vectors']
+    vector_data = list(filter(lambda item: (item['module'] == "Network.server.app[0]" and item['name'] == "throughput:vector"), vector_data))[0]
+    time = np.array(vector_data['time'])
+    value = np.array(vector_data['value'])
+    
+    plt.title("Link Utilization of Server")
     plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
+    plt.ylabel('Link Utilization (%)')
     xpoints = time
-    ypoints = B1toB1 * 1000
+    ypoints = value * 100 / bandwidth
     plt.plot(xpoints, ypoints, linestyle = 'solid')
     plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker1-Bunker1.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 1 to Bunker 2')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B1toB2 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker1-Bunker2.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 1 to Bunker 3')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B1toB3 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker1-Bunker3.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 2 to Bunker 1')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B2toB1 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker2-Bunker1.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 2 to Bunker 2')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B2toB2 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker2-Bunker2.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 2 to Bunker 3')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B2toB3 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker2-Bunker3.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 3 to Bunker 1')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B3toB1 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker3-Bunker1.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 3 to Bunker 2')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B3toB2 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker3-Bunker2.png"), bbox_inches = 'tight')
-    plt.clf()
-
-    plt.title('Latency of Bunker 3 to Bunker 3')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Latency (ms)')
-    xpoints = time
-    ypoints = B3toB3 * 1000
-    plt.plot(xpoints, ypoints, linestyle = 'solid')
-    plt.grid()
-    plt.savefig(os.path.join(B2BLatencyFolder, "Bunker3-Bunker3.png"), bbox_inches = 'tight')
+    plt.savefig(os.path.join(linkUtilizationFolder, "server-LinkUtilization.png"), bbox_inches = 'tight')
     plt.clf()
 ############################################################################################################################################
     print('Plotting Lookup of ' + config + '...')
@@ -598,62 +315,34 @@ def run_config(config):
     if not os.path.exists(lookupFolder):
         os.makedirs(lookupFolder)
 
-    for key in vectors.keys():
-        for module in vectors[key].keys():
-            for i in range(len(vectors[key][module])):
-                if 'app' in vectors[key][module][i]:
-                    length1 = 0
-                    value1 = 0
-                    time1 = 0
-                    counter1 = 0
+    first_key = list(vectors.keys())[0]
+    vector_data = vectors[first_key]['vectors']
+    vector_data = list(filter(lambda item: (item['module'] == "Network.server.app[0]" and item['name'] == "successfulLookup:vector"), vector_data))[0]
+    time1 = np.array(vector_data['time'])
+    value1 = np.array(vector_data['value'])
 
-                    length2 = 0
-                    value2 = 0
-                    time2 = 0
-                    counter2 = 0
+    first_key = list(vectors.keys())[0]
+    vector_data = vectors[first_key]['vectors']
+    vector_data = list(filter(lambda item: (item['module'] == "Network.server.app[0]" and item['name'] == "unsuccessfulLookup:vector"), vector_data))[0]
+    time2 = np.array(vector_data['time'])
+    value2 = np.array(vector_data['value'])
 
-                    for j in range(len(vectors[key][module][i]['app'])):
-                        if 'successfulLookup:vector' in vectors[key][module][i]['app'][j]:
-                            if length1 == 0:
-                                length1 = len(vectors[key][module][i]['app'][j]['successfulLookup:vector']['time'])
-                                value1 = np.zeros(length1)
-                                time1 = np.array(vectors[key][module][i]['app'][j]['successfulLookup:vector']['time'])
+    plt.title('Successful and Unsuccessful Lookups')
+    plt.xlabel('Time (s)')
+    plt.ylabel('# of Lookups')
 
-                            value1 += np.array(vectors[key][module][i]['app'][j]['successfulLookup:vector']['value'])
-                            counter1 += 1
+    xpoints = time1
+    ypoints = value1
+    plt.plot(xpoints, ypoints, linestyle = 'solid', label = 'Successful Lookups')
 
-                        if 'unsuccessfulLookup:vector' in vectors[key][module][i]['app'][j]:
-                            if length2 == 0:
-                                length2 = len(vectors[key][module][i]['app'][j]['unsuccessfulLookup:vector']['time'])
-                                value2 = np.zeros(length2)
-                                time2 = np.array(vectors[key][module][i]['app'][j]['unsuccessfulLookup:vector']['time'])
+    xpoints = time2
+    ypoints = value2
+    plt.plot(xpoints, ypoints, linestyle = 'solid', label = 'Unsuccessful Lookups')
+    plt.legend()
+    plt.grid()
 
-                            value2 += np.array(vectors[key][module][i]['app'][j]['unsuccessfulLookup:vector']['value'])
-                            counter2 += 1
-
-                    if counter1 > 0:
-                        value1 /= counter1
-
-                    if counter2 > 0:
-                        value2 /= counter2
-
-                    if type(value1) != int and type(value2) != int:
-                        plt.title('Lookups of ' + module + " - " + str(i))
-                        plt.xlabel('Time (s)')
-                        plt.ylabel('# of Lookups')
-
-                        xpoints = time1
-                        ypoints = value1 * 1000
-                        plt.plot(xpoints, ypoints, linestyle = 'solid', label = 'Successful Lookups')
-
-                        xpoints = time2
-                        ypoints = value2 * 1000
-                        plt.plot(xpoints, ypoints, linestyle = 'solid', label = 'Unsuccessful Lookups')
-                        plt.legend()
-                        plt.grid()
-
-                        plt.savefig(os.path.join(lookupFolder, module + "-" + str(i) + "-Lookups.png"), bbox_inches = 'tight')
-                        plt.clf()
+    plt.savefig(os.path.join(lookupFolder, "server-Lookups.png"), bbox_inches = 'tight')
+    plt.clf()
 ############################################################################################################################################
 def run_everything():
     if not os.path.exists(os.path.join('.', 'bunker-net-sim')):
