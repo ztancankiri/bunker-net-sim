@@ -8,6 +8,9 @@ simple WarnerAdminApp like IApp
 		string clockModule = default(""); // relative path of a module that implements IClock; optional
 
 		int bunkerId;
+		bool isCentralized = default(false);
+		string serverAddress = default("server");
+		int serverPort = default(4444);
 
         bool sendingEnabled = default(true);
         int localPort = default(6666);

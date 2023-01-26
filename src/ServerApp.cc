@@ -139,6 +139,34 @@ void ServerApp::socketDataArrived(UdpSocket *socket, Packet *pk)
         emit(packetSentSignal, packet);
         numSent++;
     }
+    else if(packetType == 4) { // Warning Trigger Message
+        EV_INFO << "SERVER PACKET IS Warning Trigger Message" << endl;
+        auto bunkerId = data->getBunkerId();
+        auto warningMessage = data->getTextMessage();
+
+        for (auto& survivor: survivorDatabase) {
+            if (survivor.second.bunkerId == bunkerId)  {
+                L3Address ip = survivor.second.ip;
+
+                EV_INFO << "WARNING MESSAGE SENDING: SERVER APP " << "---->" << ip.str() << endl;
+                Packet *packet = new Packet("Warning Message");
+                packet->addTag<FragmentationReq>()->setDontFragment(true);
+
+                const auto& payload = makeShared<BunkerPacket>();
+
+                payload->setChunkLength(B(20));
+                payload->setType(7);
+                payload->setTextMessage(warningMessage);
+
+                payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+                packet->insertAtBack(payload);
+
+                socket->sendTo(packet, ip, 5555);
+                emit(packetSentSignal, packet);
+                numSent++;
+            }
+        }
+    }
 
     delete pk;
 }

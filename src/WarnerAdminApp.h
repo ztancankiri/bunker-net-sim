@@ -40,6 +40,9 @@ class INET_API WarnerAdminApp : public ClockUserModuleMixin<ApplicationBase>, pu
     ClockEvent *selfMsg = nullptr;
 
     int bunkerId;
+    bool isCentralized;
+    L3Address serverAddress;
+    int serverPort;
 
     // statistics
     int numSent = 0;

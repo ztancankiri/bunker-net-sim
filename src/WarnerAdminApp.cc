@@ -51,6 +51,7 @@ void WarnerAdminApp::initialize(int stage)
         WATCH(numReceived);
 
         bunkerId = par("bunkerId");
+        isCentralized = par("isCentralized");
     }
 
     if (stage == INITSTAGE_APPLICATION_LAYER) {
@@ -60,6 +61,9 @@ void WarnerAdminApp::initialize(int stage)
        deviceAppAddress_ = L3AddressResolver().resolve(deviceSimbolicAppAddress_);
        mecAppName = par("mecAppName").stringValue();
        mecAppPort_ = -10;
+
+       serverAddress = L3AddressResolver().resolve(par("serverAddress"));
+       serverPort = par("serverPort");
    }
 }
 
@@ -72,7 +76,31 @@ void WarnerAdminApp::finish()
 }
 
 void WarnerAdminApp::sendPacket() {
-    if (mecAppPort_ > 0) {
+    if (!isCentralized) {
+        if (mecAppPort_ > 0) {
+            EV_INFO << "WARNING REQUEST CREATED BY: " << ownName;
+            Packet *packet = new Packet("Warning Request");
+            packet->addTag<FragmentationReq>()->setDontFragment(true);
+
+            const auto& payload = makeShared<BunkerPacket>();
+            payload->setChunkLength(B(20));
+            payload->setType(4);
+            payload->setBunkerId(bunkerId);
+            payload->setTextMessage("INCOMING MISSLE! THIS IS NOT A DRILL !!!");
+
+            payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+            packet->insertAtBack(payload);
+
+            emit(packetSentSignal, packet);
+            socket.sendTo(packet, mecAppAddress_, mecAppPort_);
+            numSent++;
+        }
+        else if (mecAppPort_ == -10) {
+            mecAppPort_ = -11;
+            sendStartMEWarningAlertApp();
+        }
+    }
+    else {
         EV_INFO << "WARNING REQUEST CREATED BY: " << ownName;
         Packet *packet = new Packet("Warning Request");
         packet->addTag<FragmentationReq>()->setDontFragment(true);
@@ -87,12 +115,8 @@ void WarnerAdminApp::sendPacket() {
         packet->insertAtBack(payload);
 
         emit(packetSentSignal, packet);
-        socket.sendTo(packet, mecAppAddress_, mecAppPort_);
+        socket.sendTo(packet, serverAddress, serverPort);
         numSent++;
-    }
-    else if (mecAppPort_ == -10) {
-        mecAppPort_ = -11;
-        sendStartMEWarningAlertApp();
     }
 }
 
