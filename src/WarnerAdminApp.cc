@@ -60,7 +60,7 @@ void WarnerAdminApp::initialize(int stage)
        deviceSimbolicAppAddress_ = (char*)par("deviceAppAddress").stringValue();
        deviceAppAddress_ = L3AddressResolver().resolve(deviceSimbolicAppAddress_);
        mecAppName = par("mecAppName").stringValue();
-       mecAppPort_ = -10;
+       mecAppPort_ = -1;
 
        serverAddress = L3AddressResolver().resolve(par("serverAddress"));
        serverPort = par("serverPort");
@@ -75,29 +75,32 @@ void WarnerAdminApp::finish()
     ApplicationBase::finish();
 }
 
+void WarnerAdminApp::sendWarningMessage() {
+    EV_INFO << "WARNING REQUEST CREATED BY: " << ownName;
+    Packet *packet = new Packet("Warning Request");
+    packet->addTag<FragmentationReq>()->setDontFragment(true);
+
+    const auto& payload = makeShared<BunkerPacket>();
+    payload->setChunkLength(B(20));
+    payload->setType(4);
+    payload->setBunkerId(bunkerId);
+    payload->setTextMessage("INCOMING MISSLE! THIS IS NOT A DRILL !!!");
+
+    payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
+    packet->insertAtBack(payload);
+
+    emit(packetSentSignal, packet);
+    socket.sendTo(packet, mecAppAddress_, mecAppPort_);
+    numSent++;
+}
+
 void WarnerAdminApp::sendPacket() {
     if (!isCentralized) {
-        if (mecAppPort_ > 0) {
-            EV_INFO << "WARNING REQUEST CREATED BY: " << ownName;
-            Packet *packet = new Packet("Warning Request");
-            packet->addTag<FragmentationReq>()->setDontFragment(true);
-
-            const auto& payload = makeShared<BunkerPacket>();
-            payload->setChunkLength(B(20));
-            payload->setType(4);
-            payload->setBunkerId(bunkerId);
-            payload->setTextMessage("INCOMING MISSLE! THIS IS NOT A DRILL !!!");
-
-            payload->addTag<CreationTimeTag>()->setCreationTime(simTime());
-            packet->insertAtBack(payload);
-
-            emit(packetSentSignal, packet);
-            socket.sendTo(packet, mecAppAddress_, mecAppPort_);
-            numSent++;
-        }
-        else if (mecAppPort_ == -10) {
-            mecAppPort_ = -11;
+        if (mecAppPort_ < 0) {
             sendStartMEWarningAlertApp();
+        }
+        else {
+            sendWarningMessage();
         }
     }
     else {
@@ -218,6 +221,8 @@ void WarnerAdminApp::socketDataArrived(UdpSocket *socket, Packet *packet) {
                 mecAppAddress_ = L3AddressResolver().resolve(pkt->getIpAddress());
                 mecAppPort_ = pkt->getPort();
                 EV << "MEC HOST INFO - Received " << pkt->getType() << " type. mecApp instance is at: "<< mecAppAddress_<< ":" << mecAppPort_ << endl;
+
+                sendWarningMessage();
             }
         }
         else {

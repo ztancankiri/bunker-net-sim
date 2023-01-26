@@ -44,6 +44,7 @@ class INET_API WarnerAdminApp : public ClockUserModuleMixin<ApplicationBase>, pu
     L3Address serverAddress;
     int serverPort;
 
+
     // statistics
     int numSent = 0;
     int numReceived = 0;
@@ -55,6 +56,7 @@ class INET_API WarnerAdminApp : public ClockUserModuleMixin<ApplicationBase>, pu
     virtual void refreshDisplay() const override;
 
     virtual void sendPacket();
+    virtual void sendWarningMessage();
 
     virtual void processStart();
     virtual void processSend();
