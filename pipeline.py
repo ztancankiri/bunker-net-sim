@@ -285,7 +285,12 @@ def run_config(config):
     xpoints = time
     ypoints = value / 1000000
     plt.plot(xpoints, ypoints, linestyle = 'solid')
+    avg = round(np.average(ypoints[np.nonzero(ypoints)]), 4)
+    plt.axhline(y = avg, color = 'red', label = 'Mean of non-zero values')
+    t = plt.text(-0.5, avg * 1.05, str(avg), color = 'black', weight = 'bold')
+    t.set_bbox(dict(facecolor = 'red', alpha=0.5, edgecolor='red'))
     plt.grid()
+    plt.legend(loc = "upper right")
     plt.savefig(os.path.join(linkLayerThroughputFolder, "server-LinkLayerThroughput.png"), bbox_inches = 'tight')
     plt.clf()
 ############################################################################################################################################
@@ -306,7 +311,12 @@ def run_config(config):
     xpoints = time
     ypoints = value * 100 / bandwidth
     plt.plot(xpoints, ypoints, linestyle = 'solid')
+    avg = round(np.average(ypoints[np.nonzero(ypoints)]), 4)
+    plt.axhline(y = avg, color = 'red', label = 'Mean of non-zero values')
+    t = plt.text(-0.5, avg * 1.05, str(avg), color = 'black', weight = 'bold')
+    t.set_bbox(dict(facecolor = 'red', alpha=0.5, edgecolor='red'))
     plt.grid()
+    plt.legend(loc = "upper right")
     plt.savefig(os.path.join(linkUtilizationFolder, "server-LinkUtilization.png"), bbox_inches = 'tight')
     plt.clf()
 ############################################################################################################################################
